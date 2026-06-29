@@ -1,0 +1,20 @@
+# Biên dịch và Build xuất đầu ra
+/build/
+/nbproject/private/
+/dist/
+/out/
+*.class
+
+# Cấu hình riêng của các IDE (Eclipse, NetBeans, IntelliJ)
+.metadata/
+.settings/
+.classpath
+.project
+.idea/
+*.iml
+*.iws
+
+# Log file và hệ thống
+*.log
+.DS_Store
+Thumbs.db
