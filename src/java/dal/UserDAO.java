@@ -8,6 +8,73 @@ import model.User;
 
 public class UserDAO extends DBContext {
 
+    public User authenticate(String usernameOrEmail, String password) {
+        String sql = "SELECT user_id, username, password, full_name, email, phone, address, status, points, role_id, created_at "
+                + "FROM Users WHERE (username = ? OR email = ?) AND password = ?";
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            con = getConnection();
+            ps = con.prepareStatement(sql);
+            ps.setString(1, usernameOrEmail);
+            ps.setString(2, usernameOrEmail);
+            ps.setString(3, password);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                return mapUser(rs);
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        } finally {
+            closeConnection(con, ps, rs);
+        }
+        return null;
+    }
+
+    public boolean isUsernameOrEmailTaken(String username, String email) {
+        String sql = "SELECT 1 FROM Users WHERE username = ? OR email = ?";
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            con = getConnection();
+            ps = con.prepareStatement(sql);
+            ps.setString(1, username);
+            ps.setString(2, email);
+            rs = ps.executeQuery();
+            return rs.next();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            return true;
+        } finally {
+            closeConnection(con, ps, rs);
+        }
+    }
+
+    public boolean createCustomer(User user) {
+        String sql = "INSERT INTO Users (username, password, full_name, email, phone, address, status, points, role_id) "
+                + "SELECT ?, ?, ?, ?, ?, ?, 1, 0, role_id FROM Roles WHERE role_name = 'Customer'";
+        Connection con = null;
+        PreparedStatement ps = null;
+        try {
+            con = getConnection();
+            ps = con.prepareStatement(sql);
+            ps.setString(1, user.getUsername());
+            ps.setString(2, user.getPassword());
+            ps.setString(3, user.getFullName());
+            ps.setString(4, user.getEmail());
+            ps.setString(5, user.getPhone());
+            ps.setString(6, user.getAddress());
+            return ps.executeUpdate() > 0;
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            return false;
+        } finally {
+            closeConnection(con, ps, null);
+        }
+    }
+
     public User getUserById(int userId) {
         String sql = "SELECT user_id, username, password, full_name, email, phone, address, status, points, role_id, created_at "
                 + "FROM Users WHERE user_id = ?";

@@ -33,10 +33,7 @@ final class CustomerPageSupport {
             }
         }
 
-        User demoCustomer = new UserDAO().getDefaultCustomer();
-        session.setAttribute("user", demoCustomer);
-        session.setAttribute("userId", demoCustomer.getUserId());
-        return demoCustomer;
+        return null;
     }
 
     static void prepareCommonData(HttpServletRequest request, User customer) {

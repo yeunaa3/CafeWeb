@@ -17,7 +17,10 @@
                     <a href="${pageContext.request.contextPath}/menu">Menu</a>
                     <a class="cart-link" href="${pageContext.request.contextPath}/checkout">Giỏ Hàng <span class="cart-count">${cartCount}</span></a>
                     <a href="#contact">Liên Hệ</a>
-                    <a class="login-button" href="#">Đăng Nhập</a>
+                    <c:choose>
+                        <c:when test="${not empty sessionScope.user}"><a class="login-button account-button" href="${pageContext.request.contextPath}/profile">Tài khoản</a></c:when>
+                        <c:otherwise><a class="login-button" href="${pageContext.request.contextPath}/login">Đăng nhập</a></c:otherwise>
+                    </c:choose>
                 </nav>
             </header>
 

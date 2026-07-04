@@ -16,6 +16,10 @@ public class ProfileController extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         User customer = CustomerPageSupport.resolveCustomer(request);
+        if (customer == null) {
+            response.sendRedirect(request.getContextPath() + "/login?returnUrl=/profile");
+            return;
+        }
         CustomerPageSupport.prepareCommonData(request, customer);
         request.setAttribute("editMode", "edit".equals(request.getParameter("mode")));
         request.getRequestDispatcher("/jsp/customer/profile.jsp").forward(request, response);
@@ -26,6 +30,10 @@ public class ProfileController extends HttpServlet {
             throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
         User customer = CustomerPageSupport.resolveCustomer(request);
+        if (customer == null) {
+            response.sendRedirect(request.getContextPath() + "/login?returnUrl=/profile");
+            return;
+        }
         String fullName = trim(request.getParameter("fullName"));
         String email = trim(request.getParameter("email"));
         String phone = trim(request.getParameter("phone"));

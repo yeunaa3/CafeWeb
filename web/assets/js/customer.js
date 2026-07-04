@@ -250,6 +250,17 @@
         });
     }
 
+    var passwordToggles = document.querySelectorAll("[data-toggle-password]");
+    for (var passwordIndex = 0; passwordIndex < passwordToggles.length; passwordIndex++) {
+        passwordToggles[passwordIndex].addEventListener("click", function () {
+            var input = document.getElementById(this.getAttribute("data-toggle-password"));
+            if (!input) return;
+            var showPassword = input.type === "password";
+            input.type = showPassword ? "text" : "password";
+            this.textContent = showPassword ? "Ẩn" : "Hiện";
+        });
+    }
+
     document.addEventListener("keydown", function (event) {
         if (event.key === "Escape") {
             setOrderModal(false);

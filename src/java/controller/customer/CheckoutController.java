@@ -35,6 +35,12 @@ public class CheckoutController extends HttpServlet {
         String note = trim(request.getParameter("note"));
         String voucherCode = trim(request.getParameter("voucherCode"));
 
+        Integer currentUserId = getCurrentUserId(request);
+        if (currentUserId == null) {
+            response.sendRedirect(request.getContextPath() + "/login?returnUrl=/checkout");
+            return;
+        }
+
         if (cart.isEmpty()) {
             request.setAttribute("error", "Giỏ hàng đang trống.");
             prepareCheckout(request);
@@ -66,7 +72,7 @@ public class CheckoutController extends HttpServlet {
         try {
             OrderDAO orderDAO = new OrderDAO();
             Integer voucherId = voucherResult.getVoucher() == null ? null : voucherResult.getVoucher().getVoucherId();
-            int orderId = orderDAO.createOnlineOrder(getCurrentUserId(request), cart, shippingAddress, phone, note,
+            int orderId = orderDAO.createOnlineOrder(currentUserId, cart, shippingAddress, phone, note,
                     voucherId, voucherResult.getDiscountAmount());
             request.getSession().removeAttribute(CartController.CART_SESSION_KEY);
             request.setAttribute("successOrderId", orderId);
