@@ -14,7 +14,7 @@
             <header class="site-header">
                 <a class="brand" href="${pageContext.request.contextPath}/home">Cafe & Bubble tea</a>
                 <nav class="site-nav">
-                    <a href="${pageContext.request.contextPath}/menu">Đặt Hàng</a>
+                    <a href="${pageContext.request.contextPath}/menu">Menu</a>
                     <a class="cart-link" href="${pageContext.request.contextPath}/checkout">Giỏ Hàng <span class="cart-count">${cartCount}</span></a>
                     <a href="#contact">Liên Hệ</a>
                     <a class="login-button" href="#">Đăng Nhập</a>
@@ -24,7 +24,7 @@
             <section class="hero">
                 <div>
                     <h1>Cafe & Bubble tea</h1>
-                    <a class="primary-button" href="${pageContext.request.contextPath}/menu">Order Ngay</a>
+                    <a class="primary-button" href="${pageContext.request.contextPath}/menu">Xem Menu</a>
                 </div>
                 <img src="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=1400&q=80" alt="Coffee table">
             </section>

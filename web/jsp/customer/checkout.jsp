@@ -14,7 +14,7 @@
             <header class="site-header">
                 <a class="brand" href="${pageContext.request.contextPath}/home">Cafe & Bubble tea</a>
                 <nav class="site-nav">
-                    <a href="${pageContext.request.contextPath}/menu">Đặt Hàng</a>
+                    <a href="${pageContext.request.contextPath}/menu">Menu</a>
                     <a class="cart-link" href="${pageContext.request.contextPath}/checkout">Giỏ Hàng <span class="cart-count">${cartCount}</span></a>
                     <a href="${pageContext.request.contextPath}/home#contact">Liên Hệ</a>
                     <a class="login-button" href="#">Đăng Nhập</a>
@@ -71,11 +71,14 @@
                 <form class="checkout-form" action="${pageContext.request.contextPath}/checkout" method="post">
                     <h2>Xác nhận đơn hàng</h2>
                     <label>Địa chỉ giao hàng *</label>
-                    <input type="text" name="shippingAddress" placeholder="Nhập địa chỉ nhận hàng" required>
+                    <input type="text" name="shippingAddress" value="<c:out value='${param.shippingAddress}'/>" placeholder="Nhập địa chỉ nhận hàng" required>
                     <label>Số điện thoại *</label>
-                    <input type="tel" name="phone" placeholder="VD: 0909090909" required pattern="0[0-9]{9,10}">
+                    <input type="tel" name="phone" value="<c:out value='${param.phone}'/>" placeholder="VD: 0909090909" required pattern="0[0-9]{9,10}">
+                    <label>Mã giảm giá</label>
+                    <input type="text" name="voucherCode" value="<c:out value='${param.voucherCode}'/>" placeholder="Nhập mã voucher (nếu có)">
+                    <small class="form-hint">Voucher được kiểm tra hạn dùng và giá trị đơn tối thiểu khi đặt hàng.</small>
                     <label>Ghi chú</label>
-                    <textarea name="note" rows="4" placeholder="Ghi chú thêm cho quán"></textarea>
+                    <textarea name="note" rows="4" placeholder="Ghi chú thêm cho quán"><c:out value="${param.note}"/></textarea>
                     <div class="checkout-total">
                         <span>Tổng tiền</span>
                         <strong><span id="cartTotal"><fmt:formatNumber value="${cartTotal}" pattern="#,##0"/></span>đ</strong>
@@ -88,6 +91,9 @@
                             <button class="primary-button wide-button" type="submit">Đặt hàng</button>
                         </c:otherwise>
                     </c:choose>
+                    <c:if test="${not empty cart}">
+                        <button class="clear-cart-button" id="clearCartButton" type="button">Xóa toàn bộ giỏ hàng</button>
+                    </c:if>
                 </form>
             </section>
         </main>

@@ -14,7 +14,7 @@
             <header class="site-header">
                 <a class="brand" href="${pageContext.request.contextPath}/home">Cafe & Bubble tea</a>
                 <nav class="site-nav">
-                    <a href="${pageContext.request.contextPath}/menu">Đặt Hàng</a>
+                    <a class="active-nav" href="${pageContext.request.contextPath}/menu">Menu</a>
                     <a class="cart-link" href="${pageContext.request.contextPath}/checkout">Giỏ Hàng <span class="cart-count">${cartCount}</span></a>
                     <a href="${pageContext.request.contextPath}/home#contact">Liên Hệ</a>
                     <a class="login-button" href="#">Đăng Nhập</a>
@@ -22,24 +22,32 @@
             </header>
 
             <section class="menu-heading">
-                <h1>Menu</h1>
+                <div><span class="page-kicker">Thực đơn hôm nay</span><h1>Menu</h1></div>
                 <form class="search-form" action="${pageContext.request.contextPath}/menu" method="get">
-                    <input type="search" name="keyword" value="${keyword}" placeholder="Search">
-                    <button type="submit" aria-label="Search">⌕</button>
+                    <input type="search" name="keyword" value="${keyword}" placeholder="Tìm món yêu thích">
+                    <button type="submit" aria-label="Tìm kiếm">Tìm</button>
                 </form>
             </section>
 
             <img class="menu-cover" src="https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?auto=format&fit=crop&w=1400&q=80" alt="Tea cover">
 
+            <nav class="category-nav" aria-label="Danh mục thực đơn">
+                <c:forEach var="section" items="${sections}">
+                    <c:if test="${not empty section.products}">
+                        <a href="#category-${section.category.categoryId}">${section.category.categoryName}</a>
+                    </c:if>
+                </c:forEach>
+            </nav>
+
             <c:forEach var="section" items="${sections}">
                 <c:if test="${not empty section.products}">
-                    <section class="product-section">
+                    <section class="product-section" id="category-${section.category.categoryId}">
                         <h2>${section.category.categoryName}</h2>
                         <div class="product-grid">
                             <c:forEach var="product" items="${section.products}">
                                 <article class="product-card">
                                     <img src="${pageContext.request.contextPath}/assets/images/${product.imageUrl}"
-                                         onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1551024601-bec78aea704b?auto=format&fit=crop&w=500&q=80';"
+                                         onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1572490122747-3968b75cc699?auto=format&fit=crop&w=500&q=80';"
                                          alt="${product.productName}">
                                     <div class="product-info">
                                         <div>
@@ -61,8 +69,8 @@
                 </c:if>
             </c:forEach>
 
-            <c:if test="${empty sections}">
-                <p class="empty-state">Không tìm thấy món phù hợp.</p>
+            <c:if test="${not hasProducts}">
+                <div class="empty-state menu-empty"><p>Không tìm thấy món phù hợp.</p><a href="${pageContext.request.contextPath}/menu">Xóa bộ lọc</a></div>
             </c:if>
 
             <section class="cart-strip">
@@ -84,11 +92,17 @@
                 <input type="hidden" name="ajax" value="true">
                 <input type="hidden" name="productId" id="modalProductId">
                 <button class="modal-close" type="button" aria-label="Đóng">×</button>
-                <h2 id="modalProductName">Chọn món</h2>
-                <p class="modal-price" id="modalProductPrice"></p>
+                <div class="modal-product-summary">
+                    <img id="modalProductImage" src="" alt="" onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1572490122747-3968b75cc699?auto=format&fit=crop&w=300&q=80';">
+                    <div><span>Tùy chỉnh món</span><h2 id="modalProductName">Chọn món</h2><p class="modal-price" id="modalProductPrice"></p></div>
+                </div>
 
                 <label>Số lượng</label>
-                <input class="number-input" type="number" name="quantity" value="1" min="1">
+                <div class="modal-quantity">
+                    <button type="button" data-modal-quantity="-1" aria-label="Giảm số lượng">−</button>
+                    <input class="number-input" type="number" name="quantity" value="1" min="1" max="99" readonly>
+                    <button type="button" data-modal-quantity="1" aria-label="Tăng số lượng">+</button>
+                </div>
 
                 <label>Size</label>
                 <div class="choice-row">
@@ -118,14 +132,15 @@
                 <div class="topping-list">
                     <c:forEach var="topping" items="${toppings}">
                         <label>
-                            <input type="checkbox" name="toppingIds" value="${topping.toppingId}">
+                            <input type="checkbox" name="toppingIds" value="${topping.toppingId}" data-topping-price="${topping.price}">
                             <span>${topping.toppingName}</span>
                             <em>+<fmt:formatNumber value="${topping.price}" pattern="#,##0"/>đ</em>
                         </label>
                     </c:forEach>
                 </div>
 
-                <button class="primary-button wide-button" type="submit">Thêm vào giỏ</button>
+                <div class="modal-total"><span>Tạm tính</span><strong id="modalTotal">0đ</strong></div>
+                <button class="primary-button wide-button" type="submit"><span>Thêm vào giỏ</span></button>
             </form>
         </div>
 

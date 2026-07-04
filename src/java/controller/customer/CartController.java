@@ -24,18 +24,25 @@ public class CartController extends HttpServlet {
             throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
         String action = request.getParameter("action");
+        boolean success = false;
+        String message = "Thao tác không hợp lệ.";
         if ("add".equals(action)) {
-            addToCart(request);
+            success = addToCart(request);
+            message = success ? "Đã thêm món vào giỏ hàng." : "Không tìm thấy món hoặc món đã ngừng bán.";
         } else if ("update".equals(action)) {
-            updateQuantity(request);
+            success = updateQuantity(request);
+            message = success ? "Đã cập nhật số lượng." : "Không tìm thấy món trong giỏ.";
         } else if ("remove".equals(action)) {
-            removeItem(request);
+            success = removeItem(request);
+            message = success ? "Đã xóa món khỏi giỏ." : "Không tìm thấy món trong giỏ.";
         } else if ("clear".equals(action)) {
             request.getSession().removeAttribute(CART_SESSION_KEY);
+            success = true;
+            message = "Đã xóa toàn bộ giỏ hàng.";
         }
 
         if ("true".equals(request.getParameter("ajax"))) {
-            writeCartJson(request, response);
+            writeCartJson(request, response, success, message);
             return;
         }
         response.sendRedirect(request.getContextPath() + "/menu");
@@ -69,13 +76,13 @@ public class CartController extends HttpServlet {
         return total;
     }
 
-    private void addToCart(HttpServletRequest request) {
+    private boolean addToCart(HttpServletRequest request) {
         int productId = parseInt(request.getParameter("productId"), -1);
         int quantity = parseInt(request.getParameter("quantity"), 1);
         ProductDAO productDAO = new ProductDAO();
         Product product = productDAO.getProductById(productId);
         if (product == null) {
-            return;
+            return false;
         }
 
         CartItem newItem = new CartItem();
@@ -93,32 +100,35 @@ public class CartController extends HttpServlet {
         for (CartItem item : cart) {
             if (item.hasSameOptions(newItem)) {
                 item.setQuantity(item.getQuantity() + newItem.getQuantity());
-                return;
+                return true;
             }
         }
         cart.add(newItem);
+        return true;
     }
 
-    private void updateQuantity(HttpServletRequest request) {
+    private boolean updateQuantity(HttpServletRequest request) {
         String cartKey = request.getParameter("cartKey");
         int quantity = parseInt(request.getParameter("quantity"), 1);
         for (CartItem item : getCart(request)) {
             if (item.getCartKey().equals(cartKey)) {
                 item.setQuantity(quantity < 1 ? 1 : quantity);
-                return;
+                return true;
             }
         }
+        return false;
     }
 
-    private void removeItem(HttpServletRequest request) {
+    private boolean removeItem(HttpServletRequest request) {
         String cartKey = request.getParameter("cartKey");
         List<CartItem> cart = getCart(request);
         for (int i = 0; i < cart.size(); i++) {
             if (cart.get(i).getCartKey().equals(cartKey)) {
                 cart.remove(i);
-                return;
+                return true;
             }
         }
+        return false;
     }
 
     private double getSizeExtra(String size) {
@@ -131,10 +141,16 @@ public class CartController extends HttpServlet {
         return 0;
     }
 
-    private void writeCartJson(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    private void writeCartJson(HttpServletRequest request, HttpServletResponse response,
+            boolean success, String message) throws IOException {
         response.setContentType("application/json;charset=UTF-8");
-        response.getWriter().write("{\"success\":true,\"count\":" + getCartCount(request)
-                + ",\"total\":" + getCartTotal(request) + "}");
+        response.setStatus(success ? HttpServletResponse.SC_OK : HttpServletResponse.SC_BAD_REQUEST);
+        response.getWriter().write("{\"success\":" + success + ",\"message\":\"" + escapeJson(message)
+                + "\",\"count\":" + getCartCount(request) + ",\"total\":" + getCartTotal(request) + "}");
+    }
+
+    private String escapeJson(String value) {
+        return value.replace("\\", "\\\\").replace("\"", "\\\"");
     }
 
     private int parseInt(String value, int defaultValue) {
