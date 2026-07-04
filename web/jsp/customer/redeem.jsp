@@ -28,7 +28,7 @@
                     <a class="sidebar-link" href="${pageContext.request.contextPath}/profile" title="Hồ sơ">P</a>
                     <a class="sidebar-link active" href="${pageContext.request.contextPath}/redeem" title="Đổi voucher">V</a>
                     <button class="sidebar-link" type="button" data-open-orders title="Đơn hàng">O</button>
-                    <a class="sidebar-link" href="#" title="Đăng xuất">X</a>
+                    <a class="sidebar-link" href="${pageContext.request.contextPath}/logout" title="Đăng xuất" aria-label="Đăng xuất">X</a>
                 </aside>
 
                 <section class="account-content redeem-content">
