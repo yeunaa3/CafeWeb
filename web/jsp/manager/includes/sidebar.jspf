@@ -1,3 +1,4 @@
+<%@page pageEncoding="UTF-8"%>
 <aside class="manager-sidebar">
     <a class="manager-brand" href="${pageContext.request.contextPath}/manager/dashboard">Cafe &amp; Bubble tea</a>
     <span class="nav-caption">MAIN MENU</span>

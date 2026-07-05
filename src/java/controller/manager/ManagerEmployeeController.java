@@ -43,6 +43,13 @@ public class ManagerEmployeeController extends HttpServlet {
             redirectResult(request, response, success, "Đã cập nhật trạng thái nhân viên.");
             return;
         }
+        if ("delete".equals(action)) {
+            boolean success = userDAO.deleteStaff(parseId(request.getParameter("id")));
+            request.getSession().setAttribute(success ? "managerSuccess" : "managerError",
+                    success ? "Đã xóa nhân viên." : "Không thể xóa nhân viên đã tham gia xử lý đơn. Hãy khóa tài khoản.");
+            response.sendRedirect(request.getContextPath() + "/manager/employees");
+            return;
+        }
 
         boolean editing = "update".equals(action);
         User staff = editing ? userDAO.getUserById(parseId(request.getParameter("id"))) : new User();

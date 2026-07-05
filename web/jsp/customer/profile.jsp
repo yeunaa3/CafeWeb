@@ -18,8 +18,8 @@
                     <a href="${pageContext.request.contextPath}/menu">Menu</a>
                     <a class="cart-link" href="${pageContext.request.contextPath}/checkout">Giỏ Hàng <span class="cart-count">${cartCount}</span></a>
                     <a href="${pageContext.request.contextPath}/home#contact">Liên Hệ</a>
-                    <button class="notification-button" type="button" data-open-orders title="Thông báo đơn hàng" aria-label="Thông báo đơn hàng">
-                        <svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M10.268 21a2 2 0 0 0 3.464 0"/><path d="M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326"/></svg>
+                    <button class="notification-button" type="button" data-open-orders title="Thông báo đơn hàng">
+                        Thông báo
                         <c:if test="${notificationCount > 0}"><span>${notificationCount}</span></c:if>
                     </button>
                     <a class="avatar-button" href="${pageContext.request.contextPath}/profile" title="Hồ sơ">${fn:substring(customer.fullName, 0, 1)}</a>
@@ -28,10 +28,10 @@
 
             <div class="account-layout">
                 <aside class="account-sidebar" aria-label="Tài khoản">
-                    <a class="sidebar-link active" href="${pageContext.request.contextPath}/profile" title="Hồ sơ" aria-label="Hồ sơ"><svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true"><rect width="7" height="7" x="3" y="3" rx="1"/><rect width="7" height="7" x="14" y="3" rx="1"/><rect width="7" height="7" x="14" y="14" rx="1"/><rect width="7" height="7" x="3" y="14" rx="1"/></svg></a>
-                    <a class="sidebar-link" href="${pageContext.request.contextPath}/redeem" title="Đổi voucher" aria-label="Đổi voucher"><svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="8" width="18" height="4" rx="1"/><path d="M12 8v13"/><path d="M19 12v9H5v-9"/><path d="M7.5 8C6.1 8 5 6.9 5 5.5S6.1 3 7.5 3C9.7 3 12 8 12 8Z"/><path d="M16.5 8C17.9 8 19 6.9 19 5.5S17.9 3 16.5 3C14.3 3 12 8 12 8Z"/></svg></a>
-                    <button class="sidebar-link" type="button" data-open-orders title="Đơn hàng" aria-label="Đơn hàng"><svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 15a4 4 0 0 1-4 4H8l-5 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4Z"/><path d="M8 9h8"/><path d="M8 13h5"/></svg></button>
-                    <a class="sidebar-link" href="${pageContext.request.contextPath}/logout" title="Đăng xuất" aria-label="Đăng xuất"><svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M10 17l5-5-5-5"/><path d="M15 12H3"/><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/></svg></a>
+                    <a class="sidebar-link active" href="${pageContext.request.contextPath}/profile" title="Hồ sơ">P</a>
+                    <a class="sidebar-link" href="${pageContext.request.contextPath}/redeem" title="Đổi voucher">V</a>
+                    <button class="sidebar-link" type="button" data-open-orders title="Đơn hàng">O</button>
+                    <a class="sidebar-link" href="${pageContext.request.contextPath}/logout" title="Đăng xuất" aria-label="Đăng xuất">X</a>
                 </aside>
 
                 <section class="account-content">
@@ -70,18 +70,13 @@
                                 <input name="phone" value="<c:out value='${customer.phone}'/>" ${editMode ? '' : 'readonly'} pattern="0[0-9]{9,10}">
                             </label>
                             <label>Giới Tính
-                                <select name="gender" ${editMode ? '' : 'disabled'}>
-                                    <option value="" ${empty customer.gender ? 'selected' : ''}>Chưa cập nhật</option>
-                                    <option value="Nam" ${customer.gender == 'Nam' ? 'selected' : ''}>Nam</option>
-                                    <option value="Nữ" ${customer.gender == 'Nữ' ? 'selected' : ''}>Nữ</option>
-                                    <option value="Khác" ${customer.gender == 'Khác' ? 'selected' : ''}>Khác</option>
-                                </select>
+                                <select name="gender" disabled><option>Chưa cập nhật</option></select>
                             </label>
                             <label>Địa Chỉ
                                 <input name="address" value="<c:out value='${customer.address}'/>" ${editMode ? '' : 'readonly'}>
                             </label>
                             <label>Username
-                                <input name="username" value="<c:out value='${customer.username}'/>" ${editMode ? '' : 'readonly'} required pattern="[A-Za-z0-9_]{4,50}">
+                                <input value="<c:out value='${customer.username}'/>" readonly>
                             </label>
                             <label>Email
                                 <input type="email" name="email" value="<c:out value='${customer.email}'/>" ${editMode ? '' : 'readonly'} required>

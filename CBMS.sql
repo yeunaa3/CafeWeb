@@ -141,9 +141,6 @@ GO
 -- PHẦN 2: CHÈN DỮ LIỆU MẪU (SEED DATA)
 -- ==========================================
 
--- 1. Thêm các quyền cơ bản theo quy định bắt buộc
-INSERT INTO Roles (role_name) VALUES ('Admin'), ('Staff'), ('Customer');
-
 -- 2. Thêm các tài khoản test hệ thống (Mật khẩu mặc định đều để thuần là '123456')
 INSERT INTO Users (username, password, full_name, email, phone, staff_position, role_id, points, status) VALUES 
 ('admin01', '123456', N'Nguyễn Quản Lý', 'admin@cbms.com', '0912345678', N'Manager', 1, 0, 1),
