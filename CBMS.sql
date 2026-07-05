@@ -40,6 +40,7 @@ CREATE TABLE Users (
     email VARCHAR(100) NOT NULL UNIQUE,
     phone VARCHAR(15) NULL,
     address NVARCHAR(255) NULL,
+    gender NVARCHAR(10) NULL CHECK (gender IN (N'Nam', N'Nữ', N'Khác')),
     status BIT NOT NULL DEFAULT 1, -- 1: Đang hoạt động, 0: Bị khóa (Manager khóa tài khoản - Task 7)
     points INT NOT NULL DEFAULT 0, -- Điểm tích lũy khách hàng (Task 7: 1.000đ = 1 điểm)
     role_id INT NOT NULL,

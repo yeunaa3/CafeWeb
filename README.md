@@ -63,6 +63,12 @@ Có thể giữ nguyên file chung và đặt các biến môi trường riêng 
 
 Giá trị từ biến môi trường sẽ được ưu tiên hơn giá trị trong file properties.
 
+Nếu đã tạo database trước khi chức năng giới tính được thêm vào, mở SSMS và chạy một lần:
+
+`database/migrations/001_add_user_gender.sql`
+
+Database tạo mới bằng `CBMS.sql` đã có sẵn cột này nên không cần chạy migration.
+
 `DBContext` đọc file bằng:
 
 ```java
