@@ -35,26 +35,37 @@ public class ProfileController extends HttpServlet {
             return;
         }
         String fullName = trim(request.getParameter("fullName"));
+        String username = trim(request.getParameter("username"));
         String email = trim(request.getParameter("email"));
         String phone = trim(request.getParameter("phone"));
         String address = trim(request.getParameter("address"));
+        String gender = trim(request.getParameter("gender"));
+        UserDAO userDAO = new UserDAO();
 
-        if (fullName.isEmpty() || email.isEmpty()) {
-            request.setAttribute("error", "Vui lòng nhập họ tên và email.");
+        if (fullName.isEmpty() || username.isEmpty() || email.isEmpty()) {
+            request.setAttribute("error", "Vui lòng nhập họ tên, username và email.");
+        } else if (!username.matches("[A-Za-z0-9_]{4,50}")) {
+            request.setAttribute("error", "Username phải có 4-50 ký tự, chỉ gồm chữ, số hoặc dấu gạch dưới.");
         } else if (!email.matches("^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$")) {
             request.setAttribute("error", "Email không hợp lệ.");
         } else if (!phone.isEmpty() && !phone.matches("0[0-9]{9,10}")) {
             request.setAttribute("error", "Số điện thoại không hợp lệ.");
+        } else if (!gender.isEmpty() && !gender.matches("Nam|Nữ|Khác")) {
+            request.setAttribute("error", "Giới tính không hợp lệ.");
+        } else if (userDAO.isUsernameOrEmailTakenByOther(customer.getUserId(), username, email)) {
+            request.setAttribute("error", "Username hoặc email đã được sử dụng.");
         } else {
+            customer.setUsername(username);
             customer.setFullName(fullName);
             customer.setEmail(email);
             customer.setPhone(phone);
             customer.setAddress(address);
-            if (new UserDAO().updateProfile(customer)) {
+            customer.setGender(gender.isEmpty() ? null : gender);
+            if (userDAO.updateProfile(customer)) {
                 request.getSession().setAttribute("user", customer);
                 request.setAttribute("success", "Đã cập nhật thông tin cá nhân.");
             } else {
-                request.setAttribute("error", "Không thể cập nhật thông tin. Email có thể đã được sử dụng.");
+                request.setAttribute("error", "Không thể cập nhật thông tin. Username hoặc email có thể đã được sử dụng.");
             }
         }
 

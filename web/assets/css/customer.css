@@ -722,17 +722,27 @@ button:disabled {
 
 .notification-button {
     position: relative;
+    width: 36px;
+    height: 36px;
+    display: grid;
+    place-items: center;
     border: 0;
+    border-radius: 50%;
     background: transparent;
-    font: inherit;
+    color: var(--coffee-900);
     cursor: pointer;
-    padding: 8px 4px;
+    padding: 0;
+}
+
+.notification-button:hover {
+    background: var(--warm-100);
+    color: var(--orange-500);
 }
 
 .notification-button span {
     position: absolute;
-    top: -2px;
-    right: -9px;
+    top: -3px;
+    right: -4px;
     min-width: 18px;
     height: 18px;
     display: grid;
@@ -741,6 +751,17 @@ button:disabled {
     background: var(--orange-500);
     color: #fff;
     font-size: 11px;
+}
+
+.ui-icon {
+    width: 20px;
+    height: 20px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    pointer-events: none;
 }
 
 .avatar-button {
@@ -776,9 +797,13 @@ button:disabled {
     border-left: 3px solid transparent;
     background: #fff;
     color: #a1a7b0;
-    font-weight: 700;
     text-decoration: none;
     cursor: pointer;
+}
+
+.sidebar-link .ui-icon {
+    width: 19px;
+    height: 19px;
 }
 
 .sidebar-link:hover,
