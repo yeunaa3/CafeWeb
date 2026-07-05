@@ -12,38 +12,45 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class DBContext {
-    
+
     public Connection getConnection() {
-        Connection conn = null;
-        try {
-            Properties properties = new Properties();
-            InputStream inputStream = getClass().getClassLoader().getResourceAsStream("ConnectDB.properties");
+        Connection connection = null;
+        try (InputStream inputStream = getClass().getClassLoader()
+                .getResourceAsStream("../ConnectDB.properties")) {
             if (inputStream == null) {
-                inputStream = getClass().getClassLoader().getResourceAsStream("../ConnectDB.properties");
+                throw new IOException("ConnectDB.properties is missing from web/WEB-INF");
             }
-            
-            if (inputStream != null) {
-                properties.load(inputStream);
-                String user = properties.getProperty("userID");
-                String pass = properties.getProperty("password");
-                String url = properties.getProperty("url");
-                
-                Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
-                conn = DriverManager.getConnection(url, user, pass);
-            } else {
-                System.err.println("Không tìm thấy file ConnectDB.properties ");
-            }
+
+            Properties properties = new Properties();
+            properties.load(inputStream);
+            String user = environmentOrDefault("CBMS_DB_USER", properties.getProperty("userID"));
+            String password = environmentOrDefault("CBMS_DB_PASSWORD", properties.getProperty("password"));
+            String url = environmentOrDefault("CBMS_DB_URL", properties.getProperty("url"));
+
+            Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
+            connection = DriverManager.getConnection(url, user, password);
         } catch (ClassNotFoundException | SQLException | IOException ex) {
             Logger.getLogger(DBContext.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return conn;
+        return connection;
     }
 
-    public void closeConnection(Connection con, PreparedStatement ps, ResultSet rs) {
+    private String environmentOrDefault(String name, String defaultValue) {
+        String value = System.getenv(name);
+        return value == null || value.trim().isEmpty() ? defaultValue : value.trim();
+    }
+
+    public void closeConnection(Connection connection, PreparedStatement statement, ResultSet resultSet) {
         try {
-            if (rs != null && !rs.isClosed()) rs.close();
-            if (ps != null && !ps.isClosed()) ps.close();
-            if (con != null && !con.isClosed()) con.close();
+            if (resultSet != null && !resultSet.isClosed()) {
+                resultSet.close();
+            }
+            if (statement != null && !statement.isClosed()) {
+                statement.close();
+            }
+            if (connection != null && !connection.isClosed()) {
+                connection.close();
+            }
         } catch (SQLException ex) {
             Logger.getLogger(DBContext.class.getName()).log(Level.SEVERE, null, ex);
         }
