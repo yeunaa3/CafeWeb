@@ -17,7 +17,7 @@ public class LoginController extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         if (getLoggedInUser(request) != null) {
-            response.sendRedirect(request.getContextPath() + "/profile");
+            response.sendRedirect(request.getContextPath() + destinationFor(getLoggedInUser(request)));
             return;
         }
         request.setAttribute("returnUrl", safeReturnUrl(request.getParameter("returnUrl")));
@@ -59,10 +59,8 @@ public class LoginController extends HttpServlet {
 
         if (!returnUrl.isEmpty()) {
             response.sendRedirect(request.getContextPath() + returnUrl);
-        } else if (user.getRoleId() == 3) {
-            response.sendRedirect(request.getContextPath() + "/profile");
         } else {
-            response.sendRedirect(request.getContextPath() + "/home");
+            response.sendRedirect(request.getContextPath() + destinationFor(user));
         }
     }
 
@@ -82,5 +80,11 @@ public class LoginController extends HttpServlet {
 
     private String trim(String value) {
         return value == null ? "" : value.trim();
+    }
+
+    private String destinationFor(User user) {
+        if (user.getRoleId() == 1) return "/manager/dashboard";
+        if (user.getRoleId() == 3) return "/profile";
+        return "/home";
     }
 }

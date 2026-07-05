@@ -65,7 +65,7 @@ public class RedeemController extends HttpServlet {
     private void preparePage(HttpServletRequest request, User customer) {
         VoucherDAO voucherDAO = new VoucherDAO();
         CustomerPageSupport.prepareCommonData(request, customer);
-        request.setAttribute("availableVouchers", voucherDAO.getActiveVouchers(3));
+        request.setAttribute("availableVouchers", voucherDAO.getCustomerVouchers(customer.getUserId(), 6));
         request.setAttribute("redeemOptions", voucherDAO.getRedeemOptions());
     }
 

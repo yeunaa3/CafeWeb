@@ -41,6 +41,7 @@ CREATE TABLE Users (
     phone VARCHAR(15) NULL,
     address NVARCHAR(255) NULL,
     gender NVARCHAR(10) NULL CHECK (gender IN (N'Nam', N'Nữ', N'Khác')),
+    staff_position NVARCHAR(50) NULL,
     status BIT NOT NULL DEFAULT 1, -- 1: Đang hoạt động, 0: Bị khóa (Manager khóa tài khoản - Task 7)
     points INT NOT NULL DEFAULT 0, -- Điểm tích lũy khách hàng (Task 7: 1.000đ = 1 điểm)
     role_id INT NOT NULL,
@@ -84,7 +85,9 @@ CREATE TABLE Vouchers (
     discount_value DECIMAL(10,2) NOT NULL, -- Số tiền được giảm (Ví dụ: 20000.00)
     min_order_value DECIMAL(10,2) NOT NULL DEFAULT 0, -- Điều kiện đơn tối thiểu để áp dụng
     expiry_date DATETIME NOT NULL, -- Ngày hết hạn voucher
-    status BIT NOT NULL DEFAULT 1 -- 1: Khả dụng, 0: Khóa/Hết hạn
+    status BIT NOT NULL DEFAULT 1, -- 1: Khả dụng, 0: Khóa/Hết hạn
+    owner_user_id INT NULL, -- NULL: voucher công khai; có giá trị: voucher khách đổi bằng điểm
+    FOREIGN KEY (owner_user_id) REFERENCES Users(user_id)
 );
 
 -- 7. Bảng Đơn hàng (Orders) - Đáp ứng Task 3, 4, 5, 8 (Phân loại đơn Online/Tại quầy, Cổng thanh toán)
@@ -98,6 +101,7 @@ CREATE TABLE Orders (
     discount_amount DECIMAL(10,2) NOT NULL DEFAULT 0, -- Số tiền đã được giảm
     order_date DATETIME DEFAULT GETDATE(),
     status NVARCHAR(50) NOT NULL DEFAULT 'Pending', -- Pending (Chờ duyệt), Processing, Completed (Hoàn thành), Cancelled (Hủy)
+    points_awarded BIT NOT NULL DEFAULT 0, -- Chặn cộng điểm lặp lại khi trạng thái đổi nhiều lần
     order_type NVARCHAR(50) NOT NULL DEFAULT 'At-Counter', -- Online (Task 3) hoặc At-Counter (Task 4 Máy POS)
     shipping_address NVARCHAR(255) NULL, -- Địa chỉ ship nếu là đơn Online
     payment_method NVARCHAR(50) NOT NULL DEFAULT 'Cash', -- Cash (Tiền mặt), QR-Code (Quét mã - Task 5)
@@ -141,12 +145,12 @@ GO
 INSERT INTO Roles (role_name) VALUES ('Admin'), ('Staff'), ('Customer');
 
 -- 2. Thêm các tài khoản test hệ thống (Mật khẩu mặc định đều để thuần là '123456')
-INSERT INTO Users (username, password, full_name, email, phone, role_id, points, status) VALUES 
-('admin01', '123456', N'Nguyễn Quản Lý', 'admin@cbms.com', '0912345678', 1, 0, 1),
-('staff01', '123456', N'Lê Thu Ngân', 'staff01@cbms.com', '0987654321', 2, 0, 1),
-('staff02', '123456', N'Trần Pha Chế', 'staff02@cbms.com', '0944556677', 2, 0, 0), -- Tài khoản nhân viên bị khóa để test Task 7
-('customer01', '123456', N'Phan Khách Hàng Online', 'customer01@gmail.com', '0909090909', 3, 1200, 1), -- Khách có sẵn 1200 điểm để đổi voucher
-('customer02', '123456', N'Hoàng Thành Viên Quầy', 'customer02@gmail.com', '0933221100', 3, 450, 1);
+INSERT INTO Users (username, password, full_name, email, phone, staff_position, role_id, points, status) VALUES 
+('admin01', '123456', N'Nguyễn Quản Lý', 'admin@cbms.com', '0912345678', N'Manager', 1, 0, 1),
+('staff01', '123456', N'Lê Thu Ngân', 'staff01@cbms.com', '0987654321', N'Thu ngân', 2, 0, 1),
+('staff02', '123456', N'Trần Pha Chế', 'staff02@cbms.com', '0944556677', N'Pha chế', 2, 0, 0), -- Tài khoản nhân viên bị khóa để test Task 7
+('customer01', '123456', N'Phan Khách Hàng Online', 'customer01@gmail.com', '0909090909', NULL, 3, 1200, 1), -- Khách có sẵn 1200 điểm để đổi voucher
+('customer02', '123456', N'Hoàng Thành Viên Quầy', 'customer02@gmail.com', '0933221100', NULL, 3, 450, 1);
 
 -- 3. Thêm các danh mục đồ uống mẫu
 INSERT INTO Categories (category_name, description, status) VALUES 

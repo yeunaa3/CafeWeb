@@ -17,6 +17,7 @@ public class Voucher {
     private double minOrderValue;
     private Timestamp expiryDate;
     private boolean status;
+    private Integer ownerUserId;
 
     public Voucher() {}
 
@@ -37,4 +38,11 @@ public class Voucher {
 
     public boolean isStatus() { return status; }
     public void setStatus(boolean status) { this.status = status; }
+
+    public Integer getOwnerUserId() { return ownerUserId; }
+    public void setOwnerUserId(Integer ownerUserId) { this.ownerUserId = ownerUserId; }
+
+    public boolean isExpired() {
+        return expiryDate != null && expiryDate.getTime() < System.currentTimeMillis();
+    }
 }

@@ -19,6 +19,7 @@ public class User {
     private String phone;
     private String address;
     private String gender;
+    private String staffPosition;
     private boolean status;
     private int points;
     private int roleId;
@@ -41,6 +42,8 @@ public class User {
     public void setAddress(String address) { this.address = address; }
     public String getGender() { return gender; }
     public void setGender(String gender) { this.gender = gender; }
+    public String getStaffPosition() { return staffPosition; }
+    public void setStaffPosition(String staffPosition) { this.staffPosition = staffPosition; }
     public boolean isStatus() { return status; }
     public void setStatus(boolean status) { this.status = status; }
     public int getPoints() { return points; }

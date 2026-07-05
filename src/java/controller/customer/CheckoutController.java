@@ -61,7 +61,7 @@ public class CheckoutController extends HttpServlet {
         }
 
         double cartTotal = CartController.getCartTotal(request);
-        VoucherValidationResult voucherResult = new VoucherDAO().validateVoucher(voucherCode, cartTotal);
+        VoucherValidationResult voucherResult = new VoucherDAO().validateVoucher(voucherCode, cartTotal, currentUserId);
         if (!voucherResult.isValid()) {
             request.setAttribute("error", voucherResult.getMessage());
             prepareCheckout(request);

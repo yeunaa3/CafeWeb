@@ -4,12 +4,14 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import model.User;
 
 public class UserDAO extends DBContext {
 
     public User authenticate(String usernameOrEmail, String password) {
-        String sql = "SELECT user_id, username, password, full_name, email, phone, address, gender, status, points, role_id, created_at "
+        String sql = "SELECT user_id, username, password, full_name, email, phone, address, gender, staff_position, status, points, role_id, created_at "
                 + "FROM Users WHERE (username = ? OR email = ?) AND password = ?";
         Connection con = null;
         PreparedStatement ps = null;
@@ -97,7 +99,7 @@ public class UserDAO extends DBContext {
     }
 
     public User getUserById(int userId) {
-        String sql = "SELECT user_id, username, password, full_name, email, phone, address, gender, status, points, role_id, created_at "
+        String sql = "SELECT user_id, username, password, full_name, email, phone, address, gender, staff_position, status, points, role_id, created_at "
                 + "FROM Users WHERE user_id = ?";
         Connection con = null;
         PreparedStatement ps = null;
@@ -119,7 +121,7 @@ public class UserDAO extends DBContext {
     }
 
     public User getDefaultCustomer() {
-        String sql = "SELECT TOP 1 user_id, username, password, full_name, email, phone, address, gender, status, points, role_id, created_at "
+        String sql = "SELECT TOP 1 user_id, username, password, full_name, email, phone, address, gender, staff_position, status, points, role_id, created_at "
                 + "FROM Users WHERE role_id = 3 AND status = 1 ORDER BY user_id";
         Connection con = null;
         PreparedStatement ps = null;
@@ -162,6 +164,104 @@ public class UserDAO extends DBContext {
         return false;
     }
 
+    public List<User> getStaff(String keyword) {
+        List<User> staff = new ArrayList<User>();
+        String value = keyword == null ? "" : keyword.trim();
+        String sql = "SELECT user_id, username, password, full_name, email, phone, address, gender, staff_position, "
+                + "status, points, role_id, created_at FROM Users "
+                + "WHERE role_id = 2 AND (? = '' OR full_name LIKE ? OR username LIKE ? OR email LIKE ?) "
+                + "ORDER BY status DESC, created_at DESC, user_id DESC";
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            con = getConnection();
+            ps = con.prepareStatement(sql);
+            String pattern = "%" + value + "%";
+            ps.setString(1, value);
+            ps.setString(2, pattern);
+            ps.setString(3, pattern);
+            ps.setString(4, pattern);
+            rs = ps.executeQuery();
+            while (rs.next()) staff.add(mapUser(rs));
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        } finally {
+            closeConnection(con, ps, rs);
+        }
+        return staff;
+    }
+
+    public boolean createStaff(User user) {
+        String sql = "INSERT INTO Users (username, password, full_name, email, phone, staff_position, "
+                + "status, points, role_id) VALUES (?, ?, ?, ?, ?, ?, 1, 0, 2)";
+        Connection con = null;
+        PreparedStatement ps = null;
+        try {
+            con = getConnection();
+            ps = con.prepareStatement(sql);
+            ps.setString(1, user.getUsername());
+            ps.setString(2, user.getPassword());
+            ps.setString(3, user.getFullName());
+            ps.setString(4, user.getEmail());
+            ps.setString(5, user.getPhone());
+            ps.setString(6, user.getStaffPosition());
+            return ps.executeUpdate() == 1;
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            return false;
+        } finally {
+            closeConnection(con, ps, null);
+        }
+    }
+
+    public boolean updateStaff(User user, boolean changePassword) {
+        String sql = changePassword
+                ? "UPDATE Users SET full_name=?, phone=?, email=?, staff_position=?, username=?, password=? WHERE user_id=? AND role_id=2"
+                : "UPDATE Users SET full_name=?, phone=?, email=?, staff_position=?, username=? WHERE user_id=? AND role_id=2";
+        Connection con = null;
+        PreparedStatement ps = null;
+        try {
+            con = getConnection();
+            ps = con.prepareStatement(sql);
+            ps.setString(1, user.getFullName());
+            ps.setString(2, user.getPhone());
+            ps.setString(3, user.getEmail());
+            ps.setString(4, user.getStaffPosition());
+            ps.setString(5, user.getUsername());
+            if (changePassword) {
+                ps.setString(6, user.getPassword());
+                ps.setInt(7, user.getUserId());
+            } else {
+                ps.setInt(6, user.getUserId());
+            }
+            return ps.executeUpdate() == 1;
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            return false;
+        } finally {
+            closeConnection(con, ps, null);
+        }
+    }
+
+    public boolean setStaffStatus(int userId, boolean active) {
+        String sql = "UPDATE Users SET status = ? WHERE user_id = ? AND role_id = 2";
+        Connection con = null;
+        PreparedStatement ps = null;
+        try {
+            con = getConnection();
+            ps = con.prepareStatement(sql);
+            ps.setBoolean(1, active);
+            ps.setInt(2, userId);
+            return ps.executeUpdate() == 1;
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            return false;
+        } finally {
+            closeConnection(con, ps, null);
+        }
+    }
+
     private User mapUser(ResultSet rs) throws SQLException {
         User user = new User();
         user.setUserId(rs.getInt("user_id"));
@@ -172,6 +272,7 @@ public class UserDAO extends DBContext {
         user.setPhone(rs.getString("phone"));
         user.setAddress(rs.getString("address"));
         user.setGender(rs.getString("gender"));
+        user.setStaffPosition(rs.getString("staff_position"));
         user.setStatus(rs.getBoolean("status"));
         user.setPoints(rs.getInt("points"));
         user.setRoleId(rs.getInt("role_id"));

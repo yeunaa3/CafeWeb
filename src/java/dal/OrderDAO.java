@@ -28,17 +28,41 @@ public class OrderDAO extends DBContext {
         PreparedStatement orderPs = null;
         PreparedStatement detailPs = null;
         PreparedStatement toppingPs = null;
+        PreparedStatement voucherLockPs = null;
+        PreparedStatement consumeVoucherPs = null;
         ResultSet generatedKeys = null;
+        ResultSet voucherRs = null;
 
         String orderSql = "INSERT INTO Orders (user_id, staff_id, voucher_id, total_price, discount_amount, status, order_type, shipping_address, payment_method, note) "
                 + "VALUES (?, NULL, ?, ?, ?, ?, ?, ?, ?, ?)";
         String detailSql = "INSERT INTO OrderDetails (order_id, product_id, quantity, selected_size, ice_level, sugar_level, price) "
                 + "VALUES (?, ?, ?, ?, ?, ?, ?)";
         String toppingSql = "INSERT INTO OrderDetailToppings (order_detail_id, topping_id, topping_price) VALUES (?, ?, ?)";
+        String voucherLockSql = "SELECT owner_user_id, status FROM Vouchers WITH (UPDLOCK) WHERE voucher_id = ?";
+        String consumeVoucherSql = "UPDATE Vouchers SET status = 0 WHERE voucher_id = ? AND status = 1";
 
         try {
             con = getConnection();
             con.setAutoCommit(false);
+
+            boolean consumePrivateVoucher = false;
+            if (voucherId != null) {
+                voucherLockPs = con.prepareStatement(voucherLockSql);
+                voucherLockPs.setInt(1, voucherId);
+                voucherRs = voucherLockPs.executeQuery();
+                if (!voucherRs.next() || !voucherRs.getBoolean("status")) {
+                    throw new SQLException("Voucher is unavailable");
+                }
+                Object owner = voucherRs.getObject("owner_user_id");
+                if (owner != null) {
+                    if (userId == null || ((Number) owner).intValue() != userId.intValue()) {
+                        throw new SQLException("Voucher owner mismatch");
+                    }
+                    consumePrivateVoucher = true;
+                }
+                voucherRs.close();
+                voucherRs = null;
+            }
 
             orderPs = con.prepareStatement(orderSql, Statement.RETURN_GENERATED_KEYS);
             if (userId == null) {
@@ -97,6 +121,14 @@ public class OrderDAO extends DBContext {
                 }
             }
 
+            if (consumePrivateVoucher) {
+                consumeVoucherPs = con.prepareStatement(consumeVoucherSql);
+                consumeVoucherPs.setInt(1, voucherId);
+                if (consumeVoucherPs.executeUpdate() != 1) {
+                    throw new SQLException("Voucher was already used");
+                }
+            }
+
             con.commit();
             return orderId;
         } catch (SQLException ex) {
@@ -105,7 +137,10 @@ public class OrderDAO extends DBContext {
             }
             throw ex;
         } finally {
+            if (voucherRs != null) voucherRs.close();
             if (generatedKeys != null) generatedKeys.close();
+            if (consumeVoucherPs != null) consumeVoucherPs.close();
+            if (voucherLockPs != null) voucherLockPs.close();
             if (toppingPs != null) toppingPs.close();
             if (detailPs != null) detailPs.close();
             if (orderPs != null) orderPs.close();
@@ -190,10 +225,12 @@ public class OrderDAO extends DBContext {
         PreparedStatement selectPs = null;
         PreparedStatement updateOrderPs = null;
         PreparedStatement updatePointPs = null;
+        PreparedStatement markAwardedPs = null;
         ResultSet rs = null;
-        String selectSql = "SELECT user_id, total_price, status FROM Orders WITH (UPDLOCK) WHERE order_id = ?";
+        String selectSql = "SELECT user_id, total_price, status, points_awarded FROM Orders WITH (UPDLOCK) WHERE order_id = ?";
         String updateOrderSql = "UPDATE Orders SET status = ? WHERE order_id = ?";
         String updatePointSql = "UPDATE Users SET points = points + ? WHERE user_id = ?";
+        String markAwardedSql = "UPDATE Orders SET points_awarded = 1 WHERE order_id = ?";
         try {
             con = getConnection();
             con.setAutoCommit(false);
@@ -207,18 +244,25 @@ public class OrderDAO extends DBContext {
             boolean hasUser = !rs.wasNull();
             double totalPrice = rs.getDouble("total_price");
             String oldStatus = rs.getString("status");
+            boolean pointsAwarded = rs.getBoolean("points_awarded");
 
             updateOrderPs = con.prepareStatement(updateOrderSql);
             updateOrderPs.setString(1, newStatus);
             updateOrderPs.setInt(2, orderId);
             updateOrderPs.executeUpdate();
 
-            if (hasUser && "Completed".equalsIgnoreCase(newStatus) && !"Completed".equalsIgnoreCase(oldStatus)) {
+            if (hasUser && !pointsAwarded && "Completed".equalsIgnoreCase(newStatus)
+                    && !"Completed".equalsIgnoreCase(oldStatus)) {
                 int earnedPoints = (int) Math.floor(totalPrice / 1000);
-                updatePointPs = con.prepareStatement(updatePointSql);
-                updatePointPs.setInt(1, earnedPoints);
-                updatePointPs.setInt(2, userId);
-                updatePointPs.executeUpdate();
+                if (earnedPoints > 0) {
+                    updatePointPs = con.prepareStatement(updatePointSql);
+                    updatePointPs.setInt(1, earnedPoints);
+                    updatePointPs.setInt(2, userId);
+                    updatePointPs.executeUpdate();
+                }
+                markAwardedPs = con.prepareStatement(markAwardedSql);
+                markAwardedPs.setInt(1, orderId);
+                markAwardedPs.executeUpdate();
             }
 
             con.commit();
@@ -227,6 +271,7 @@ public class OrderDAO extends DBContext {
             throw ex;
         } finally {
             if (rs != null) rs.close();
+            if (markAwardedPs != null) markAwardedPs.close();
             if (updatePointPs != null) updatePointPs.close();
             if (updateOrderPs != null) updateOrderPs.close();
             if (selectPs != null) selectPs.close();
