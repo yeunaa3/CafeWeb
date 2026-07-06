@@ -84,6 +84,7 @@ public class LoginController extends HttpServlet {
 
     private String destinationFor(User user) {
         if (user.getRoleId() == 1) return "/manager/dashboard";
+        if (user.getRoleId() == 2 && "Thu ngân".equalsIgnoreCase(user.getStaffPosition())) return "/cashier/order";
         if (user.getRoleId() == 3) return "/profile";
         return "/home";
     }

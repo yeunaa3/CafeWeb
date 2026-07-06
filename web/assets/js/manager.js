@@ -8,4 +8,10 @@
             if (!window.confirm(this.getAttribute("data-confirm"))) event.preventDefault();
         });
     }
+    var automaticSelects = document.querySelectorAll("[data-submit-on-change]");
+    for (var selectIndex = 0; selectIndex < automaticSelects.length; selectIndex++) {
+        automaticSelects[selectIndex].addEventListener("change", function () {
+            if (this.form) this.form.submit();
+        });
+    }
 })();

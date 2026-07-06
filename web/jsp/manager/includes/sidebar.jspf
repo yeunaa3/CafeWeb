@@ -7,13 +7,11 @@
         <a class="${activePage == 'orders' ? 'active' : ''}" href="${pageContext.request.contextPath}/manager/orders"><svg viewBox="0 0 24 24"><path d="M3 3h2l2 13h11l3-9H6"/><circle cx="9" cy="20" r="1"/><circle cx="18" cy="20" r="1"/></svg><span>Quản lý đơn hàng</span></a>
         <a class="${activePage == 'employees' ? 'active' : ''}" href="${pageContext.request.contextPath}/manager/employees"><svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg><span>Nhân viên</span></a>
         <a class="${activePage == 'vouchers' ? 'active' : ''}" href="${pageContext.request.contextPath}/manager/vouchers"><svg viewBox="0 0 24 24"><path d="M2 9a3 3 0 0 0 0 6v4a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-4a3 3 0 0 0 0-6V5a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z"/><path d="M13 5v2"/><path d="M13 17v2"/><path d="M13 11v2"/></svg><span>Mã giảm giá</span></a>
-        <a class="${activePage == 'invoices' ? 'active' : ''}" href="${pageContext.request.contextPath}/manager/invoices"><svg viewBox="0 0 24 24"><path d="M6 2h9l5 5v15H6z"/><path d="M14 2v6h6"/><path d="M9 13h7"/><path d="M9 17h7"/></svg><span>Hóa đơn</span></a>
         <a class="${activePage == 'products' ? 'active' : ''}" href="${pageContext.request.contextPath}/manager/products"><svg viewBox="0 0 24 24"><path d="m21 8-9 5-9-5 9-5z"/><path d="m3 8 9 5 9-5v8l-9 5-9-5z"/></svg><span>Sản phẩm</span></a>
-        <a class="${activePage == 'reports' ? 'active' : ''}" href="${pageContext.request.contextPath}/manager/reports"><svg viewBox="0 0 24 24"><path d="M4 19V9"/><path d="M10 19V5"/><path d="M16 19v-7"/><path d="M22 19H2"/></svg><span>Báo cáo</span></a>
     </nav>
-    <span class="nav-caption">ADMIN</span>
+    <span class="nav-caption">TÀI KHOẢN</span>
     <nav class="manager-nav">
-        <a class="${activePage == 'admins' ? 'active' : ''}" href="${pageContext.request.contextPath}/manager/admins"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/><path d="M12 14v3"/></svg><span>Manage Admins</span></a>
+        <a class="${activePage == 'account' ? 'active' : ''}" href="${pageContext.request.contextPath}/manager/account"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/><path d="M12 14v3"/></svg><span>Tài khoản của tôi</span></a>
         <a href="${pageContext.request.contextPath}/logout"><svg viewBox="0 0 24 24"><path d="m10 17 5-5-5-5"/><path d="M15 12H3"/><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/></svg><span>Đăng xuất</span></a>
     </nav>
 </aside>

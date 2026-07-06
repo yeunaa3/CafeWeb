@@ -17,6 +17,7 @@ public class OrderDetail {
     private String iceLevel;
     private String sugarLevel;
     private double price;
+    private String note;
 
     public OrderDetail() {}
 
@@ -43,4 +44,7 @@ public class OrderDetail {
 
     public double getPrice() { return price; }
     public void setPrice(double price) { this.price = price; }
+
+    public String getNote() { return note; }
+    public void setNote(String note) { this.note = note; }
 }

@@ -1,0 +1,16 @@
+<%@page pageEncoding="UTF-8"%>
+<aside class="manager-sidebar cashier-sidebar">
+    <a class="manager-brand" href="${pageContext.request.contextPath}/cashier/order">Cafe &amp; Bubble tea</a>
+    <span class="nav-caption">THU NGÂN</span>
+    <nav class="manager-nav" aria-label="Thu ngân">
+        <a class="${activePage == 'order' ? 'active' : ''}" href="${pageContext.request.contextPath}/cashier/order"><svg viewBox="0 0 24 24"><path d="M3 3h2l2 13h11l3-9H6"/><circle cx="9" cy="20" r="1"/><circle cx="18" cy="20" r="1"/></svg><span>Đặt hàng tại quầy</span></a>
+        <a class="${activePage == 'invoices' ? 'active' : ''}" href="${pageContext.request.contextPath}/cashier/invoices"><svg viewBox="0 0 24 24"><path d="M6 2h9l5 5v15H6z"/><path d="M14 2v6h6M9 13h7M9 17h7"/></svg><span>Hóa đơn</span></a>
+        <a class="${activePage == 'products' ? 'active' : ''}" href="${pageContext.request.contextPath}/cashier/products"><svg viewBox="0 0 24 24"><path d="m21 8-9 5-9-5 9-5z"/><path d="m3 8 9 5 9-5v8l-9 5-9-5z"/></svg><span>Sản phẩm</span></a>
+        <a class="${activePage == 'order-management' ? 'active' : ''}" href="${pageContext.request.contextPath}/cashier/order-management"><svg viewBox="0 0 24 24"><path d="M4 5h16M4 12h16M4 19h10"/><circle cx="19" cy="19" r="2"/></svg><span>Quản lý đơn hàng</span></a>
+    </nav>
+    <span class="nav-caption">TÀI KHOẢN</span>
+    <nav class="manager-nav">
+        <a class="${activePage == 'account' ? 'active' : ''}" href="${pageContext.request.contextPath}/cashier/account"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg><span>Tài khoản thu ngân</span></a>
+        <a href="${pageContext.request.contextPath}/logout"><svg viewBox="0 0 24 24"><path d="m10 17 5-5-5-5M15 12H3M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/></svg><span>Đăng xuất</span></a>
+    </nav>
+</aside>

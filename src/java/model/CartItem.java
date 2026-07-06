@@ -22,6 +22,7 @@ public class CartItem {
     private String iceLevel;
     private String sugarLevel;
     private double drinkPrice;
+    private String note;
     private List<Topping> toppings;
 
     public CartItem() {
@@ -53,6 +54,7 @@ public class CartItem {
         if (!safeEquals(selectedSize, other.selectedSize)) return false;
         if (!safeEquals(iceLevel, other.iceLevel)) return false;
         if (!safeEquals(sugarLevel, other.sugarLevel)) return false;
+        if (!safeEquals(note, other.note)) return false;
         return getToppingSignature().equals(other.getToppingSignature());
     }
 
@@ -97,6 +99,9 @@ public class CartItem {
 
     public double getDrinkPrice() { return drinkPrice; }
     public void setDrinkPrice(double drinkPrice) { this.drinkPrice = drinkPrice; }
+
+    public String getNote() { return note; }
+    public void setNote(String note) { this.note = note; }
 
     public List<Topping> getToppings() { return toppings; }
     public void setToppings(List<Topping> toppings) { this.toppings = toppings; }

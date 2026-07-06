@@ -1,6 +1,7 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <!DOCTYPE html>
 <html>
     <head>
@@ -18,7 +19,7 @@
                     <a class="cart-link" href="${pageContext.request.contextPath}/checkout">Giỏ Hàng <span class="cart-count">${cartCount}</span></a>
                     <a href="${pageContext.request.contextPath}/home#contact">Liên Hệ</a>
                     <c:choose>
-                        <c:when test="${not empty sessionScope.user}"><a class="login-button account-button" href="${pageContext.request.contextPath}/profile">Tài khoản</a></c:when>
+                        <c:when test="${not empty sessionScope.user}"><a class="customer-nav-avatar" href="${pageContext.request.contextPath}/profile" title="Thông tin cá nhân" aria-label="Thông tin cá nhân">${fn:substring(sessionScope.user.fullName,0,1)}</a></c:when>
                         <c:otherwise><a class="login-button" href="${pageContext.request.contextPath}/login?returnUrl=/checkout">Đăng nhập</a></c:otherwise>
                     </c:choose>
                 </nav>

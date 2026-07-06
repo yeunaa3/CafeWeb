@@ -800,6 +800,18 @@ button:disabled {
     text-decoration: none;
     cursor: pointer;
 }
+.customer-nav-avatar {
+    width: 38px;
+    height: 38px;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: #765038;
+    color: #fff;
+    font-size: 13px;
+    font-weight: 800;
+}
+.customer-nav-avatar:hover { background: #30231b; }
 
 .sidebar-link .ui-icon {
     width: 19px;

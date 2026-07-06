@@ -1,7 +1,6 @@
 package controller.manager;
 
-import dal.UserDAO;
-import dal.VoucherDAO;
+import dal.OrderDAO;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -17,8 +16,9 @@ public class ManagerDashboardController extends HttpServlet {
             throws ServletException, IOException {
         if (ManagerPageSupport.requireManager(request, response) == null) return;
         ManagerPageSupport.prepare(request, "dashboard", "Dashboard");
-        request.setAttribute("staffCount", new UserDAO().getStaff("").size());
-        request.setAttribute("voucherCount", new VoucherDAO().getAllVouchers("").size());
+        int days = "7".equals(request.getParameter("days")) ? 7 : 30;
+        request.setAttribute("days", days);
+        request.setAttribute("dashboard", new OrderDAO().getDashboardSummary(days));
         request.getRequestDispatcher("/jsp/manager/dashboard.jsp").forward(request, response);
     }
 }
