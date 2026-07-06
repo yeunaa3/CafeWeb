@@ -14,7 +14,6 @@ import java.util.logging.Logger;
 public class DBContext {
 
     public Connection getConnection() {
-        Connection connection = null;
         try (InputStream inputStream = getClass().getClassLoader()
                 .getResourceAsStream("../ConnectDB.properties")) {
             if (inputStream == null) {
@@ -27,12 +26,29 @@ public class DBContext {
             String password = environmentOrDefault("CBMS_DB_PASSWORD", properties.getProperty("password"));
             String url = environmentOrDefault("CBMS_DB_URL", properties.getProperty("url"));
 
+            requireConfiguration("url", url);
+            requireConfiguration("userID", user);
+            if (password == null) {
+                throw new IOException("Database configuration 'password' is missing");
+            }
+
             Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
-            connection = DriverManager.getConnection(url, user, password);
+            return DriverManager.getConnection(url, user, password);
         } catch (ClassNotFoundException | SQLException | IOException ex) {
-            Logger.getLogger(DBContext.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(DBContext.class.getName()).log(
+                    Level.SEVERE,
+                    "Cannot connect to CBMS database. Check SQL Server service, TCP/IP/port, "
+                    + "database name, SQL Authentication and ConnectDB.properties.",
+                    ex);
+            throw new IllegalStateException(
+                    "Cannot connect to CBMS database. See the server log for the root cause.", ex);
         }
-        return connection;
+    }
+
+    private void requireConfiguration(String name, String value) throws IOException {
+        if (value == null || value.trim().isEmpty()) {
+            throw new IOException("Database configuration '" + name + "' is missing");
+        }
     }
 
     private String environmentOrDefault(String name, String defaultValue) {

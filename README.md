@@ -150,3 +150,33 @@ Sau khi Clean and Build, file deploy nằm tại:
 URL mặc định:
 
 `http://localhost:8080/CafeWeb/`
+
+## 9. HTTP 500: `con is null` hoặc không kết nối được database
+
+Lỗi này xảy ra khi SQL Server từ chối kết nối trước khi DAO chạy câu SQL. Không chỉ kiểm tra username/password; trên máy mới cần kiểm tra lần lượt:
+
+1. Mở **SQL Server Configuration Manager**, bảo đảm service của instance đang ở trạng thái `Running`.
+2. Trong **SQL Server Network Configuration**, bật `TCP/IP`, đặt TCP Port là `1433`, rồi restart SQL Server service.
+3. Bật chế độ **SQL Server and Windows Authentication mode**; bảo đảm login `sa` được enable.
+4. Dùng chính tài khoản trong `ConnectDB.properties` đăng nhập thử bằng SSMS với server `localhost,1433`.
+5. Kiểm tra database `CBMS` đã tồn tại và đã chạy `CBMS.sql` hoặc các migration cần thiết.
+6. Kiểm tra `web/WEB-INF/ConnectDB.properties` có đúng URL, user và password của máy đó.
+7. Trong Command Prompt chạy `set CBMS_DB` hoặc PowerShell chạy `Get-ChildItem Env:CBMS_DB*`. Xóa/sửa biến cũ vì các biến này được ưu tiên hơn file properties.
+8. Stop Tomcat, chạy **Clean and Build**, rồi Run lại để WAR mới chứa properties và JDBC driver.
+
+URL chuẩn khi SQL Server chạy cổng cố định:
+
+```properties
+url=jdbc:sqlserver://localhost:1433;databaseName=CBMS;encrypt=true;trustServerCertificate=true
+userID=sa
+password=mat_khau_cua_may_do
+```
+
+Nếu dùng instance `SQLEXPRESS` với cổng động, nên cấu hình instance dùng cổng cố định `1433`. Chỉ sửa username/password trong khi SQL Server thực tế đang chạy ở instance hoặc port khác vẫn sẽ kết nối thất bại.
+
+`DBContext` không trả về `null` khi kết nối lỗi. Hãy đọc dòng `Caused by:` trong Tomcat Output/log để biết nguyên nhân gốc:
+
+- `Login failed for user`: sai tài khoản/mật khẩu, login bị khóa hoặc chưa bật SQL Authentication.
+- `The TCP/IP connection ... has failed`: SQL Server chưa chạy, TCP/IP chưa bật, sai port hoặc firewall chặn.
+- `Cannot open database "CBMS"`: database chưa được tạo hoặc login chưa có quyền.
+- `ClassNotFoundException ... SQLServerDriver`: `sqljdbc42.jar` chưa được đóng vào WAR.

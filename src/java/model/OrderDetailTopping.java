@@ -11,6 +11,7 @@ package model;
 public class OrderDetailTopping {
     private int orderDetailId;
     private int toppingId;
+    private int quantity;
     private double toppingPrice;
 
     public OrderDetailTopping() {}
@@ -20,6 +21,9 @@ public class OrderDetailTopping {
 
     public int getToppingId() { return toppingId; }
     public void setToppingId(int toppingId) { this.toppingId = toppingId; }
+
+    public int getQuantity() { return quantity; }
+    public void setQuantity(int quantity) { this.quantity = quantity; }
 
     public double getToppingPrice() { return toppingPrice; }
     public void setToppingPrice(double toppingPrice) { this.toppingPrice = toppingPrice; }

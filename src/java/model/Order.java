@@ -17,12 +17,15 @@ public class Order {
     private Integer voucherId;
     private double totalPrice;
     private double discountAmount;
+    private double shippingFee;
     private Timestamp orderDate;
     private String status;
     private String orderType;
     private String shippingAddress;
+    private String shippingPhone;
     private String paymentMethod;
     private String note;
+    private boolean pointsAwarded;
 
     public Order() {}
 
@@ -44,6 +47,9 @@ public class Order {
     public double getDiscountAmount() { return discountAmount; }
     public void setDiscountAmount(double discountAmount) { this.discountAmount = discountAmount; }
 
+    public double getShippingFee() { return shippingFee; }
+    public void setShippingFee(double shippingFee) { this.shippingFee = shippingFee; }
+
     public Timestamp getOrderDate() { return orderDate; }
     public void setOrderDate(Timestamp orderDate) { this.orderDate = orderDate; }
 
@@ -56,9 +62,15 @@ public class Order {
     public String getShippingAddress() { return shippingAddress; }
     public void setShippingAddress(String shippingAddress) { this.shippingAddress = shippingAddress; }
 
+    public String getShippingPhone() { return shippingPhone; }
+    public void setShippingPhone(String shippingPhone) { this.shippingPhone = shippingPhone; }
+
     public String getPaymentMethod() { return paymentMethod; }
     public void setPaymentMethod(String paymentMethod) { this.paymentMethod = paymentMethod; }
 
     public String getNote() { return note; }
     public void setNote(String note) { this.note = note; }
+
+    public boolean isPointsAwarded() { return pointsAwarded; }
+    public void setPointsAwarded(boolean pointsAwarded) { this.pointsAwarded = pointsAwarded; }
 }

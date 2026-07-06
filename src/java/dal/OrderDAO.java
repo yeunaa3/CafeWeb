@@ -33,8 +33,8 @@ public class OrderDAO extends DBContext {
         ResultSet generatedKeys = null;
         ResultSet voucherRs = null;
 
-        String orderSql = "INSERT INTO Orders (user_id, staff_id, voucher_id, total_price, discount_amount, status, order_type, shipping_address, payment_method, note) "
-                + "VALUES (?, NULL, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String orderSql = "INSERT INTO Orders (user_id, staff_id, voucher_id, total_price, discount_amount, status, order_type, shipping_address, shipping_phone, payment_method, note) "
+                + "VALUES (?, NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         String detailSql = "INSERT INTO OrderDetails (order_id, product_id, quantity, selected_size, ice_level, sugar_level, price) "
                 + "VALUES (?, ?, ?, ?, ?, ?, ?)";
         String toppingSql = "INSERT INTO OrderDetailToppings (order_detail_id, topping_id, topping_price) VALUES (?, ?, ?)";
@@ -82,8 +82,9 @@ public class OrderDAO extends DBContext {
             orderPs.setString(5, "Pending");
             orderPs.setString(6, "Online");
             orderPs.setString(7, shippingAddress);
-            orderPs.setString(8, "Cash");
-            orderPs.setString(9, buildOrderNote(phone, note));
+            orderPs.setString(8, phone);
+            orderPs.setString(9, "Cash");
+            orderPs.setString(10, note == null || note.trim().isEmpty() ? null : note.trim());
             orderPs.executeUpdate();
 
             generatedKeys = orderPs.getGeneratedKeys();
