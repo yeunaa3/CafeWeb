@@ -157,3 +157,393 @@ select.order-state { max-width:130px; outline:0; cursor:pointer; }
 @media (max-width:1050px) { .manager-shell { grid-template-columns:78px minmax(0,1fr); } .manager-sidebar { padding:24px 10px; } .manager-brand { padding:0 4px 24px; font-size:0; text-align:center; } .manager-brand::after { content:"CB"; font-size:16px; } .nav-caption,.manager-nav span { display:none; } .manager-nav a { justify-content:center; padding:0; } .metric-grid { grid-template-columns:repeat(2,minmax(0,1fr)); } }
 @media (max-width:1050px) { .dashboard-grid { grid-template-columns:1fr; } .recent-orders-panel { grid-column:auto; } }
 @media (max-width:720px) { .manager-page { padding:0; } .manager-shell { min-height:100vh; grid-template-columns:1fr; } .manager-sidebar { position:fixed; z-index:30; top:0; bottom:0; left:0; width:250px; min-height:100vh; transform:translateX(-100%); transition:transform .2s; box-shadow:12px 0 30px rgba(48,35,27,.16); } .manager-page.sidebar-open .manager-sidebar { transform:translateX(0); } .manager-brand { font-size:15px; text-align:left; } .manager-brand::after { content:none; } .nav-caption,.manager-nav span { display:block; } .manager-nav a { justify-content:flex-start; padding:0 12px; } .sidebar-toggle { display:grid; } .manager-header { height:68px; padding:0 14px; } .manager-header h1 { font-size:19px; } .manager-content { padding:16px 12px; } .metric-grid { grid-template-columns:1fr; } .toolbar-band { align-items:stretch; flex-direction:column; } .toolbar-band form,.search-box { width:100%; } .toolbar-actions { justify-content:flex-end; } .secondary-action { display:none; } .form-grid,.order-detail-grid { grid-template-columns:1fr; } .manager-modal { padding:10px; } .dialog-heading { padding:20px 18px 8px; } .manager-form { padding:16px 18px 20px; } .dashboard-panel { padding:15px; } .revenue-bars { gap:3px; } .revenue-column>span { display:none; } .account-panel { padding:16px; } .account-summary { align-items:flex-start; flex-wrap:wrap; } .account-summary>a { margin-left:82px; } }
+
+/* =========================================================
+   MODERN CLEAN UI - Lop giao dien hien dai cho Admin/Cashier
+   Dat cuoi file de override UI cu va giu JSP it thay doi.
+   ========================================================= */
+:root {
+    --ui-font: "Inter", "Be Vietnam Pro", "Segoe UI", Arial, sans-serif;
+    --ui-bg: #f6f3ee;
+    --ui-card: #ffffff;
+    --ui-line: #edf2f7;
+    --ui-line-strong: #e5e7eb;
+    --ui-text: #1f2933;
+    --ui-muted: #6b7280;
+    --ui-soft: #f8fafc;
+    --ui-coffee: #6f4e37;
+    --ui-coffee-dark: #36261d;
+    --ui-accent: #d9893d;
+    --ui-focus: rgba(217, 137, 61, .18);
+    --ui-shadow: 0 18px 45px rgba(54, 38, 29, .08);
+}
+
+html,
+body {
+    width: 100%;
+    min-height: 100%;
+    font-family: var(--ui-font);
+    background: var(--ui-bg);
+    color: var(--ui-text);
+}
+
+button,
+input,
+select,
+textarea {
+    font-family: inherit;
+}
+
+/* Full man hinh: bo nen den va khung 1440px bi co lai. */
+.manager-page {
+    min-height: 100vh;
+    padding: 0;
+    background: var(--ui-bg);
+}
+
+.manager-shell {
+    width: 100%;
+    max-width: none;
+    min-height: 100vh;
+    margin: 0;
+    grid-template-columns: 264px minmax(0, 1fr);
+    background: transparent;
+}
+
+.manager-main {
+    min-width: 0;
+    background: var(--ui-bg);
+}
+
+.manager-content {
+    width: min(100%, 1500px);
+    margin: 0 auto;
+    padding: 32px;
+}
+
+/* Sidebar sang, thoang, active co vach cam thay vi nen den. */
+.manager-sidebar {
+    min-height: 100vh;
+    padding: 30px 18px;
+    background: rgba(255, 253, 249, .96);
+    border-right: 1px solid var(--ui-line-strong);
+    box-shadow: 8px 0 30px rgba(54, 38, 29, .04);
+}
+
+.manager-brand {
+    padding: 0 14px 34px;
+    color: var(--ui-coffee-dark);
+    font-size: 16px;
+    font-weight: 800;
+}
+
+.nav-caption {
+    margin: 16px 14px 10px;
+    color: #9ca3af;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: .08em;
+}
+
+.manager-nav {
+    gap: 8px;
+}
+
+.manager-nav a {
+    position: relative;
+    min-height: 46px;
+    padding: 0 14px;
+    border-left: 0;
+    border-radius: 2px;
+    color: #5f6368;
+    font-size: 13px;
+    font-weight: 650;
+}
+
+.manager-nav a::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 10px;
+    bottom: 10px;
+    width: 3px;
+    border-radius: 9999px;
+}
+
+.manager-nav a:hover {
+    background: #f7f0e8;
+    color: var(--ui-coffee);
+}
+
+.manager-nav a.active {
+    background: #fff3e5;
+    color: var(--ui-coffee-dark);
+    box-shadow: inset 0 0 0 1px rgba(217, 137, 61, .12);
+}
+
+.manager-nav a.active::before {
+    background: var(--ui-accent);
+}
+
+/* Header gon, co badge so thong bao. */
+.manager-header {
+    height: 76px;
+    padding: 0 32px;
+    border-bottom: 1px solid var(--ui-line);
+    background: rgba(255, 253, 249, .94);
+}
+
+.manager-header h1 {
+    color: var(--ui-text);
+    font-size: 24px;
+    font-weight: 800;
+}
+
+.header-icon,
+.manager-avatar,
+.sidebar-toggle {
+    border-radius: 2px;
+}
+
+.header-icon:hover {
+    background: #fff3e5;
+    color: var(--ui-coffee);
+}
+
+.header-icon span {
+    box-shadow: 0 0 0 2px #fffdf9;
+}
+
+.manager-avatar {
+    overflow: hidden;
+}
+
+.manager-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Search gom thanh mot khoi, focus ro rang. */
+.toolbar-band {
+    min-height: auto;
+    gap: 18px;
+    margin-bottom: 22px;
+}
+
+.search-box {
+    width: min(520px, 100%);
+    height: 46px;
+    grid-template-columns: 44px minmax(180px, 1fr) 44px;
+    border: 1px solid var(--ui-line-strong);
+    border-radius: 8px;
+    background: var(--ui-card);
+    box-shadow: 0 8px 24px rgba(54, 38, 29, .04);
+}
+
+.search-box:focus-within {
+    border-color: #c99a6b;
+    box-shadow: 0 0 0 4px var(--ui-focus), 0 12px 30px rgba(54, 38, 29, .06);
+}
+
+.search-box input {
+    height: 44px;
+    background: transparent;
+    color: var(--ui-text);
+    font-size: 14px;
+}
+
+.search-box button {
+    width: 34px;
+    height: 34px;
+    margin: 0 6px 0 0;
+    padding: 0;
+    border-radius: 2px;
+    background: #fff3e5;
+    color: transparent;
+    font-size: 0;
+    position: relative;
+}
+
+.search-box button::before {
+    content: "";
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    left: 9px;
+    top: 8px;
+    border: 2px solid var(--ui-coffee);
+    border-radius: 9999px;
+}
+
+.search-box button::after {
+    content: "";
+    position: absolute;
+    width: 8px;
+    height: 2px;
+    left: 20px;
+    top: 22px;
+    background: var(--ui-coffee);
+    transform: rotate(45deg);
+}
+
+/* Table: bo border tho, tang padding, hover nhe. */
+.data-panel,
+.dashboard-panel,
+.account-panel,
+.manager-dialog {
+    border: 1px solid var(--ui-line-strong);
+    border-radius: 2px;
+    background: var(--ui-card);
+    box-shadow: var(--ui-shadow);
+}
+
+.manager-table {
+    border-collapse: separate;
+    border-spacing: 0;
+    color: var(--ui-text);
+    font-size: 14px;
+}
+
+.manager-table th {
+    padding: 15px 16px;
+    border-bottom: 1px solid var(--ui-line);
+    background: #fbfcfd;
+    color: #7b8491;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+}
+
+.manager-table td {
+    padding: 16px;
+    border-top: 0;
+    border-bottom: 1px solid var(--ui-line);
+    color: #374151;
+}
+
+.manager-table tbody tr:hover {
+    background: var(--ui-soft);
+}
+
+.manager-table tbody tr:last-child td {
+    border-bottom: 0;
+}
+
+.manager-table td:first-child strong,
+.manager-table td > a,
+.compact-table td > a {
+    color: var(--ui-coffee-dark);
+    font-weight: 800;
+}
+
+.manager-table td:nth-child(2),
+.manager-table .order-items,
+.person-cell small,
+.product-cell small,
+.result-count,
+.table-footer {
+    color: var(--ui-muted);
+}
+
+/* Badge trang thai pastel dang vien thuoc. */
+.order-state,
+.state-pill,
+.order-type {
+    min-height: 28px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 12px;
+    border: 1px solid transparent;
+    border-radius: 9999px;
+    font-size: 11px;
+    font-weight: 800;
+    white-space: nowrap;
+}
+
+.state-pending { background: #fff7d6; color: #946200; }
+.state-approved { background: #f4ebe2; color: #70462d; }
+.state-processing { background: #def7f3; color: #0f766e; }
+.state-ready { background: #ede9fe; color: #5b45a6; }
+.state-delivering { background: #fce7f3; color: #9d2769; }
+.state-completed,
+.state-pill.active { background: #dcfce7; color: #166534; }
+.state-cancelled,
+.state-refunded,
+.state-pill.locked { background: #fee2e2; color: #991b1b; }
+
+/* Avatar upload: click vao anh de chon file. */
+.avatar-upload-form {
+    margin: 0;
+}
+
+.account-avatar-picker {
+    position: relative;
+    width: 72px;
+    height: 72px;
+    display: grid;
+    place-items: center;
+    overflow: hidden;
+    border-radius: 50%;
+    background: var(--ui-coffee);
+    color: #fff;
+    cursor: pointer;
+    font-size: 26px;
+    font-weight: 800;
+}
+
+.account-avatar-picker img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.account-avatar-picker span {
+    position: absolute;
+    left: 7px;
+    right: 7px;
+    bottom: 6px;
+    padding: 3px 0;
+    border-radius: 9999px;
+    background: var(--ui-accent);
+    color: #fff;
+    font-size: 10px;
+    text-align: center;
+}
+
+.account-avatar-picker input {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    cursor: pointer;
+}
+
+.primary-action,
+.secondary-action,
+.dialog-submit,
+.detail-button,
+.row-actions a,
+.row-actions button,
+.pagination button,
+.pagination b,
+.manager-form input,
+.manager-form select,
+.manager-form textarea,
+.account-form input,
+.account-form select {
+    border-radius: 2px;
+}
+
+@media (max-width: 1050px) {
+    .manager-shell { grid-template-columns: 82px minmax(0, 1fr); }
+    .manager-content { padding: 24px; }
+}
+
+@media (max-width: 720px) {
+    .manager-shell { grid-template-columns: 1fr; }
+    .manager-sidebar { width: 268px; }
+    .manager-content { width: 100%; padding: 18px 14px; }
+    .search-box { width: 100%; }
+}

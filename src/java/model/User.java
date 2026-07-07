@@ -23,6 +23,7 @@ public class User {
     private boolean status;
     private int points;
     private int roleId;
+    private String avatarUrl;
     private Timestamp createdAt;
 
     public User() {}
@@ -50,6 +51,8 @@ public class User {
     public void setPoints(int points) { this.points = points; }
     public int getRoleId() { return roleId; }
     public void setRoleId(int roleId) { this.roleId = roleId; }
+    public String getAvatarUrl() { return avatarUrl; }
+    public void setAvatarUrl(String avatarUrl) { this.avatarUrl = avatarUrl; }
     public Timestamp getCreatedAt() { return createdAt; }
     public void setCreatedAt(Timestamp createdAt) { this.createdAt = createdAt; }
 }

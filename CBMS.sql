@@ -41,6 +41,7 @@ CREATE TABLE dbo.Users (
     address NVARCHAR(255) NULL,
     gender NVARCHAR(10) NULL,
     staff_position NVARCHAR(50) NULL,
+    avatar_url VARCHAR(255) NULL,
     status BIT NOT NULL CONSTRAINT DF_Users_Status DEFAULT (1),
     points INT NOT NULL CONSTRAINT DF_Users_Points DEFAULT (0),
     role_id INT NOT NULL,

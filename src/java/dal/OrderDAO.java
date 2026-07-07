@@ -164,6 +164,25 @@ public class OrderDAO extends DBContext {
         return total;
     }
 
+    public int countOrdersByStatus(String status) {
+        String sql = "SELECT COUNT(*) FROM Orders WHERE status = ?";
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            con = getConnection();
+            ps = con.prepareStatement(sql);
+            ps.setString(1, status);
+            rs = ps.executeQuery();
+            return rs.next() ? rs.getInt(1) : 0;
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            return 0;
+        } finally {
+            closeConnection(con, ps, rs);
+        }
+    }
+
     public int createCounterOrder(int staffId, List<CartItem> cart, String paymentMethod,
             Integer voucherId, double discountAmount, double amountReceived) throws SQLException {
         if (cart == null || cart.isEmpty()) throw new SQLException("Cart is empty");

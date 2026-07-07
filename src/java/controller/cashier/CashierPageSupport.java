@@ -1,5 +1,6 @@
 package controller.cashier;
 
+import dal.OrderDAO;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -30,6 +31,7 @@ public final class CashierPageSupport {
     public static void prepare(HttpServletRequest request, String activePage, String pageTitle) {
         request.setAttribute("activePage", activePage);
         request.setAttribute("pageTitle", pageTitle);
+        request.setAttribute("pendingOrderCount", new OrderDAO().countOrdersByStatus("Pending"));
         HttpSession session = request.getSession(false);
         if (session != null) {
             Object success = session.getAttribute("cashierSuccess");

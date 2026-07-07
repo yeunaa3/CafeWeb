@@ -19,7 +19,7 @@
                     <a class="cart-link" href="${pageContext.request.contextPath}/checkout">Giỏ Hàng <span class="cart-count">${cartCount}</span></a>
                     <a href="${pageContext.request.contextPath}/home#contact">Liên Hệ</a>
                     <c:choose>
-                        <c:when test="${not empty sessionScope.user}"><a class="customer-nav-avatar" href="${pageContext.request.contextPath}/profile" title="Thông tin cá nhân" aria-label="Thông tin cá nhân">${fn:substring(sessionScope.user.fullName,0,1)}</a></c:when>
+                        <c:when test="${not empty sessionScope.user}"><a class="customer-nav-avatar" href="${pageContext.request.contextPath}/profile" title="Thông tin cá nhân" aria-label="Thông tin cá nhân"><c:choose><c:when test="${not empty sessionScope.user.avatarUrl}"><span class="avatar-fallback" hidden>${fn:substring(sessionScope.user.fullName,0,1)}</span><img src="${pageContext.request.contextPath}/${sessionScope.user.avatarUrl}" alt="" onerror="this.hidden=true;this.previousElementSibling.hidden=false;"></c:when><c:otherwise>${fn:substring(sessionScope.user.fullName,0,1)}</c:otherwise></c:choose></a></c:when>
                         <c:otherwise><a class="login-button" href="${pageContext.request.contextPath}/login?returnUrl=/menu">Đăng nhập</a></c:otherwise>
                     </c:choose>
                 </nav>
@@ -85,7 +85,9 @@
             <footer class="site-footer">
                 <strong>Cafe & Bubble tea</strong>
                 <div class="social-row">
-                    <span>f</span><span>in</span><span>yt</span><span>ig</span>
+                    <a href="https://facebook.com/" target="_blank" rel="noopener" aria-label="Facebook">f</a>
+                    <a href="https://youtube.com/" target="_blank" rel="noopener" aria-label="YouTube">yt</a>
+                    <a href="https://instagram.com/" target="_blank" rel="noopener" aria-label="Instagram">ig</a>
                 </div>
             </footer>
         </main>

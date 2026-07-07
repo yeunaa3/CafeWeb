@@ -22,7 +22,7 @@
                 <svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M10.268 21a2 2 0 0 0 3.464 0"/><path d="M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326"/></svg>
                 <c:if test="${notificationCount > 0}"><span>${notificationCount}</span></c:if>
             </button>
-            <a class="avatar-button" href="${pageContext.request.contextPath}/profile" title="Hồ sơ">${fn:substring(customer.fullName, 0, 1)}</a>
+            <a class="avatar-button" href="${pageContext.request.contextPath}/profile" title="Hồ sơ"><c:choose><c:when test="${not empty customer.avatarUrl}"><span class="avatar-fallback" hidden>${fn:substring(customer.fullName, 0, 1)}</span><img src="${pageContext.request.contextPath}/${customer.avatarUrl}" alt="" onerror="this.hidden=true;this.previousElementSibling.hidden=false;"></c:when><c:otherwise>${fn:substring(customer.fullName, 0, 1)}</c:otherwise></c:choose></a>
         </nav>
     </header>
 
@@ -36,7 +36,16 @@
 
         <section class="account-content">
             <div class="customer-summary">
-                <img class="profile-avatar" src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&amp;fit=crop&amp;w=160&amp;q=80" alt="Ảnh đại diện">
+                <form class="customer-avatar-upload" method="post" action="${pageContext.request.contextPath}/avatar/upload" enctype="multipart/form-data">
+                    <label class="profile-avatar-picker" title="Đổi ảnh đại diện">
+                        <c:choose>
+                            <c:when test="${not empty customer.avatarUrl}"><span class="profile-avatar avatar-fallback" hidden>${fn:substring(customer.fullName, 0, 1)}</span><img class="profile-avatar" src="${pageContext.request.contextPath}/${customer.avatarUrl}" alt="" onerror="this.hidden=true;this.previousElementSibling.hidden=false;"></c:when>
+                            <c:otherwise><span class="profile-avatar">${fn:substring(customer.fullName, 0, 1)}</span></c:otherwise>
+                        </c:choose>
+                        <em>Đổi ảnh</em>
+                        <input type="file" name="avatar" accept="image/png,image/jpeg,image/webp" onchange="this.form.submit()">
+                    </label>
+                </form>
                 <div><strong><c:out value="${customer.fullName}"/></strong><span><c:out value="${customer.email}"/></span></div>
             </div>
 

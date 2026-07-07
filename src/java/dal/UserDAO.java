@@ -11,8 +11,8 @@ import model.User;
 public class UserDAO extends DBContext {
 
     public User authenticate(String usernameOrEmail, String password) {
-        String sql = "SELECT user_id, username, password, full_name, email, phone, address, gender, staff_position, status, points, role_id, created_at "
-                + "FROM Users WHERE (username = ? OR email = ?) AND password = ?";
+        String sql = "SELECT " + userColumns()
+                + " FROM Users WHERE (username = ? OR email = ?) AND password = ?";
         Connection con = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -99,8 +99,7 @@ public class UserDAO extends DBContext {
     }
 
     public User getUserById(int userId) {
-        String sql = "SELECT user_id, username, password, full_name, email, phone, address, gender, staff_position, status, points, role_id, created_at "
-                + "FROM Users WHERE user_id = ?";
+        String sql = "SELECT " + userColumns() + " FROM Users WHERE user_id = ?";
         Connection con = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -121,8 +120,8 @@ public class UserDAO extends DBContext {
     }
 
     public User getDefaultCustomer() {
-        String sql = "SELECT TOP 1 user_id, username, password, full_name, email, phone, address, gender, staff_position, status, points, role_id, created_at "
-                + "FROM Users WHERE role_id = 3 AND status = 1 ORDER BY user_id";
+        String sql = "SELECT TOP 1 " + userColumns()
+                + " FROM Users WHERE role_id = 3 AND status = 1 ORDER BY user_id";
         Connection con = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -167,8 +166,7 @@ public class UserDAO extends DBContext {
     public List<User> getStaff(String keyword) {
         List<User> staff = new ArrayList<User>();
         String value = keyword == null ? "" : keyword.trim();
-        String sql = "SELECT user_id, username, password, full_name, email, phone, address, gender, staff_position, "
-                + "status, points, role_id, created_at FROM Users "
+        String sql = "SELECT " + userColumns() + " FROM Users "
                 + "WHERE role_id = 2 AND (? = '' OR full_name LIKE ? OR username LIKE ? OR email LIKE ?) "
                 + "ORDER BY status DESC, created_at DESC, user_id DESC";
         Connection con = null;
@@ -280,6 +278,70 @@ public class UserDAO extends DBContext {
         }
     }
 
+    public boolean updateAvatar(int userId, String avatarUrl) {
+        ensureAvatarColumn();
+        String sql = "UPDATE Users SET avatar_url = ? WHERE user_id = ?";
+        Connection con = null;
+        PreparedStatement ps = null;
+        try {
+            con = getConnection();
+            ps = con.prepareStatement(sql);
+            ps.setString(1, avatarUrl);
+            ps.setInt(2, userId);
+            return ps.executeUpdate() == 1;
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            return false;
+        } finally {
+            closeConnection(con, ps, null);
+        }
+    }
+
+    private String userColumns() {
+        String avatarColumn = hasAvatarColumn()
+                ? "avatar_url"
+                : "CAST(NULL AS VARCHAR(255)) AS avatar_url";
+        return "user_id, username, password, full_name, email, phone, address, gender, "
+                + "staff_position, status, points, role_id, " + avatarColumn + ", created_at";
+    }
+
+    private boolean hasAvatarColumn() {
+        String sql = "SELECT COL_LENGTH('dbo.Users', 'avatar_url')";
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            con = getConnection();
+            ps = con.prepareStatement(sql);
+            rs = ps.executeQuery();
+            return rs.next() && rs.getObject(1) != null;
+        } catch (SQLException ex) {
+            return false;
+        } finally {
+            closeConnection(con, ps, rs);
+        }
+    }
+
+    private void ensureAvatarColumn() {
+        if (hasAvatarColumn()) {
+            return;
+        }
+        String sql = "ALTER TABLE dbo.Users ADD avatar_url VARCHAR(255) NULL";
+        Connection con = null;
+        PreparedStatement ps = null;
+        try {
+            con = getConnection();
+            ps = con.prepareStatement(sql);
+            ps.executeUpdate();
+        } catch (SQLException ex) {
+            if (!hasAvatarColumn()) {
+                ex.printStackTrace();
+            }
+        } finally {
+            closeConnection(con, ps, null);
+        }
+    }
+
     private User mapUser(ResultSet rs) throws SQLException {
         User user = new User();
         user.setUserId(rs.getInt("user_id"));
@@ -294,6 +356,7 @@ public class UserDAO extends DBContext {
         user.setStatus(rs.getBoolean("status"));
         user.setPoints(rs.getInt("points"));
         user.setRoleId(rs.getInt("role_id"));
+        user.setAvatarUrl(rs.getString("avatar_url"));
         user.setCreatedAt(rs.getTimestamp("created_at"));
         return user;
     }
@@ -309,6 +372,7 @@ public class UserDAO extends DBContext {
         user.setStatus(true);
         user.setPoints(0);
         user.setRoleId(3);
+        user.setAvatarUrl(null);
         return user;
     }
 }

@@ -2,6 +2,290 @@
     box-sizing: border-box;
 }
 
+/* =========================================================
+   CUSTOMER MODERN CLEAN UI - Dong bo font, full width, avatar, contact
+   ========================================================= */
+:root {
+    --customer-font: "Inter", "Be Vietnam Pro", "Segoe UI", Arial, sans-serif;
+}
+
+html,
+body {
+    width: 100%;
+    min-height: 100%;
+    font-family: var(--customer-font);
+}
+
+button,
+input,
+select,
+textarea {
+    font-family: inherit;
+}
+
+/* Full man hinh cho trang khach hang, khong con nen den hai ben. */
+.page-shell,
+.account-shell {
+    width: 100%;
+    max-width: none;
+    margin: 0;
+}
+
+.site-header,
+.account-header {
+    width: 100%;
+}
+
+.hero,
+.section-block,
+.about-section,
+.site-footer,
+.account-layout {
+    width: min(100% - 64px, 1280px);
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Menu danh muc theo chieu ngang, de scan tren desktop va cuon tren mobile. */
+.category-tabs,
+.menu-tabs,
+.menu-categories {
+    display: flex;
+    gap: 10px;
+    overflow-x: auto;
+    padding-bottom: 10px;
+    white-space: nowrap;
+}
+
+.category-tabs a,
+.menu-tabs a,
+.menu-categories a,
+.menu-categories button {
+    flex: 0 0 auto;
+}
+
+/* Anh san pham gon hon, khong bi meo/leo layout. */
+.recommend-item img,
+.menu-card img,
+.product-card img {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+}
+
+/* Avatar customer: hien anh neu da upload, click avatar trong profile de doi anh. */
+.avatar-button,
+.customer-nav-avatar {
+    overflow: hidden;
+}
+
+.avatar-button img,
+.customer-nav-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.customer-avatar-upload {
+    margin: 0;
+}
+
+.profile-avatar-picker {
+    position: relative;
+    display: inline-grid;
+    place-items: center;
+    cursor: pointer;
+}
+
+.profile-avatar-picker .profile-avatar {
+    width: 96px;
+    height: 96px;
+    display: grid;
+    place-items: center;
+    overflow: hidden;
+    border-radius: 50%;
+    background: #765038;
+    color: #fff;
+    font-size: 32px;
+    font-weight: 800;
+    object-fit: cover;
+}
+
+.profile-avatar-picker em {
+    position: absolute;
+    left: 10px;
+    right: 10px;
+    bottom: 8px;
+    padding: 4px 0;
+    border-radius: 9999px;
+    background: #ef8f32;
+    color: #fff;
+    font-size: 10px;
+    font-style: normal;
+    font-weight: 800;
+    text-align: center;
+}
+
+.profile-avatar-picker input {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    cursor: pointer;
+}
+
+/* Icon social o footer la link that va co hover. */
+.social-row {
+    display: flex;
+    gap: 12px;
+}
+
+.social-row a {
+    width: 34px;
+    height: 34px;
+    display: grid;
+    place-items: center;
+    border: 1px solid #e7dac7;
+    border-radius: 9999px;
+    color: #765038;
+    font-size: 11px;
+    font-weight: 800;
+    text-decoration: none;
+}
+
+.social-row a:hover {
+    background: #765038;
+    color: #fff;
+}
+
+/* Final fix 2: full-width customer/account/auth, khong con khung giua man hinh. */
+body,
+.account-page,
+.auth-simple-page {
+    background: #f6f3ee;
+}
+
+.account-shell,
+.auth-simple-shell,
+.page-shell {
+    width: 100%;
+    max-width: none;
+    min-height: 100vh;
+    margin: 0;
+    background: #fffdf9;
+}
+
+.auth-frame-title {
+    display: none;
+}
+
+.auth-simple-page {
+    padding: 0;
+}
+
+.auth-simple-shell {
+    padding: 0 64px 34px;
+}
+
+.auth-simple-content {
+    min-height: calc(100vh - 220px);
+}
+
+.auth-simple-form-wrap {
+    width: min(520px, 100%);
+}
+
+.auth-simple-submit,
+.auth-simple-shell .login-button {
+    border-radius: 2px;
+    background: #6f4e37;
+}
+
+.auth-simple-submit:hover,
+.auth-simple-shell .login-button:hover {
+    background: #36261d;
+}
+
+.account-layout {
+    width: 100%;
+    min-height: calc(100vh - 92px);
+    margin: 0;
+    background: #f4ecdf;
+}
+
+.account-content {
+    min-height: calc(100vh - 128px);
+    margin: 18px 24px;
+    border-radius: 2px;
+}
+
+.hero,
+.section-block,
+.about-section,
+.site-footer {
+    width: min(100% - 64px, 1320px);
+}
+
+.avatar-fallback {
+    display: grid;
+    place-items: center;
+    background: #765038;
+    color: #fff;
+    font-weight: 800;
+}
+
+.avatar-fallback[hidden],
+.profile-avatar[hidden],
+.avatar-button img[hidden],
+.customer-nav-avatar img[hidden] {
+    display: none !important;
+}
+
+.avatar-button .avatar-fallback,
+.customer-nav-avatar .avatar-fallback {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+}
+
+@media (max-width: 760px) {
+    .auth-simple-shell {
+        padding: 0 18px 24px;
+    }
+
+    .account-content {
+        margin: 12px;
+    }
+
+    .hero,
+    .section-block,
+    .about-section,
+    .site-footer {
+        width: calc(100% - 28px);
+    }
+}
+
+.category-nav {
+    display: flex;
+    gap: 10px;
+    overflow-x: auto;
+    padding-bottom: 10px;
+    white-space: nowrap;
+}
+
+.category-nav a {
+    flex: 0 0 auto;
+}
+
+@media (max-width: 720px) {
+    .hero,
+    .section-block,
+    .about-section,
+    .site-footer,
+    .account-layout {
+        width: calc(100% - 28px);
+    }
+}
+
 :root {
     --coffee-900: #30231b;
     --coffee-700: #765038;
@@ -1625,4 +1909,82 @@ button:disabled {
     .auth-simple-form-wrap h1 {
         font-size: 28px;
     }
+}
+
+/* Final override: dat cuoi file de UI moi khong bi rule cu ghi de. */
+.page-shell,
+.account-shell {
+    width: 100%;
+    max-width: none;
+    margin: 0;
+}
+
+.hero,
+.section-block,
+.about-section,
+.site-footer,
+.account-layout {
+    width: min(100% - 64px, 1280px);
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.avatar-button img,
+.customer-nav-avatar img,
+.profile-avatar-picker .profile-avatar {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.profile-avatar-picker {
+    position: relative;
+    cursor: pointer;
+}
+
+.profile-avatar-picker .profile-avatar {
+    width: 96px;
+    height: 96px;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+}
+
+.profile-avatar-picker em {
+    position: absolute;
+    left: 10px;
+    right: 10px;
+    bottom: 8px;
+    padding: 4px 0;
+    border-radius: 9999px;
+    background: #ef8f32;
+    color: #fff;
+    font-size: 10px;
+    font-style: normal;
+    font-weight: 800;
+    text-align: center;
+}
+
+.profile-avatar-picker input {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+}
+
+.social-row a {
+    width: 34px;
+    height: 34px;
+    display: grid;
+    place-items: center;
+    border: 1px solid #e7dac7;
+    border-radius: 9999px;
+    color: #765038;
+    font-size: 11px;
+    font-weight: 800;
+    text-decoration: none;
+}
+
+.social-row a:hover {
+    background: #765038;
+    color: #fff;
 }

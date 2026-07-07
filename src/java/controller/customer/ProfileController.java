@@ -21,6 +21,7 @@ public class ProfileController extends HttpServlet {
             return;
         }
         CustomerPageSupport.prepareCommonData(request, customer);
+        pullProfileMessages(request);
         request.setAttribute("editMode", "edit".equals(request.getParameter("mode")));
         request.getRequestDispatcher("/jsp/customer/profile.jsp").forward(request, response);
     }
@@ -70,11 +71,21 @@ public class ProfileController extends HttpServlet {
         }
 
         CustomerPageSupport.prepareCommonData(request, customer);
+        pullProfileMessages(request);
         request.setAttribute("editMode", request.getAttribute("error") != null);
         request.getRequestDispatcher("/jsp/customer/profile.jsp").forward(request, response);
     }
 
     private String trim(String value) {
         return value == null ? "" : value.trim();
+    }
+
+    private void pullProfileMessages(HttpServletRequest request) {
+        Object success = request.getSession().getAttribute("profileSuccess");
+        Object error = request.getSession().getAttribute("profileError");
+        if (success != null) request.setAttribute("success", success);
+        if (error != null) request.setAttribute("error", error);
+        request.getSession().removeAttribute("profileSuccess");
+        request.getSession().removeAttribute("profileError");
     }
 }
