@@ -2,9 +2,7 @@
     box-sizing: border-box;
 }
 
-/* =========================================================
-   CUSTOMER MODERN CLEAN UI - Dong bo font, full width, avatar, contact
-   ========================================================= */
+
 :root {
     --customer-font: "Inter", "Be Vietnam Pro", "Segoe UI", Arial, sans-serif;
 }
@@ -1095,7 +1093,9 @@ button:disabled {
     font-size: 13px;
     font-weight: 800;
 }
-.customer-nav-avatar:hover { background: #30231b; }
+.customer-nav-avatar:hover {
+    background: #30231b;
+}
 
 .sidebar-link .ui-icon {
     width: 19px;

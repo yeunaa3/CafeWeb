@@ -23,7 +23,8 @@
             cashReceived.hidden = usesQr;
             qrPayment.hidden = !usesQr;
             var receivedInput = cashReceived.querySelector("input");
-            if (receivedInput) receivedInput.required = !usesQr;
+            if (receivedInput)
+                receivedInput.required = !usesQr;
         };
         paymentMethod.addEventListener("change", updatePaymentFields);
         updatePaymentFields();

@@ -10,7 +10,8 @@
     }
 
     function showToast(message) {
-        if (!toast) return;
+        if (!toast)
+            return;
         toast.textContent = message;
         toast.classList.add("is-visible");
         window.setTimeout(function () {
@@ -33,31 +34,36 @@
             },
             body: new URLSearchParams(formData).toString()
         })
-            .then(function (response) {
-                return response.json().then(function (data) {
-                    return { ok: response.ok, data: data };
+                .then(function (response) {
+                    return response.json().then(function (data) {
+                        return {ok: response.ok, data: data};
+                    });
+                })
+                .then(function (result) {
+                    if (!result.ok || !result.data.success) {
+                        throw new Error(result.data.message || "Không thể cập nhật giỏ hàng.");
+                    }
+                    updateCartBadges(result.data.count);
+                    if (callback)
+                        callback(result.data);
+                })
+                .catch(function (error) {
+                    showToast(error.message || "Kết nối bị gián đoạn. Vui lòng thử lại.");
+                    if (errorCallback)
+                        errorCallback(error);
                 });
-            })
-            .then(function (result) {
-                if (!result.ok || !result.data.success) {
-                    throw new Error(result.data.message || "Không thể cập nhật giỏ hàng.");
-                }
-                updateCartBadges(result.data.count);
-                if (callback) callback(result.data);
-            })
-            .catch(function (error) {
-                showToast(error.message || "Kết nối bị gián đoạn. Vui lòng thử lại.");
-                if (errorCallback) errorCallback(error);
-            });
     }
 
     function updateModalTotal() {
-        if (!addCartForm) return;
+        if (!addCartForm)
+            return;
         var basePrice = Number(addCartForm.getAttribute("data-base-price")) || 0;
         var selectedSize = addCartForm.querySelector("input[name='selectedSize']:checked");
         var sizeExtra = 0;
-        if (selectedSize && selectedSize.value === "L") sizeExtra = 5000;
-        if (selectedSize && selectedSize.value === "S") sizeExtra = -3000;
+        if (selectedSize && selectedSize.value === "L")
+            sizeExtra = 5000;
+        if (selectedSize && selectedSize.value === "S")
+            sizeExtra = -3000;
 
         var toppingTotal = 0;
         var selectedToppings = addCartForm.querySelectorAll("input[name='toppingIds']:checked");
@@ -73,14 +79,16 @@
     }
 
     function setDrinkModal(open) {
-        if (!modal) return;
+        if (!modal)
+            return;
         modal.classList.toggle("is-open", open);
         modal.setAttribute("aria-hidden", open ? "false" : "true");
         document.body.style.overflow = open ? "hidden" : "";
     }
 
     function openDrinkModal(button) {
-        if (!modal || !addCartForm) return;
+        if (!modal || !addCartForm)
+            return;
 
         // Reset first so hidden product data is not cleared after assignment.
         addCartForm.reset();
@@ -157,17 +165,20 @@
         var rows = document.querySelectorAll(".cart-item");
         var total = 0;
         for (var i = 0; i < rows.length; i++) {
-            if (rows[i].style.display === "none") continue;
+            if (rows[i].style.display === "none")
+                continue;
             var unit = Number(rows[i].getAttribute("data-unit-price")) || 0;
             var quantityInput = rows[i].querySelector("input[type='number']");
             var quantity = Number(quantityInput.value) || 1;
             var lineTotal = unit * quantity;
             total += lineTotal;
             var lineTotalElement = rows[i].querySelector(".line-total");
-            if (lineTotalElement) lineTotalElement.textContent = formatVnd(lineTotal);
+            if (lineTotalElement)
+                lineTotalElement.textContent = formatVnd(lineTotal);
         }
         var totalElement = document.getElementById("cartTotal");
-        if (totalElement) totalElement.textContent = formatVnd(total);
+        if (totalElement)
+            totalElement.textContent = formatVnd(total);
     }
 
     var quantityButtons = document.querySelectorAll(".qty-btn");
@@ -177,7 +188,8 @@
             var input = row.querySelector("input[type='number']");
             var oldQuantity = Number(input.value) || 1;
             var nextQuantity = Math.max(1, oldQuantity + Number(this.getAttribute("data-delta")));
-            if (nextQuantity === oldQuantity) return;
+            if (nextQuantity === oldQuantity)
+                return;
             input.value = nextQuantity;
 
             var formData = new FormData();
@@ -206,7 +218,8 @@
                 row.style.display = "none";
                 updateCheckoutTotal();
                 showToast("Đã xóa món khỏi giỏ");
-                if (data.count === 0) window.location.reload();
+                if (data.count === 0)
+                    window.location.reload();
             });
         });
     }
@@ -214,7 +227,8 @@
     var clearCartButton = document.getElementById("clearCartButton");
     if (clearCartButton) {
         clearCartButton.addEventListener("click", function () {
-            if (!window.confirm("Xóa toàn bộ món trong giỏ hàng?")) return;
+            if (!window.confirm("Xóa toàn bộ món trong giỏ hàng?"))
+                return;
             var formData = new FormData();
             formData.append("action", "clear");
             formData.append("ajax", "true");
@@ -232,7 +246,8 @@
     var orderClosers = document.querySelectorAll("[data-close-orders]");
 
     function setOrderModal(open) {
-        if (!orderModal) return;
+        if (!orderModal)
+            return;
         orderModal.classList.toggle("is-open", open);
         orderModal.setAttribute("aria-hidden", open ? "false" : "true");
         document.body.style.overflow = open ? "hidden" : "";
@@ -254,7 +269,8 @@
     for (var passwordIndex = 0; passwordIndex < passwordToggles.length; passwordIndex++) {
         passwordToggles[passwordIndex].addEventListener("click", function () {
             var input = document.getElementById(this.getAttribute("data-toggle-password"));
-            if (!input) return;
+            if (!input)
+                return;
             var showPassword = input.type === "password";
             input.type = showPassword ? "text" : "password";
             this.textContent = showPassword ? "Ẩn" : "Hiện";
