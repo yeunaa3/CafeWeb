@@ -5,11 +5,11 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Đăng nhập - Cafe & Bubble tea</title>
+        <title>Quên mật khẩu - Cafe & Bubble tea</title>
         <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/customer.css">
     </head>
     <body class="auth-simple-page">
-        <div class="auth-frame-title">Sign In</div>
+        <div class="auth-frame-title">Forgot Password</div>
         <main class="auth-simple-shell">
             <header class="site-header auth-site-header">
                 <a class="brand" href="${pageContext.request.contextPath}/home">Cafe & Bubble tea</a>
@@ -23,33 +23,25 @@
 
             <section class="auth-simple-content">
                 <div class="auth-simple-form-wrap">
-                    <h1>Đăng nhập</h1>
+                    <h1>Quên mật khẩu</h1>
 
-                    <c:if test="${param.registered == 'true'}">
-                        <p class="alert success-alert">Tạo tài khoản thành công. Bạn có thể đăng nhập ngay.</p>
-                    </c:if>
                     <c:if test="${not empty error}">
                         <p class="alert error-alert"><c:out value="${error}"/></p>
                     </c:if>
+                    <c:if test="${not empty message}">
+                        <p class="alert success-alert"><c:out value="${message}"/></p>
+                    </c:if>
 
-                    <form class="auth-simple-form" action="${pageContext.request.contextPath}/login" method="post">
-                        <input type="hidden" name="returnUrl" value="<c:out value='${returnUrl}'/>">
+                    <form class="auth-simple-form" action="${pageContext.request.contextPath}/forgot-password" method="post">
+                        <label for="forgotEmail">Địa chỉ email</label>
+                        <input id="forgotEmail" type="email" name="email" value="<c:out value='${email}'/>"
+                               placeholder="email@example.com" autocomplete="email" required autofocus>
 
-                        <label for="usernameOrEmail">Username or Email</label>
-                        <input id="usernameOrEmail" type="text" name="usernameOrEmail"
-                               value="<c:out value='${usernameOrEmail}'/>" placeholder="Enter your username or email"
-                               autocomplete="username" required autofocus>
-
-                        <label for="loginPassword">Password</label>
-                        <input id="loginPassword" type="password" name="password"
-                               placeholder="Enter your password" autocomplete="current-password" required>
-
-                        <div class="auth-help-links">
-                            <span>Bạn chưa có tài khoản? <a href="${pageContext.request.contextPath}/register">Đăng ký tại đây</a></span>
-                            <span>Quên mật khẩu? <a href="${pageContext.request.contextPath}/forgot-password.jsp">Nhấn vào đây</a></span>
+                        <div class="auth-help-links" style="display: flex; flex-direction: column; gap: 8px; margin-top: 12px; font-size: 14px; color: #333;">
+                            <div>Quay lại trang <a href="${pageContext.request.contextPath}/login" style="color: #0056b3; text-decoration: underline;">Đăng nhập</a></div>
                         </div>
 
-                        <button class="auth-simple-submit" type="submit">Đăng nhập</button>
+                        <button class="auth-simple-submit" type="submit" style="margin-top: 24px;">Gửi yêu cầu</button>
                     </form>
                 </div>
             </section>
