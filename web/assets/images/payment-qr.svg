@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="320" height="320" viewBox="0 0 320 320" role="img" aria-label="CBMS static payment QR">
+  <rect width="320" height="320" fill="#ffffff"/>
+  <g fill="#1f1f1f">
+    <path d="M24 24h82v82H24zM214 24h82v82h-82zM24 214h82v82H24z"/>
+    <path fill="#fff" d="M38 38h54v54H38zM228 38h54v54h-54zM38 228h54v54H38z"/>
+    <path d="M52 52h26v26H52zM242 52h26v26h-26zM52 242h26v26H52z"/>
+    <path d="M132 28h18v18h-18zM166 28h16v34h-16zM132 64h50v16h-50zM128 98h18v18h-18zM162 96h18v36h-18zM196 126h18v18h-18zM232 128h36v18h-36zM286 128h10v18h-10z"/>
+    <path d="M128 154h18v54h-18zM160 154h36v18h-36zM214 154h18v18h-18zM250 154h46v18h-46zM154 190h18v18h-18zM190 190h60v18h-60zM268 190h28v18h-28z"/>
+    <path d="M126 228h36v18h-36zM178 226h18v36h-18zM214 226h18v18h-18zM250 226h46v18h-46zM126 262h18v34h-18zM160 278h34v18h-34zM214 260h52v18h-52zM282 260h14v36h-14zM214 292h18v4h-18z"/>
+    <path d="M118 118h18v18h-18zM30 128h34v18H30zM80 128h34v18H80zM30 164h18v34H30zM64 164h52v18H64zM96 190h18v18H96z"/>
+  </g>
+  <text x="160" y="160" text-anchor="middle" dominant-baseline="middle" font-family="Arial, sans-serif" font-size="22" font-weight="700" fill="#ef8f32">CBMS</text>
+</svg>
