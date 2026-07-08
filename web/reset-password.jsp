@@ -6,7 +6,7 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Đặt lại mật khẩu - Cafe & Bubble tea</title>
-        <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/customer.css">
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/customer.css?v=20260708-ui7">
     </head>
     <body class="auth-simple-page">
         <div class="auth-frame-title">Reset Password</div>
@@ -16,7 +16,9 @@
                     <h1>Đặt lại mật khẩu</h1>
 
                     <c:if test="${not empty error}">
-                        <p class="alert error-alert" style="color: red; background: #fce8e6; padding: 10px; border-radius: 4px;"><c:out value="${error}"/></p>
+                        <p class="alert error-alert" style="color: red; background: #fce8e6; padding: 10px; border-radius: 4px;">
+<c:out value="${error}"/>
+</p>
                     </c:if>
 
                     <form class="auth-simple-form" action="${pageContext.request.contextPath}/verify-otp" method="post">

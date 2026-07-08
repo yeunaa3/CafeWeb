@@ -277,6 +277,66 @@
         });
     }
 
+    function setupMenuPagination() {
+        var sections = document.querySelectorAll(".product-section");
+        var pageSize = 7;
+
+        function renderPage(targetSection, targetCards, targetPagination, page) {
+            for (var cardIndex = 0; cardIndex < targetCards.length; cardIndex++) {
+                var firstIndex = page * pageSize;
+                var lastIndex = firstIndex + pageSize;
+                targetCards[cardIndex].style.display = cardIndex >= firstIndex && cardIndex < lastIndex ? "" : "none";
+            }
+
+            var buttons = targetPagination.querySelectorAll(".menu-page-btn");
+            for (var buttonIndex = 0; buttonIndex < buttons.length; buttonIndex++) {
+                buttons[buttonIndex].classList.toggle("is-active", Number(buttons[buttonIndex].getAttribute("data-page")) === page);
+            }
+        }
+
+        function buildPagination(section, cards, totalPages, grid) {
+            var pagination = document.createElement("div");
+            pagination.className = "menu-pagination";
+            pagination.setAttribute("aria-label", "Phan trang san pham");
+            grid.insertAdjacentElement("afterend", pagination);
+
+            for (var pageIndex = 0; pageIndex < totalPages; pageIndex++) {
+                var button = document.createElement("button");
+                button.type = "button";
+                button.className = "menu-page-btn";
+                button.textContent = String(pageIndex + 1);
+                button.setAttribute("data-page", String(pageIndex));
+                pagination.appendChild(button);
+
+                button.addEventListener("click", function () {
+                    var nextPage = Number(this.getAttribute("data-page")) || 0;
+                    renderPage(section, cards, pagination, nextPage);
+                    section.scrollIntoView({behavior: "smooth", block: "start"});
+                });
+            }
+
+            renderPage(section, cards, pagination, 0);
+        }
+
+        for (var sectionIndex = 0; sectionIndex < sections.length; sectionIndex++) {
+            var section = sections[sectionIndex];
+            var grid = section.querySelector(".product-grid");
+
+            if (!grid)
+                continue;
+
+            var cards = grid.querySelectorAll(".product-card");
+            var totalPages = Math.ceil(cards.length / pageSize);
+
+            if (totalPages <= 1)
+                continue;
+
+            buildPagination(section, cards, totalPages, grid);
+        }
+    }
+
+    setupMenuPagination();
+
     document.addEventListener("keydown", function (event) {
         if (event.key === "Escape") {
             setOrderModal(false);

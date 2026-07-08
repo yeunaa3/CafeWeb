@@ -1,5 +1,96 @@
-<%@page contentType="text/html" pageEncoding="UTF-8"%><%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%><%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%><%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
-<!DOCTYPE html><html lang="vi"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Thêm món - CBMS</title><link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/manager.css"><link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/cashier.css"></head><body class="manager-page"><div class="manager-shell"><%@include file="includes/sidebar.jspf"%><div class="manager-main"><%@include file="includes/header.jspf"%><main class="manager-content">
-<c:if test="${not empty error}"><div class="manager-alert error"><c:out value="${error}"/></div></c:if><div class="add-order-toolbar"><form method="get" action="${pageContext.request.contextPath}/cashier/order/add"><div class="search-box"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg><input name="q" value="<c:out value='${param.q}'/>" placeholder="Tìm tên sản phẩm"><button type="submit">Tìm</button></div></form><a class="secondary-action" href="${pageContext.request.contextPath}/cashier/order">Quay lại đơn</a></div>
-<form method="post" action="${pageContext.request.contextPath}/cashier/order/add"><section class="cashier-product-picker"><c:forEach var="product" items="${productList}"><article class="picker-row ${product.status?'':'sold-out'}"><span class="picker-image"><c:choose><c:when test="${not empty product.imageUrl}"><img src="${pageContext.request.contextPath}/assets/images/${product.imageUrl}" alt=""></c:when><c:otherwise>${fn:substring(product.productName,0,1)}</c:otherwise></c:choose></span><div><strong><c:out value="${product.productName}"/></strong><small><c:out value="${product.categoryName}"/></small><input name="note_${product.productId}" placeholder="Ghi chú" ${product.status?'':'disabled'}></div><select name="topping_${product.productId}" ${product.status?'':'disabled'}><option value="">Không topping</option><c:forEach var="topping" items="${toppingList}"><option value="${topping.toppingId}"><c:out value="${topping.toppingName}"/> (+<fmt:formatNumber value="${topping.price}" pattern="#,##0"/>đ)</option></c:forEach></select><select name="size_${product.productId}" ${product.status?'':'disabled'}><option>S</option><option selected>M</option><option>L</option></select><div class="quantity-control"><button type="button" data-quantity-minus ${product.status?'':'disabled'}>−</button><input name="quantity_${product.productId}" value="0" min="0" max="99" readonly><button type="button" data-quantity-plus ${product.status?'':'disabled'}>+</button></div><strong><fmt:formatNumber value="${product.price}" pattern="#,##0"/>đ</strong></article></c:forEach><c:if test="${empty productList}"><div class="empty-row">Không tìm thấy sản phẩm.</div></c:if></section><div class="picker-actions"><button class="primary-action" type="submit">Xác nhận món đã chọn</button></div></form>
-</main></div></div><script src="${pageContext.request.contextPath}/assets/js/manager.js"></script><script src="${pageContext.request.contextPath}/assets/js/cashier.js"></script></body></html>
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
+<!DOCTYPE html>
+<html lang="vi">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1">
+        <title>Thêm món - CBMS</title>
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/manager.css?v=20260708-ui7">
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/cashier.css?v=20260708-ui7">
+    </head>
+    <body class="manager-page">
+        <div class="manager-shell">
+            <%@include file="includes/sidebar.jspf"%>
+            <div class="manager-main">
+                <%@include file="includes/header.jspf"%>
+                <main class="manager-content">
+                    <c:if test="${not empty error}">
+                        <div class="manager-alert error">
+                            <c:out value="${error}"/>
+                        </div>
+                    </c:if>
+                    <div class="add-order-toolbar">
+                        <form method="get" action="${pageContext.request.contextPath}/cashier/order/add">
+                            <div class="search-box">
+                                <svg viewBox="0 0 24 24">
+                                <circle cx="11" cy="11" r="7"/>
+                                <path d="m20 20-4-4"/>
+                                </svg>
+                                <input name="q" value="<c:out value='${param.q}'/>" placeholder="Tìm tên sản phẩm">
+                                <button type="submit">Tìm</button>
+                            </div>
+                        </form>
+                        <a class="secondary-action" href="${pageContext.request.contextPath}/cashier/order">Quay lại đơn</a>
+                    </div>
+                    <form method="post" action="${pageContext.request.contextPath}/cashier/order/add">
+                        <section class="cashier-product-picker">
+                            <c:forEach var="product" items="${productList}">
+                                <article class="picker-row ${product.status?'':'sold-out'}">
+                                    <span class="picker-image">
+                                        <c:choose>
+                                            <c:when test="${not empty product.imageUrl}">
+                                                <img src="${pageContext.request.contextPath}/assets/images/${product.imageUrl}" alt="">
+                                            </c:when>
+                                            <c:otherwise>${fn:substring(product.productName,0,1)}</c:otherwise>
+                                        </c:choose>
+                                    </span>
+                                    <div>
+                                        <strong>
+                                            <c:out value="${product.productName}"/>
+                                        </strong>
+                                        <small>
+                                            <c:out value="${product.categoryName}"/>
+                                        </small>
+                                        <input name="note_${product.productId}" placeholder="Ghi chú" ${product.status?'':'disabled'}>
+                                    </div>
+                                    <select name="topping_${product.productId}" ${product.status?'':'disabled'}>
+                                        <option value="">Không topping</option>
+                                        <c:forEach var="topping" items="${toppingList}">
+                                            <option value="${topping.toppingId}">
+                                                <c:out value="${topping.toppingName}"/> (+<fmt:formatNumber value="${topping.price}" pattern="#,##0"/>đ)</option>
+                                            </c:forEach>
+                                    </select>
+                                    <select name="size_${product.productId}" ${product.status?'':'disabled'}>
+                                        <option>S</option>
+                                        <option selected>M</option>
+                                        <option>L</option>
+                                    </select>
+                                    <div class="quantity-control">
+                                        <button type="button" data-quantity-minus ${product.status?'':'disabled'}>−</button>
+                                        <input name="quantity_${product.productId}" value="0" min="0" max="99" readonly>
+                                        <button type="button" data-quantity-plus ${product.status?'':'disabled'}>+</button>
+                                    </div>
+                                    <strong>
+                                        <fmt:formatNumber value="${product.price}" pattern="#,##0"/>đ</strong>
+                                </article>
+                            </c:forEach>
+                            <c:if test="${empty productList}">
+                                <div class="empty-row">Không tìm thấy sản phẩm.</div>
+                            </c:if>
+                        </section>
+                        <div class="picker-actions">
+                            <button class="primary-action" type="submit">Xác nhận món đã chọn</button>
+                        </div>
+                    </form>
+                </main>
+            </div>
+        </div>
+        <script src="${pageContext.request.contextPath}/assets/js/manager.js?v=20260708-ui7">
+        </script>
+        <script src="${pageContext.request.contextPath}/assets/js/cashier.js?v=20260708-ui7">
+        </script>
+    </body>
+</html>

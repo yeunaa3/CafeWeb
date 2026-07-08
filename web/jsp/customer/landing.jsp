@@ -8,7 +8,7 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Cafe & Bubble tea</title>
-        <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/customer.css">
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/customer.css?v=20260708-ui7">
     </head>
     <body>
         <main class="page-shell">
@@ -16,11 +16,24 @@
                 <a class="brand" href="${pageContext.request.contextPath}/home">Cafe & Bubble tea</a>
                 <nav class="site-nav">
                     <a href="${pageContext.request.contextPath}/menu">Menu</a>
-                    <a class="cart-link" href="${pageContext.request.contextPath}/checkout">Giỏ Hàng <span class="cart-count">${cartCount}</span></a>
+                    <a class="cart-link" href="${pageContext.request.contextPath}/checkout">Giỏ Hàng <span class="cart-count">${cartCount}</span>
+</a>
                     <a href="#contact">Liên Hệ</a>
                     <c:choose>
-                        <c:when test="${not empty sessionScope.user}"><a class="customer-nav-avatar" href="${pageContext.request.contextPath}/profile" title="Thông tin cá nhân" aria-label="Thông tin cá nhân"><c:choose><c:when test="${not empty sessionScope.user.avatarUrl}"><span class="avatar-fallback" hidden>${fn:substring(sessionScope.user.fullName,0,1)}</span><img src="${pageContext.request.contextPath}/${sessionScope.user.avatarUrl}" alt="" onerror="this.hidden=true;this.previousElementSibling.hidden=false;"></c:when><c:otherwise>${fn:substring(sessionScope.user.fullName,0,1)}</c:otherwise></c:choose></a></c:when>
-                        <c:otherwise><a class="login-button" href="${pageContext.request.contextPath}/login">Đăng nhập</a></c:otherwise>
+                        <c:when test="${not empty sessionScope.user}">
+<a class="customer-nav-avatar" href="${pageContext.request.contextPath}/profile" title="Thông tin cá nhân" aria-label="Thông tin cá nhân">
+<c:choose>
+<c:when test="${not empty sessionScope.user.avatarUrl}">
+<span class="avatar-fallback" hidden>${fn:substring(sessionScope.user.fullName,0,1)}</span>
+<img src="${pageContext.request.contextPath}/${sessionScope.user.avatarUrl}" alt="" onerror="this.hidden=true;this.previousElementSibling.hidden=false;">
+</c:when>
+<c:otherwise>${fn:substring(sessionScope.user.fullName,0,1)}</c:otherwise>
+</c:choose>
+</a>
+</c:when>
+                        <c:otherwise>
+<a class="login-button" href="${pageContext.request.contextPath}/login">Đăng nhập</a>
+</c:otherwise>
                     </c:choose>
                 </nav>
             </header>

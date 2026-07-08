@@ -6,7 +6,7 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Đăng ký - Cafe & Bubble tea</title>
-        <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/customer.css">
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/customer.css?v=20260708-ui7">
     </head>
     <body class="auth-simple-page">
         <div class="auth-frame-title">SignUp</div>
@@ -26,7 +26,9 @@
                     <h1>Đăng Kí</h1>
 
                     <c:if test="${not empty error}">
-                        <p class="alert error-alert"><c:out value="${error}"/></p>
+                        <p class="alert error-alert">
+                            <c:out value="${error}"/>
+                        </p>
                     </c:if>
 
                     <form class="auth-simple-form" action="${pageContext.request.contextPath}/register" method="post">
@@ -57,7 +59,12 @@
 
             <footer class="site-footer auth-simple-footer">
                 <strong>Cafe & Bubble tea</strong>
-                <div class="social-row"><span>f</span><span>in</span><span>yt</span><span>ig</span></div>
+                <div class="social-row">
+                    <span>f</span>
+                    <span>in</span>
+                    <span>yt</span>
+                    <span>ig</span>
+                </div>
             </footer>
         </main>
     </body>

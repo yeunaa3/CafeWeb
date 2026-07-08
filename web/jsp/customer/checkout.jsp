@@ -8,7 +8,7 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Checkout - Cafe & Bubble tea</title>
-        <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/customer.css">
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/customer.css?v=20260708-ui7">
     </head>
     <body data-context-path="${pageContext.request.contextPath}">
         <main class="page-shell checkout-shell">
@@ -16,11 +16,24 @@
                 <a class="brand" href="${pageContext.request.contextPath}/home">Cafe & Bubble tea</a>
                 <nav class="site-nav">
                     <a href="${pageContext.request.contextPath}/menu">Menu</a>
-                    <a class="cart-link" href="${pageContext.request.contextPath}/checkout">Giỏ Hàng <span class="cart-count">${cartCount}</span></a>
+                    <a class="cart-link" href="${pageContext.request.contextPath}/checkout">Giỏ Hàng <span class="cart-count">${cartCount}</span>
+                    </a>
                     <a href="${pageContext.request.contextPath}/home#contact">Liên Hệ</a>
                     <c:choose>
-                        <c:when test="${not empty sessionScope.user}"><a class="customer-nav-avatar" href="${pageContext.request.contextPath}/profile" title="Thông tin cá nhân" aria-label="Thông tin cá nhân">${fn:substring(sessionScope.user.fullName,0,1)}</a></c:when>
-                        <c:otherwise><a class="login-button" href="${pageContext.request.contextPath}/login?returnUrl=/checkout">Đăng nhập</a></c:otherwise>
+                        <c:when test="${not empty sessionScope.user}">
+                            <a class="customer-nav-avatar" href="${pageContext.request.contextPath}/profile" title="Thông tin cá nhân" aria-label="Thông tin cá nhân">
+                                <c:choose>
+                                    <c:when test="${not empty sessionScope.user.avatarUrl}">
+                                        <span class="avatar-fallback" hidden>${fn:substring(sessionScope.user.fullName,0,1)}</span>
+                                        <img src="${pageContext.request.contextPath}/${sessionScope.user.avatarUrl}" alt="" onerror="this.hidden=true;this.previousElementSibling.hidden=false;">
+                                    </c:when>
+                                    <c:otherwise>${fn:substring(sessionScope.user.fullName,0,1)}</c:otherwise>
+                                </c:choose>
+                            </a>
+                        </c:when>
+                        <c:otherwise>
+                            <a class="login-button" href="${pageContext.request.contextPath}/login?returnUrl=/checkout">Đăng nhập</a>
+                        </c:otherwise>
                     </c:choose>
                 </nav>
             </header>
@@ -57,7 +70,10 @@
                                                     </c:forEach>
                                                 </p>
                                             </c:if>
-                                            <strong><span class="line-total"><fmt:formatNumber value="${item.lineTotal}" pattern="#,##0"/></span>đ</strong>
+                                            <strong>
+                                                <span class="line-total">
+                                                    <fmt:formatNumber value="${item.lineTotal}" pattern="#,##0"/>
+                                                </span>đ</strong>
                                         </div>
                                         <div class="quantity-control">
                                             <button type="button" class="qty-btn" data-cart-key="${item.cartKey}" data-delta="-1">-</button>
@@ -82,10 +98,15 @@
                     <input type="text" name="voucherCode" value="<c:out value='${param.voucherCode}'/>" placeholder="Nhập mã voucher (nếu có)">
                     <small class="form-hint">Voucher được kiểm tra hạn dùng và giá trị đơn tối thiểu khi đặt hàng.</small>
                     <label>Ghi chú</label>
-                    <textarea name="note" rows="4" placeholder="Ghi chú thêm cho quán"><c:out value="${param.note}"/></textarea>
+                    <textarea name="note" rows="4" placeholder="Ghi chú thêm cho quán">
+                        <c:out value="${param.note}"/>
+                    </textarea>
                     <div class="checkout-total">
                         <span>Tổng tiền</span>
-                        <strong><span id="cartTotal"><fmt:formatNumber value="${cartTotal}" pattern="#,##0"/></span>đ</strong>
+                        <strong>
+                            <span id="cartTotal">
+                                <fmt:formatNumber value="${cartTotal}" pattern="#,##0"/>
+                            </span>đ</strong>
                     </div>
                     <c:choose>
                         <c:when test="${empty cart}">
@@ -102,6 +123,7 @@
             </section>
         </main>
         <div class="toast" id="toast">Đã cập nhật giỏ hàng</div>
-        <script src="${pageContext.request.contextPath}/assets/js/customer.js"></script>
+        <script src="${pageContext.request.contextPath}/assets/js/customer.js?v=20260708-ui7">
+        </script>
     </body>
 </html>

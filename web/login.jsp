@@ -6,7 +6,7 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Đăng nhập - Cafe & Bubble tea</title>
-        <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/customer.css">
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/customer.css?v=20260708-ui7">
     </head>
     <body class="auth-simple-page">
         <div class="auth-frame-title">Sign In</div>
@@ -29,7 +29,9 @@
                         <p class="alert success-alert">Tạo tài khoản thành công. Bạn có thể đăng nhập ngay.</p>
                     </c:if>
                     <c:if test="${not empty error}">
-                        <p class="alert error-alert"><c:out value="${error}"/></p>
+                        <p class="alert error-alert">
+                            <c:out value="${error}"/>
+                        </p>
                     </c:if>
 
                     <form class="auth-simple-form" action="${pageContext.request.contextPath}/login" method="post">
@@ -45,8 +47,10 @@
                                placeholder="Enter your password" autocomplete="current-password" required>
 
                         <div class="auth-help-links">
-                            <span>Bạn chưa có tài khoản? <a href="${pageContext.request.contextPath}/register">Đăng ký tại đây</a></span>
-                            <span>Quên mật khẩu? <a href="${pageContext.request.contextPath}/forgot-password.jsp">Nhấn vào đây</a></span>
+                            <span>Bạn chưa có tài khoản? <a href="${pageContext.request.contextPath}/register">Đăng ký tại đây</a>
+                            </span>
+                            <span>Quên mật khẩu? <a href="${pageContext.request.contextPath}/forgot-password.jsp">Nhấn vào đây</a>
+                            </span>
                         </div>
 
                         <button class="auth-simple-submit" type="submit">Đăng nhập</button>
@@ -56,7 +60,11 @@
 
             <footer class="site-footer auth-simple-footer">
                 <strong>Cafe & Bubble tea</strong>
-                <div class="social-row"><span>f</span><span>in</span><span>yt</span><span>ig</span></div>
+                <div class="social-row">
+                    <a href="https://facebook.com/" target="_blank" rel="noopener" aria-label="Facebook">f</a>
+                    <a href="https://youtube.com/" target="_blank" rel="noopener" aria-label="YouTube">yt</a>
+                    <a href="https://instagram.com/" target="_blank" rel="noopener" aria-label="Instagram">ig</a>
+                </div>
             </footer>
         </main>
     </body>

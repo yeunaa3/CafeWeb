@@ -8,7 +8,7 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Menu - Cafe & Bubble tea</title>
-        <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/customer.css">
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/customer.css?v=20260708-ui7">
     </head>
     <body data-context-path="${pageContext.request.contextPath}">
         <main class="page-shell">
@@ -16,24 +16,40 @@
                 <a class="brand" href="${pageContext.request.contextPath}/home">Cafe & Bubble tea</a>
                 <nav class="site-nav">
                     <a class="active-nav" href="${pageContext.request.contextPath}/menu">Menu</a>
-                    <a class="cart-link" href="${pageContext.request.contextPath}/checkout">Giỏ Hàng <span class="cart-count">${cartCount}</span></a>
+                    <a class="cart-link" href="${pageContext.request.contextPath}/checkout">Giỏ Hàng <span class="cart-count">${cartCount}</span>
+                    </a>
                     <a href="${pageContext.request.contextPath}/home#contact">Liên Hệ</a>
                     <c:choose>
-                        <c:when test="${not empty sessionScope.user}"><a class="customer-nav-avatar" href="${pageContext.request.contextPath}/profile" title="Thông tin cá nhân" aria-label="Thông tin cá nhân"><c:choose><c:when test="${not empty sessionScope.user.avatarUrl}"><span class="avatar-fallback" hidden>${fn:substring(sessionScope.user.fullName,0,1)}</span><img src="${pageContext.request.contextPath}/${sessionScope.user.avatarUrl}" alt="" onerror="this.hidden=true;this.previousElementSibling.hidden=false;"></c:when><c:otherwise>${fn:substring(sessionScope.user.fullName,0,1)}</c:otherwise></c:choose></a></c:when>
-                        <c:otherwise><a class="login-button" href="${pageContext.request.contextPath}/login?returnUrl=/menu">Đăng nhập</a></c:otherwise>
+                        <c:when test="${not empty sessionScope.user}">
+                            <a class="customer-nav-avatar" href="${pageContext.request.contextPath}/profile" title="Thông tin cá nhân" aria-label="Thông tin cá nhân">
+                                <c:choose>
+                                    <c:when test="${not empty sessionScope.user.avatarUrl}">
+                                        <span class="avatar-fallback" hidden>${fn:substring(sessionScope.user.fullName,0,1)}</span>
+                                        <img src="${pageContext.request.contextPath}/${sessionScope.user.avatarUrl}" alt="" onerror="this.hidden=true;this.previousElementSibling.hidden=false;">
+                                    </c:when>
+                                    <c:otherwise>${fn:substring(sessionScope.user.fullName,0,1)}</c:otherwise>
+                                </c:choose>
+                            </a>
+                        </c:when>
+                        <c:otherwise>
+                            <a class="login-button" href="${pageContext.request.contextPath}/login?returnUrl=/menu">Đăng nhập</a>
+                        </c:otherwise>
                     </c:choose>
                 </nav>
             </header>
 
             <section class="menu-heading">
-                <div><span class="page-kicker">Thực đơn hôm nay</span><h1>Menu</h1></div>
+                <div>
+                    <span class="page-kicker">Thực đơn hôm nay</span>
+                    <h1>Menu</h1>
+                </div>
                 <form class="search-form" action="${pageContext.request.contextPath}/menu" method="get">
                     <input type="search" name="keyword" value="${keyword}" placeholder="Tìm món yêu thích">
                     <button type="submit" aria-label="Tìm kiếm">Tìm</button>
                 </form>
             </section>
 
-            <img class="menu-cover" src="https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?auto=format&fit=crop&w=1400&q=80" alt="Tea cover">
+            <img class="menu-cover" src="https://sukientuanviet.vn/wp-content/uploads/2024/06/bang-ron-khai-truong-quan-cafe-2.jpg" alt="Tea cover">
 
             <nav class="category-nav" aria-label="Danh mục thực đơn">
                 <c:forEach var="section" items="${sections}">
@@ -51,12 +67,13 @@
                             <c:forEach var="product" items="${section.products}">
                                 <article class="product-card">
                                     <img src="${pageContext.request.contextPath}/assets/images/${product.imageUrl}"
-                                         onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1572490122747-3968b75cc699?auto=format&fit=crop&w=500&q=80';"
+                                         onerror="this.onerror=null;this.src='https://png.pngtree.com/png-clipart/20241213/original/pngtree-iced-coffee-with-milk-in-glass-black-png-image_17810628.png';"
                                          alt="${product.productName}">
                                     <div class="product-info">
                                         <div>
                                             <h3>${product.productName}</h3>
-                                            <p><fmt:formatNumber value="${product.price}" pattern="#,##0"/>đ</p>
+                                            <p>
+                                                <fmt:formatNumber value="${product.price}" pattern="#,##0"/>đ</p>
                                         </div>
                                         <button class="icon-button add-product-btn"
                                                 type="button"
@@ -74,19 +91,23 @@
             </c:forEach>
 
             <c:if test="${not hasProducts}">
-                <div class="empty-state menu-empty"><p>Không tìm thấy món phù hợp.</p><a href="${pageContext.request.contextPath}/menu">Xóa bộ lọc</a></div>
+                <div class="empty-state menu-empty">
+                    <p>Không tìm thấy món phù hợp.</p>
+                    <a href="${pageContext.request.contextPath}/menu">Xóa bộ lọc</a>
+                </div>
             </c:if>
 
             <section class="cart-strip">
                 <strong>Cafe & Bubble tea</strong>
-                <a class="danger-button" href="${pageContext.request.contextPath}/checkout">Xem Giỏ Hàng <span class="cart-count">${cartCount}</span></a>
+                <a class="danger-button" href="${pageContext.request.contextPath}/checkout">Xem Giỏ Hàng <span class="cart-count">${cartCount}</span>
+                </a>
             </section>
 
             <footer class="site-footer">
                 <strong>Cafe & Bubble tea</strong>
                 <div class="social-row">
-                    <a href="https://facebook.com/" target="_blank" rel="noopener" aria-label="Facebook">f</a>
-                    <a href="https://youtube.com/" target="_blank" rel="noopener" aria-label="YouTube">yt</a>
+                    <a href="https://www.facebook.com/n.khanh.290706" target="_blank" rel="noopener" aria-label="Facebook">f</a>
+                    <a href="https://www.youtube.com/watch?v=8sVtL0o-v7U&list=RDgJAbDSse5WM&index=4" target="_blank" rel="noopener" aria-label="YouTube">yt</a>
                     <a href="https://instagram.com/" target="_blank" rel="noopener" aria-label="Instagram">ig</a>
                 </div>
             </footer>
@@ -100,7 +121,12 @@
                 <button class="modal-close" type="button" aria-label="Đóng">×</button>
                 <div class="modal-product-summary">
                     <img id="modalProductImage" src="" alt="" onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1572490122747-3968b75cc699?auto=format&fit=crop&w=300&q=80';">
-                    <div><span>Tùy chỉnh món</span><h2 id="modalProductName">Chọn món</h2><p class="modal-price" id="modalProductPrice"></p></div>
+                    <div>
+                        <span>Tùy chỉnh món</span>
+                        <h2 id="modalProductName">Chọn món</h2>
+                        <p class="modal-price" id="modalProductPrice">
+                        </p>
+                    </div>
                 </div>
 
                 <label>Số lượng</label>
@@ -112,9 +138,12 @@
 
                 <label>Size</label>
                 <div class="choice-row">
-                    <label><input type="radio" name="selectedSize" value="S"> S</label>
-                    <label><input type="radio" name="selectedSize" value="M" checked> M</label>
-                    <label><input type="radio" name="selectedSize" value="L"> L +5.000đ</label>
+                    <label>
+                        <input type="radio" name="selectedSize" value="S"> S</label>
+                    <label>
+                        <input type="radio" name="selectedSize" value="M" checked> M</label>
+                    <label>
+                        <input type="radio" name="selectedSize" value="L"> L +5.000đ</label>
                 </div>
 
                 <label>Đá</label>
@@ -145,12 +174,18 @@
                     </c:forEach>
                 </div>
 
-                <div class="modal-total"><span>Tạm tính</span><strong id="modalTotal">0đ</strong></div>
-                <button class="primary-button wide-button" type="submit"><span>Thêm vào giỏ</span></button>
+                <div class="modal-total">
+                    <span>Tạm tính</span>
+                    <strong id="modalTotal">0đ</strong>
+                </div>
+                <button class="primary-button wide-button" type="submit">
+                    <span>Thêm vào giỏ</span>
+                </button>
             </form>
         </div>
 
         <div class="toast" id="toast">Đã thêm vào giỏ hàng</div>
-        <script src="${pageContext.request.contextPath}/assets/js/customer.js"></script>
+        <script src="${pageContext.request.contextPath}/assets/js/customer.js?v=20260708-ui7">
+        </script>
     </body>
 </html>

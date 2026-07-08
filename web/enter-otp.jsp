@@ -6,7 +6,7 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Xác thực OTP - Cafe & Bubble tea</title>
-        <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/customer.css">
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/customer.css?v=20260708-ui7">
     </head>
     <body class="auth-simple-page">
         <div class="auth-frame-title">Verify OTP</div>
@@ -18,12 +18,16 @@
             <section class="auth-simple-content" style="margin-top: 40px;">
                 <div class="auth-simple-form-wrap">
                     <h1>Xác thực mã OTP</h1>
-                    
+
                     <c:if test="${not empty message}">
-                        <p class="alert success-alert" style="color: green; background: #e6f4ea; padding: 10px; border-radius: 4px;"><c:out value="${message}"/></p>
+                        <p class="alert success-alert" style="color: green; background: #e6f4ea; padding: 10px; border-radius: 4px;">
+                            <c:out value="${message}"/>
+                        </p>
                     </c:if>
                     <c:if test="${not empty error}">
-                        <p class="alert error-alert" style="color: red; background: #fce8e6; padding: 10px; border-radius: 4px;"><c:out value="${error}"/></p>
+                        <p class="alert error-alert" style="color: red; background: #fce8e6; padding: 10px; border-radius: 4px;">
+                            <c:out value="${error}"/>
+                        </p>
                     </c:if>
 
                     <form class="auth-simple-form" action="${pageContext.request.contextPath}/verify-otp" method="post">

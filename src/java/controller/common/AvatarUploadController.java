@@ -15,7 +15,11 @@ import java.util.Locale;
 import model.User;
 
 @WebServlet(name = "AvatarUploadController", urlPatterns = {"/avatar/upload"})
-@MultipartConfig(maxFileSize = 5 * 1024 * 1024, maxRequestSize = 6 * 1024 * 1024)
+@MultipartConfig(
+        fileSizeThreshold = 1024 * 1024,
+        maxFileSize = 20 * 1024 * 1024,
+        maxRequestSize = 22 * 1024 * 1024
+)
 public class AvatarUploadController extends HttpServlet {
 
     @Override
@@ -72,7 +76,13 @@ public class AvatarUploadController extends HttpServlet {
                 putMessage(session, user, false, "Không thể lưu ảnh đại diện vào database.");
             }
         } catch (IllegalStateException ex) {
-            putMessage(session, user, false, "Ảnh quá lớn. Vui lòng chọn ảnh dưới 5MB.");
+            putMessage(session, user, false, "Ảnh quá lớn. Vui lòng chọn ảnh dưới 20MB.");
+        } catch (ServletException ex) {
+            putMessage(session, user, false, "Không thể đọc file ảnh. Vui lòng chọn ảnh PNG, JPG, JPEG hoặc WEBP.");
+        } catch (IOException ex) {
+            putMessage(session, user, false, "Không thể lưu file ảnh. Vui lòng thử ảnh khác.");
+        } catch (RuntimeException ex) {
+            putMessage(session, user, false, "Không thể cập nhật ảnh đại diện. Vui lòng thử lại.");
         }
 
         response.sendRedirect(request.getContextPath() + target);
