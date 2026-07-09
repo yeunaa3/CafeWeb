@@ -51,7 +51,7 @@
                 <div class="recommend-grid">
                     <c:forEach var="product" items="${recommendedProducts}">
                         <a class="recommend-item" href="${pageContext.request.contextPath}/menu">
-                            <img src="${pageContext.request.contextPath}/${empty product.imageUrl ? '' : (fn:startsWith(product.imageUrl, 'uploads/') ? product.imageUrl : 'assets/images/'.concat(product.imageUrl))}"
+                            <img src="${pageContext.request.contextPath}/assets/images/${product.imageUrl}"
                                  onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1572490122747-3968b75cc699?auto=format&fit=crop&w=600&q=80';"
                                  alt="${product.productName}">
                             <span>${product.productName}</span>

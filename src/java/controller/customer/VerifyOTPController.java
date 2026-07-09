@@ -1,8 +1,8 @@
 package controller.customer;
 
-import dal.DBContext;
 import java.io.IOException;
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -13,6 +13,10 @@ import jakarta.servlet.http.HttpSession;
 
 @WebServlet(name = "VerifyOTPController", urlPatterns = {"/verify-otp"})
 public class VerifyOTPController extends HttpServlet {
+
+    private static final String DB_URL = "jdbc:sqlserver://localhost:1433;databaseName=CBMS;encrypt=false;trustServerCertificate=true";
+    private static final String DB_USER = "sa"; 
+    private static final String DB_PASS = "123456"; 
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -47,9 +51,14 @@ public class VerifyOTPController extends HttpServlet {
                 return;
             }
 
-            String updateSql = "UPDATE dbo.Users SET password = ? WHERE LOWER(email) = LOWER(?)";
-            try (Connection conn = new DBContext().getConnection();
-                 PreparedStatement ps = conn.prepareStatement(updateSql)) {
+            Connection conn = null;
+            PreparedStatement ps = null;
+            try {
+                Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
+                conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS);
+                
+                String updateSql = "UPDATE dbo.Users SET password = ? WHERE LOWER(email) = LOWER(?)";
+                ps = conn.prepareStatement(updateSql);
                 ps.setString(1, newPassword); // Nếu hệ thống dùng mã hóa MD5/Bcrypt thì xử lý ở đây
                 ps.setString(2, email.trim());
                 
@@ -68,6 +77,9 @@ public class VerifyOTPController extends HttpServlet {
                 request.setAttribute("error", "Lỗi cập nhật mật khẩu: " + e.getMessage());
                 request.getRequestDispatcher("/reset-password.jsp").forward(request, response);
                 return;
+            } finally {
+                try { if (ps != null) ps.close(); } catch (Exception e) {}
+                try { if (conn != null) conn.close(); } catch (Exception e) {}
             }
         }
 
