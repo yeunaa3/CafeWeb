@@ -688,3 +688,36 @@
     background: #fff;
     box-shadow: 0 0 0 1px var(--ui-line-strong, #e5e7eb);
 }
+
+/* Cashier pages inherit the same clean UI rhythm */
+body,
+button,
+input,
+select,
+textarea {
+    font-family: "Be Vietnam Pro", "Inter", "Segoe UI", Arial, sans-serif !important;
+    letter-spacing: 0 !important;
+}
+
+button,
+.primary-action,
+.secondary-action,
+.approve-order,
+.cancel-order,
+.payment-form input,
+.payment-form select,
+.pos-item,
+.payment-summary,
+.product-row {
+    border-radius: 6px !important;
+    transition: background-color 0.18s ease, border-color 0.18s ease, color 0.18s ease, transform 0.18s ease, box-shadow 0.18s ease !important;
+}
+
+button:hover,
+.primary-action:hover,
+.secondary-action:hover,
+.approve-order:hover,
+.cancel-order:hover {
+    transform: translateY(-1px) !important;
+    box-shadow: 0 10px 22px rgba(79, 52, 33, 0.12) !important;
+}

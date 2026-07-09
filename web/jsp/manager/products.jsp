@@ -1,4 +1,4 @@
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
@@ -8,7 +8,7 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width,initial-scale=1">
         <title>Sản phẩm - CBMS</title>
-        <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/manager.css?v=20260708-ui7">
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/manager.css?v=20260709-orderflow1">
     </head>
     <body class="manager-page">
         <div class="manager-shell">
@@ -193,7 +193,8 @@
                 </section>
             </div>
         </c:if>
-        <script src="${pageContext.request.contextPath}/assets/js/manager.js?v=20260708-ui7">
+        <script src="${pageContext.request.contextPath}/assets/js/manager.js?v=20260709-orderflow1">
         </script>
     </body>
 </html>
+

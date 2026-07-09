@@ -36,7 +36,7 @@ public class CustomerOrderSummary {
 
     public String getDisplayStatus() {
         if ("Pending".equalsIgnoreCase(status)) return "Chờ duyệt";
-        if ("Processing".equalsIgnoreCase(status)) return "Đang xử lý";
+        if ("Approved".equalsIgnoreCase(status)) return "Đã duyệt";
         if ("Completed".equalsIgnoreCase(status)) return "Hoàn thành";
         if ("Cancelled".equalsIgnoreCase(status)) return "Đã hủy";
         return status;

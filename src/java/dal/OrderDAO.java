@@ -32,6 +32,7 @@ public class OrderDAO extends DBContext {
         PreparedStatement orderPs = null;
         PreparedStatement detailPs = null;
         PreparedStatement toppingPs = null;
+        PreparedStatement paymentPs = null;
         PreparedStatement voucherLockPs = null;
         PreparedStatement consumeVoucherPs = null;
         ResultSet generatedKeys = null;
@@ -42,6 +43,8 @@ public class OrderDAO extends DBContext {
         String detailSql = "INSERT INTO OrderDetails (order_id, product_id, quantity, selected_size, ice_level, sugar_level, price) "
                 + "VALUES (?, ?, ?, ?, ?, ?, ?)";
         String toppingSql = "INSERT INTO OrderDetailToppings (order_detail_id, topping_id, topping_price) VALUES (?, ?, ?)";
+        String paymentSql = "INSERT INTO Payments(order_id, payment_method, amount, amount_received, change_amount, payment_status, paid_at) "
+                + "VALUES (?, ?, ?, ?, 0, 'Paid', SYSDATETIME())";
         String voucherLockSql = "SELECT owner_user_id, status FROM Vouchers WITH (UPDLOCK) WHERE voucher_id = ?";
         String consumeVoucherSql = "UPDATE Vouchers SET status = 0 WHERE voucher_id = ? AND status = 1";
 
@@ -87,7 +90,7 @@ public class OrderDAO extends DBContext {
             orderPs.setString(6, "Online");
             orderPs.setString(7, shippingAddress);
             orderPs.setString(8, phone);
-            orderPs.setString(9, "Cash");
+            orderPs.setString(9, "QR-Code");
             orderPs.setString(10, note == null || note.trim().isEmpty() ? null : note.trim());
             orderPs.executeUpdate();
 
@@ -126,6 +129,14 @@ public class OrderDAO extends DBContext {
                 }
             }
 
+            double payableTotal = originalTotal - appliedDiscount;
+            paymentPs = con.prepareStatement(paymentSql);
+            paymentPs.setInt(1, orderId);
+            paymentPs.setString(2, "QR-Code");
+            paymentPs.setDouble(3, payableTotal);
+            paymentPs.setDouble(4, payableTotal);
+            paymentPs.executeUpdate();
+
             if (consumePrivateVoucher) {
                 consumeVoucherPs = con.prepareStatement(consumeVoucherSql);
                 consumeVoucherPs.setInt(1, voucherId);
@@ -146,6 +157,7 @@ public class OrderDAO extends DBContext {
             if (generatedKeys != null) generatedKeys.close();
             if (consumeVoucherPs != null) consumeVoucherPs.close();
             if (voucherLockPs != null) voucherLockPs.close();
+            if (paymentPs != null) paymentPs.close();
             if (toppingPs != null) toppingPs.close();
             if (detailPs != null) detailPs.close();
             if (orderPs != null) orderPs.close();
@@ -344,7 +356,6 @@ public class OrderDAO extends DBContext {
         result.addAll(orderMap.values());
         return result;
     }
-
     public void updateOrderStatusAndRewardPoints(int orderId, String newStatus) throws SQLException {
         Connection con = null;
         PreparedStatement selectPs = null;

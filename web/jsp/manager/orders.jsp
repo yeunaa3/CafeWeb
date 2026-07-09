@@ -1,4 +1,4 @@
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
@@ -8,7 +8,7 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width,initial-scale=1">
         <title>Quản lý đơn hàng - CBMS</title>
-        <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/manager.css?v=20260708-ui7">
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/manager.css?v=20260709-orderflow1">
     </head>
     <body class="manager-page">
         <div class="manager-shell">
@@ -29,8 +29,7 @@
                     <nav class="status-tabs" aria-label="Lọc trạng thái">
                         <a class="${empty selectedStatus ? 'active' : ''}" href="${pageContext.request.contextPath}/manager/orders">Tất cả</a>
                         <a class="${selectedStatus == 'Pending' ? 'active' : ''}" href="${pageContext.request.contextPath}/manager/orders?status=Pending">Chờ duyệt</a>
-                        <a class="${selectedStatus == 'Processing' ? 'active' : ''}" href="${pageContext.request.contextPath}/manager/orders?status=Processing">Đang xử lý</a>
-                        <a class="${selectedStatus == 'Delivering' ? 'active' : ''}" href="${pageContext.request.contextPath}/manager/orders?status=Delivering">Đang giao</a>
+                        <a class="${selectedStatus == 'Approved' ? 'active' : ''}" href="${pageContext.request.contextPath}/manager/orders?status=Approved">Đã duyệt</a>
                         <a class="${selectedStatus == 'Completed' ? 'active' : ''}" href="${pageContext.request.contextPath}/manager/orders?status=Completed">Hoàn thành</a>
                         <a class="${selectedStatus == 'Cancelled' ? 'active' : ''}" href="${pageContext.request.contextPath}/manager/orders?status=Cancelled">Đã hủy</a>
                     </nav>
@@ -90,12 +89,8 @@
                                                     <select name="status" class="order-state state-${fn:toLowerCase(order.status)}" data-submit-on-change>
                                                         <option value="Pending" ${order.status == 'Pending' ? 'selected' : ''}>Chờ duyệt</option>
                                                         <option value="Approved" ${order.status == 'Approved' ? 'selected' : ''}>Đã duyệt</option>
-                                                        <option value="Processing" ${order.status == 'Processing' ? 'selected' : ''}>Đang xử lý</option>
-                                                        <option value="Ready" ${order.status == 'Ready' ? 'selected' : ''}>Sẵn sàng</option>
-                                                        <option value="Delivering" ${order.status == 'Delivering' ? 'selected' : ''}>Đang giao</option>
                                                         <option value="Completed" ${order.status == 'Completed' ? 'selected' : ''}>Hoàn thành</option>
                                                         <option value="Cancelled" ${order.status == 'Cancelled' ? 'selected' : ''}>Đã hủy</option>
-                                                        <option value="Refunded" ${order.status == 'Refunded' ? 'selected' : ''}>Đã hoàn tiền</option>
                                                     </select>
                                                 </form>
                                             </td>
@@ -185,7 +180,8 @@
                 </section>
             </div>
         </c:if>
-        <script src="${pageContext.request.contextPath}/assets/js/manager.js?v=20260708-ui7">
+        <script src="${pageContext.request.contextPath}/assets/js/manager.js?v=20260709-orderflow1">
         </script>
     </body>
 </html>
+

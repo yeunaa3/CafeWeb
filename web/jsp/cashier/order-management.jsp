@@ -1,4 +1,4 @@
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
@@ -8,8 +8,8 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width,initial-scale=1">
         <title>Quản lý đơn hàng - Thu ngân</title>
-        <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/manager.css?v=20260708-ui7">
-        <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/cashier.css?v=20260708-ui7">
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/manager.css?v=20260709-orderflow1">
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/cashier.css?v=20260709-orderflow1">
     </head>
     <body class="manager-page">
         <div class="manager-shell">
@@ -30,8 +30,7 @@
                     <nav class="status-tabs">
                         <a class="${empty selectedStatus?'active':''}" href="${pageContext.request.contextPath}/cashier/order-management">Tất cả</a>
                         <a class="${selectedStatus=='Pending'?'active':''}" href="?status=Pending">Chờ duyệt</a>
-                        <a class="${selectedStatus=='Processing'?'active':''}" href="?status=Processing">Đang xử lý</a>
-                        <a class="${selectedStatus=='Ready'?'active':''}" href="?status=Ready">Chờ giao</a>
+                        <a class="${selectedStatus=='Approved'?'active':''}" href="?status=Approved">Đã duyệt</a>
                         <a class="${selectedStatus=='Completed'?'active':''}" href="?status=Completed">Hoàn thành</a>
                         <a class="${selectedStatus=='Cancelled'?'active':''}" href="?status=Cancelled">Đã hủy</a>
                     </nav>
@@ -93,7 +92,7 @@
                                                         <c:when test="${order.status=='Pending'}">
                                                             <form method="post" action="${pageContext.request.contextPath}/cashier/order-management">
                                                                 <input type="hidden" name="id" value="${order.orderId}">
-                                                                <input type="hidden" name="status" value="Processing">
+                                                                <input type="hidden" name="status" value="Approved">
                                                                 <button class="approve-order" type="submit">Duyệt đơn</button>
                                                             </form>
                                                             <form method="post" action="${pageContext.request.contextPath}/cashier/order-management" data-confirm="Hủy đơn #${order.orderId}?">
@@ -102,8 +101,20 @@
                                                                 <button class="cancel-order" type="submit">Hủy</button>
                                                             </form>
                                                         </c:when>
+                                                        <c:when test="${order.status=='Approved'}">
+                                                            <form method="post" action="${pageContext.request.contextPath}/cashier/order-management">
+                                                                <input type="hidden" name="id" value="${order.orderId}">
+                                                                <input type="hidden" name="status" value="Completed">
+                                                                <button class="approve-order" type="submit">Hoàn thành</button>
+                                                            </form>
+                                                            <form method="post" action="${pageContext.request.contextPath}/cashier/order-management" data-confirm="Hủy đơn #${order.orderId}?">
+                                                                <input type="hidden" name="id" value="${order.orderId}">
+                                                                <input type="hidden" name="status" value="Cancelled">
+                                                                <button class="cancel-order" type="submit">Hủy</button>
+                                                            </form>
+                                                        </c:when>
                                                         <c:otherwise>
-                                                            <small>Đang ở bộ phận tiếp theo</small>
+                                                            <small>Không còn thao tác</small>
                                                         </c:otherwise>
                                                     </c:choose>
                                                 </div>
@@ -179,7 +190,8 @@
                 </section>
             </div>
         </c:if>
-        <script src="${pageContext.request.contextPath}/assets/js/manager.js?v=20260708-ui7">
+        <script src="${pageContext.request.contextPath}/assets/js/manager.js?v=20260709-orderflow1">
         </script>
     </body>
 </html>
+

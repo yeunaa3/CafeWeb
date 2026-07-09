@@ -1619,3 +1619,73 @@ textarea {
         width: 100%;
     }
 }
+
+/* Unified typography and friendly controls */
+:root {
+    --ui-font: "Be Vietnam Pro", "Inter", "Segoe UI", Arial, sans-serif;
+    --ui-radius: 6px;
+}
+
+html,
+body,
+button,
+input,
+select,
+textarea {
+    font-family: var(--ui-font) !important;
+    letter-spacing: 0 !important;
+}
+
+button,
+.primary-action,
+.secondary-action,
+.dialog-submit,
+.search-box,
+.status-tabs a,
+.manager-nav a,
+.detail-button,
+.state-pill,
+.order-state,
+.availability-button,
+.approve-order,
+.cancel-order {
+    border-radius: var(--ui-radius) !important;
+    transition: background-color 0.18s ease, border-color 0.18s ease, color 0.18s ease, transform 0.18s ease, box-shadow 0.18s ease !important;
+}
+
+input,
+select,
+textarea,
+.data-panel,
+.dashboard-panel,
+.metric-card,
+.modal-dialog,
+.manager-card,
+.account-card,
+.manager-form input,
+.manager-form select,
+.manager-form textarea {
+    border-radius: var(--ui-radius) !important;
+}
+
+button:hover,
+.primary-action:hover,
+.secondary-action:hover,
+.dialog-submit:hover,
+.status-tabs a:hover,
+.manager-nav a:hover,
+.detail-button:hover,
+.availability-button:hover,
+.approve-order:hover,
+.cancel-order:hover {
+    transform: translateY(-1px) !important;
+    box-shadow: 0 10px 22px rgba(79, 52, 33, 0.12) !important;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+    border-color: var(--coffee-500) !important;
+    box-shadow: 0 0 0 3px rgba(166, 111, 72, 0.14) !important;
+    outline: 0 !important;
+}

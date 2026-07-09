@@ -39,8 +39,9 @@ public class CashierOrderManagementController extends HttpServlet {
         boolean success = false;
         OrderDAO orderDAO = new OrderDAO();
         ManagerOrderSummary order = orderDAO.getManagerOrderById(orderId);
-        boolean allowedAction = order != null && "Pending".equals(order.getStatus())
-                && ("Processing".equals(status) || "Cancelled".equals(status));
+        boolean allowedAction = order != null
+                && (("Pending".equals(order.getStatus()) && ("Approved".equals(status) || "Cancelled".equals(status)))
+                || ("Approved".equals(order.getStatus()) && ("Completed".equals(status) || "Cancelled".equals(status))));
         if (allowedAction) {
             try {
                 orderDAO.updateOrderStatusAndRewardPoints(orderId, status);
@@ -56,8 +57,7 @@ public class CashierOrderManagementController extends HttpServlet {
     private int parseId(String value) { try { return Integer.parseInt(value); } catch (Exception ex) { return -1; } }
     private String value(String value) { return value == null ? "" : value.trim(); }
     private boolean isKnownStatus(String status) {
-        return "Pending".equals(status) || "Approved".equals(status) || "Processing".equals(status)
-                || "Ready".equals(status) || "Delivering".equals(status) || "Completed".equals(status)
-                || "Cancelled".equals(status) || "Refunded".equals(status);
+        return "Pending".equals(status) || "Approved".equals(status)
+                || "Completed".equals(status) || "Cancelled".equals(status);
     }
 }

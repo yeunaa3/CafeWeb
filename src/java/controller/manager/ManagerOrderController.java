@@ -15,7 +15,7 @@ import java.util.Set;
 @WebServlet(name = "ManagerOrderController", urlPatterns = {"/manager/orders"})
 public class ManagerOrderController extends HttpServlet {
     private static final Set<String> STATUSES = new HashSet<String>(Arrays.asList(
-            "Pending", "Approved", "Processing", "Ready", "Delivering", "Completed", "Cancelled", "Refunded"));
+            "Pending", "Approved", "Completed", "Cancelled"));
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
