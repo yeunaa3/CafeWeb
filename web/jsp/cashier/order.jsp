@@ -1,0 +1,237 @@
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
+<!DOCTYPE html>
+<html lang="vi">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Đặt hàng tại quầy - CBMS</title>
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/manager.css?v=20260708-ui7">
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/cashier.css?v=20260708-ui7">
+    </head>
+    <body class="manager-page">
+        <div class="manager-shell">
+            <%@include file="includes/sidebar.jspf"%>
+
+            <div class="manager-main">
+                <%@include file="includes/header.jspf"%>
+
+                <main class="manager-content cashier-order-page">
+                    <c:if test="${not empty success}">
+                        <div class="manager-alert success">
+                            <c:out value="${success}"/>
+                        </div>
+                    </c:if>
+
+                    <c:if test="${not empty error}">
+                        <div class="manager-alert error">
+                            <c:out value="${error}"/>
+                        </div>
+                    </c:if>
+
+                    <div class="pos-heading">
+                        <div>
+                            <span>ĐƠN TẠI QUẦY</span>
+                            <h2>Order</h2>
+                        </div>
+                        <a class="primary-action" href="${pageContext.request.contextPath}/cashier/order/add">
+                            Thêm món <b>+</b>
+                        </a>
+                    </div>
+
+                    <section class="pos-layout">
+                        <div class="pos-items">
+                            <c:forEach var="item" items="${cart}">
+                                <article class="pos-item">
+                                    <span class="pos-product-image">
+                                        <c:choose>
+                                            <c:when test="${not empty item.imageUrl}">
+                                                <img src="${pageContext.request.contextPath}/${fn:startsWith(item.imageUrl, 'uploads/') ? item.imageUrl : 'assets/images/'.concat(item.imageUrl)}" alt="">
+                                            </c:when>
+                                            <c:otherwise>
+                                                ${fn:substring(item.productName, 0, 1)}
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </span>
+
+                                    <div class="pos-item-info">
+                                        <strong>
+<c:out value="${item.productName}"/>
+</strong>
+                                        <small>
+                                            <c:if test="${not empty item.toppings}">
+                                                <c:forEach var="topping" items="${item.toppings}" varStatus="loop">
+                                                    <c:out value="${topping.toppingName}"/>${loop.last ? '' : ' · '}
+                                                </c:forEach>
+                                            </c:if>
+                                        </small>
+
+                                        <form method="post" action="${pageContext.request.contextPath}/cashier/order" class="item-edit-form">
+                                            <input type="hidden" name="action" value="update">
+                                            <input type="hidden" name="cartKey" value="${item.cartKey}">
+                                            <input name="note" value="<c:out value='${item.note}'/>" placeholder="Ghi chú">
+                                            <select name="selectedSize">
+                                                <option ${item.selectedSize == 'S' ? 'selected' : ''}>S</option>
+                                                <option ${item.selectedSize == 'M' ? 'selected' : ''}>M</option>
+                                                <option ${item.selectedSize == 'L' ? 'selected' : ''}>L</option>
+                                            </select>
+                                            <input type="number" name="quantity" value="${item.quantity}" min="1">
+                                            <button type="submit">Cập nhật</button>
+                                        </form>
+
+                                        <form method="post" action="${pageContext.request.contextPath}/cashier/order">
+                                            <input type="hidden" name="action" value="remove">
+                                            <input type="hidden" name="cartKey" value="${item.cartKey}">
+                                            <button class="remove-link" type="submit">Xóa món</button>
+                                        </form>
+                                    </div>
+
+                                    <strong class="line-total">
+                                        <fmt:formatNumber value="${item.lineTotal}" pattern="#,##0"/>đ
+                                    </strong>
+                                </article>
+                            </c:forEach>
+
+                            <c:if test="${empty cart}">
+                                <div class="pos-empty">
+                                    <svg viewBox="0 0 24 24">
+                                    <path d="M3 3h2l2 13h11l3-9H6"/>
+                                    <circle cx="9" cy="20" r="1"/>
+                                    <circle cx="18" cy="20" r="1"/>
+                                    </svg>
+                                    <h3>Đơn tại quầy đang trống</h3>
+                                    <a href="${pageContext.request.contextPath}/cashier/order/add">Chọn món</a>
+                                </div>
+                            </c:if>
+                        </div>
+
+                        <aside class="payment-summary">
+                            <span>THANH TOÁN</span>
+                            <h2>Tổng đơn hàng</h2>
+
+                            <div>
+                                <small>Tạm tính</small>
+                                <strong>
+<fmt:formatNumber value="${cartTotal}" pattern="#,##0"/>đ</strong>
+                            </div>
+
+                            <div>
+                                <small>Phí giao hàng</small>
+                                <strong>0đ</strong>
+                            </div>
+
+                            <form method="post" action="${pageContext.request.contextPath}/cashier/payment" class="payment-form">
+                                <label>
+                                    Mã giảm giá
+                                    <input name="voucherCode" placeholder="Nhập voucher">
+                                </label>
+
+                                <label>
+                                    Phương thức
+                                    <select name="paymentMethod" data-payment-method>
+                                        <option value="Cash">Tiền mặt</option>
+                                        <option value="QR-Code">QR Code</option>
+                                    </select>
+                                </label>
+
+                                <label data-cash-received>
+                                    Tiền khách đưa
+                                    <input type="number" name="amountReceived" min="0" step="1000" value="${cartTotal}">
+                                </label>
+
+                                <div class="qr-payment" data-qr-payment hidden>
+                                    <img
+                                        class="qr-image"
+                                        src="${pageContext.request.contextPath}/assets/images/payment-qr.jpg"
+                                        alt="QR thanh toán"
+                                        onerror="if(!this.dataset.triedPng){this.dataset.triedPng='true';this.src='${pageContext.request.contextPath}/assets/images/payment-qr.png';}else{this.hidden=true;this.nextElementSibling.hidden=false;}"
+                                        >
+                                    <div class="qr-visual" hidden aria-label="QR thanh toán demo">
+                                        <i class="finder one">
+</i>
+                                        <i class="finder two">
+</i>
+                                        <i class="finder three">
+</i>
+                                    </div>
+                                    <strong>Quét mã để thanh toán</strong>
+                                    <small>Đặt ảnh QR thật tại web/assets/images/payment-qr.jpg hoặc payment-qr.png</small>
+                                </div>
+
+                                <div class="payment-total">
+                                    <span>Tổng</span>
+                                    <strong>
+<fmt:formatNumber value="${cartTotal}" pattern="#,##0"/>đ</strong>
+                                </div>
+
+                                <button class="pay-button" type="submit" ${empty cart ? 'disabled' : ''}>
+                                    Xác nhận thanh toán
+                                </button>
+                            </form>
+                        </aside>
+                    </section>
+
+                    <div class="pos-actions">
+                        <form method="post" action="${pageContext.request.contextPath}/cashier/order">
+                            <input type="hidden" name="action" value="hold">
+                            <button class="secondary-action" type="submit" ${empty cart ? 'disabled' : ''}>
+                                Giữ đơn
+                            </button>
+                        </form>
+
+                        <form
+                            method="post"
+                            action="${pageContext.request.contextPath}/cashier/order"
+                            data-confirm="Xóa toàn bộ món trong đơn?"
+                            >
+                            <input type="hidden" name="action" value="clear">
+                            <button class="secondary-action" type="submit" ${empty cart ? 'disabled' : ''}>
+                                Xóa đơn
+                            </button>
+                        </form>
+                    </div>
+
+                    <c:if test="${not empty heldOrders}">
+                        <section class="held-orders">
+                            <div class="panel-heading">
+                                <div>
+                                    <span>HOLD LIST</span>
+                                    <h2>Đơn đang giữ</h2>
+                                </div>
+                            </div>
+
+                            <div class="held-list">
+                                <c:forEach var="held" items="${heldOrders}">
+                                    <article>
+                                        <div>
+                                            <strong>
+<fmt:formatDate value="${held.createdAt}" pattern="HH:mm dd/MM"/>
+</strong>
+                                            <small>
+                                                ${held.itemCount} món ·
+                                                <fmt:formatNumber value="${held.total}" pattern="#,##0"/>đ
+                                            </small>
+                                        </div>
+
+                                        <form method="post" action="${pageContext.request.contextPath}/cashier/order">
+                                            <input type="hidden" name="action" value="recall">
+                                            <input type="hidden" name="holdId" value="${held.holdId}">
+                                            <button type="submit">Gọi lại</button>
+                                        </form>
+                                    </article>
+                                </c:forEach>
+                            </div>
+                        </section>
+                    </c:if>
+                </main>
+            </div>
+        </div>
+
+        <script src="${pageContext.request.contextPath}/assets/js/manager.js?v=20260708-ui7">
+</script>
+        <script src="${pageContext.request.contextPath}/assets/js/cashier.js?v=20260708-ui7">
+</script>
+    </body>
+</html>
