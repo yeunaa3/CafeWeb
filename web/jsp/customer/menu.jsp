@@ -66,7 +66,7 @@
                         <div class="product-grid">
                             <c:forEach var="product" items="${section.products}">
                                 <article class="product-card">
-                                    <img src="${pageContext.request.contextPath}/assets/images/${product.imageUrl}"
+                                    <img src="${pageContext.request.contextPath}/${empty product.imageUrl ? '' : (fn:startsWith(product.imageUrl, 'uploads/') ? product.imageUrl : 'assets/images/'.concat(product.imageUrl))}"
                                          onerror="this.onerror=null;this.src='https://png.pngtree.com/png-clipart/20241213/original/pngtree-iced-coffee-with-milk-in-glass-black-png-image_17810628.png';"
                                          alt="${product.productName}">
                                     <div class="product-info">
@@ -81,7 +81,7 @@
                                                 data-product-id="${product.productId}"
                                                 data-product-name="${product.productName}"
                                                 data-product-price="${product.price}"
-                                                data-product-image="${product.imageUrl}">+</button>
+                                                data-product-image="${empty product.imageUrl ? '' : (fn:startsWith(product.imageUrl, 'uploads/') ? product.imageUrl : 'assets/images/'.concat(product.imageUrl))}">+</button>
                                     </div>
                                 </article>
                             </c:forEach>

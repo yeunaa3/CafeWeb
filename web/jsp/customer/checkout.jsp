@@ -57,7 +57,7 @@
                             <div class="cart-list">
                                 <c:forEach var="item" items="${cart}">
                                     <article class="cart-item" data-cart-row="${item.cartKey}" data-unit-price="${item.unitPrice}">
-                                        <img src="${pageContext.request.contextPath}/assets/images/${item.imageUrl}"
+                                        <img src="${pageContext.request.contextPath}/${empty item.imageUrl ? '' : (fn:startsWith(item.imageUrl, 'uploads/') ? item.imageUrl : 'assets/images/'.concat(item.imageUrl))}"
                                              onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1572490122747-3968b75cc699?auto=format&fit=crop&w=300&q=80';"
                                              alt="${item.productName}">
                                         <div>

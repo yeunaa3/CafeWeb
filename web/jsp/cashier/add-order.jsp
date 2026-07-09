@@ -42,7 +42,7 @@
                                     <span class="picker-image">
                                         <c:choose>
                                             <c:when test="${not empty product.imageUrl}">
-                                                <img src="${pageContext.request.contextPath}/assets/images/${product.imageUrl}" alt="">
+                                                <img src="${pageContext.request.contextPath}/${fn:startsWith(product.imageUrl, 'uploads/') ? product.imageUrl : 'assets/images/'.concat(product.imageUrl)}" alt="">
                                             </c:when>
                                             <c:otherwise>${fn:substring(product.productName,0,1)}</c:otherwise>
                                         </c:choose>

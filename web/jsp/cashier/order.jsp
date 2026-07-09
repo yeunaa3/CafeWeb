@@ -48,7 +48,7 @@
                                     <span class="pos-product-image">
                                         <c:choose>
                                             <c:when test="${not empty item.imageUrl}">
-                                                <img src="${pageContext.request.contextPath}/assets/images/${item.imageUrl}" alt="">
+                                                <img src="${pageContext.request.contextPath}/${fn:startsWith(item.imageUrl, 'uploads/') ? item.imageUrl : 'assets/images/'.concat(item.imageUrl)}" alt="">
                                             </c:when>
                                             <c:otherwise>
                                                 ${fn:substring(item.productName, 0, 1)}

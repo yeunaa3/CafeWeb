@@ -2,14 +2,23 @@ package controller.manager;
 
 import dal.ProductDAO;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.Part;
+import java.io.File;
 import java.io.IOException;
+import java.util.Locale;
 import model.Product;
 
 @WebServlet(name = "ManagerProductController", urlPatterns = {"/manager/products"})
+@MultipartConfig(
+        fileSizeThreshold = 1024 * 1024,
+        maxFileSize = 8 * 1024 * 1024,
+        maxRequestSize = 10 * 1024 * 1024
+)
 public class ManagerProductController extends HttpServlet {
 
     @Override
@@ -56,11 +65,25 @@ public class ManagerProductController extends HttpServlet {
         product.setProductName(trim(request.getParameter("productName")));
         product.setCategoryId(parseId(request.getParameter("categoryId")));
         product.setPrice(parseDouble(request.getParameter("price")));
-        product.setImageUrl(trimToNull(request.getParameter("imageUrl")));
+        product.setImageUrl(trimToNull(request.getParameter("currentImageUrl")));
         product.setDescription(trimToNull(request.getParameter("description")));
         product.setStatus(request.getParameter("status") != null);
 
         String error = validate(product);
+        if (error == null) {
+            try {
+                String uploadedImage = saveProductImage(request);
+                if (uploadedImage != null) {
+                    product.setImageUrl(uploadedImage);
+                }
+            } catch (IllegalStateException ex) {
+                error = "Anh qua lon. Vui long chon anh duoi 8MB.";
+            } catch (ServletException ex) {
+                error = ex.getMessage();
+            } catch (IOException ex) {
+                error = "Khong the luu file anh. Vui long thu anh khac.";
+            }
+        }
         if (error == null) {
             boolean success = editing ? productDAO.updateProduct(product) : productDAO.createProduct(product);
             if (success) {
@@ -88,6 +111,41 @@ public class ManagerProductController extends HttpServlet {
         if (product.getCategoryId() < 1) return "Vui lòng chọn danh mục.";
         if (product.getPrice() < 0) return "Giá sản phẩm không được âm.";
         return null;
+    }
+
+    private String saveProductImage(HttpServletRequest request) throws IOException, ServletException {
+        Part image = request.getPart("productImage");
+        if (image == null || image.getSize() <= 0) {
+            return null;
+        }
+
+        String extension = extensionOf(image.getSubmittedFileName());
+        if (extension == null) {
+            throw new ServletException("Vui long chon anh PNG, JPG, JPEG hoac WEBP.");
+        }
+
+        String uploadPath = getServletContext().getRealPath("/uploads/products");
+        if (uploadPath == null) {
+            throw new IOException("Khong tim thay thu muc upload cua server.");
+        }
+
+        File uploadDir = new File(uploadPath);
+        if (!uploadDir.exists() && !uploadDir.mkdirs()) {
+            throw new IOException("Khong the tao thu muc luu anh san pham.");
+        }
+
+        String fileName = "product-" + System.currentTimeMillis() + extension;
+        image.write(new File(uploadDir, fileName).getAbsolutePath());
+        return "uploads/products/" + fileName;
+    }
+
+    private String extensionOf(String fileName) {
+        int dot = fileName == null ? -1 : fileName.lastIndexOf('.');
+        if (dot < 0) {
+            return null;
+        }
+        String extension = fileName.substring(dot).toLowerCase(Locale.ROOT);
+        return extension.matches("\\.(png|jpg|jpeg|webp)") ? extension : null;
     }
 
     private void finish(HttpServletRequest request, HttpServletResponse response,

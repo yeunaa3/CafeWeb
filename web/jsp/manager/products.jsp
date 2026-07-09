@@ -63,7 +63,7 @@
                                                     <span>
                                                         <c:choose>
                                                             <c:when test="${not empty product.imageUrl}">
-                                                                <img src="${pageContext.request.contextPath}/assets/images/${product.imageUrl}" alt="">
+                                                                <img src="${pageContext.request.contextPath}/${fn:startsWith(product.imageUrl, 'uploads/') ? product.imageUrl : 'assets/images/'.concat(product.imageUrl)}" alt="">
                                                             </c:when>
                                                             <c:otherwise>${fn:substring(product.productName,0,1)}</c:otherwise>
                                                         </c:choose>
@@ -155,9 +155,10 @@
                         </div>
                         <a href="${pageContext.request.contextPath}/manager/products" aria-label="Đóng">×</a>
                     </div>
-                    <form method="post" action="${pageContext.request.contextPath}/manager/products" class="manager-form">
+                    <form method="post" action="${pageContext.request.contextPath}/manager/products" class="manager-form" enctype="multipart/form-data">
                         <input type="hidden" name="action" value="${formMode == 'edit' ? 'update' : 'create'}">
                         <input type="hidden" name="id" value="${editingProduct.productId}">
+                        <input type="hidden" name="currentImageUrl" value="<c:out value='${editingProduct.imageUrl}'/>">
                         <label>Tên sản phẩm *<input name="productName" value="<c:out value='${editingProduct.productName}'/>" required>
                         </label>
                         <div class="form-grid">
@@ -173,7 +174,11 @@
                             <label>Giá bán *<input type="number" name="price" value="${editingProduct.price}" min="0" step="1000" required>
                             </label>
                         </div>
-                        <label>Tên file ảnh<input name="imageUrl" value="<c:out value='${editingProduct.imageUrl}'/>" placeholder="ca-phe-sua-da.png">
+                        <label class="file-upload-field">Ảnh sản phẩm
+                            <input type="file" name="productImage" accept="image/png,image/jpeg,image/webp">
+                            <c:if test="${not empty editingProduct.imageUrl}">
+                                <small>Đang dùng: <c:out value="${editingProduct.imageUrl}"/></small>
+                            </c:if>
                         </label>
                         <label>Mô tả<textarea name="description" rows="3">
                                 <c:out value="${editingProduct.description}"/>

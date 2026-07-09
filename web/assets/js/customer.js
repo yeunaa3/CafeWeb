@@ -106,7 +106,7 @@
 
         if (productImage) {
             var cardImage = button.closest(".product-card").querySelector("img");
-            productImage.src = cardImage ? cardImage.src : contextPath + "/assets/images/" + button.getAttribute("data-product-image");
+            productImage.src = cardImage ? cardImage.src : contextPath + "/" + button.getAttribute("data-product-image");
             productImage.alt = productName;
         }
 
