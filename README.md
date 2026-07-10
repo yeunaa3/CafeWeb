@@ -72,15 +72,7 @@ Nếu Tomcat báo không thấy `com.microsoft.sqlserver.jdbc.SQLServerDriver`, 
 
 Không cấu hình DB bằng các biến `CBMS_DB_*` nữa, vì rule hiện dùng Tomcat connection pool qua `jdbc/CBMS`.
 
-Nếu database đã được tạo từ phiên bản cũ, mở SSMS và chạy lần lượt:
-
-1. `database/migrations/001_add_user_gender.sql`
-2. `database/migrations/002_task7_manager.sql`
-3. `database/migrations/003_update_product_image_paths.sql`
-4. `database/migrations/004_update_user_avatar_paths.sql`
-5. `database/migrations/005_seed_role_accounts.sql`
-
-Database tạo mới bằng `CBMS.sql` đã có sẵn các cột này. Tài khoản Manager mẫu là `admin01` / `123456`.
+Chạy file `CBMS.sql` mới nhất để tạo database và đồng bộ dữ liệu mẫu. File này đã có sẵn cấu trúc, sản phẩm, ảnh, avatar và tài khoản mẫu. Tài khoản Manager mẫu là `admin01` / `123456`.
 
 ## 4.1. Cấu hình Gmail SMTP cho OTP
 
@@ -195,7 +187,7 @@ Lỗi này xảy ra khi SQL Server từ chối kết nối trước khi DAO ch�
 2. Trong **SQL Server Network Configuration**, bật `TCP/IP`, đặt TCP Port là `1433`, rồi restart SQL Server service.
 3. Bật chế độ **SQL Server and Windows Authentication mode**; bảo đảm login `sa` được enable.
 4. Dùng chính tài khoản trong `web/META-INF/context.xml` đăng nhập thử bằng SSMS với server `localhost,1433`.
-5. Kiểm tra database `CBMS` đã tồn tại và đã chạy `CBMS.sql` hoặc các migration cần thiết.
+5. Kiểm tra database `CBMS` đã tồn tại và đã chạy file `CBMS.sql` mới nhất.
 6. Kiểm tra `web/META-INF/context.xml` có đúng URL, username và password của máy đó.
 7. Nếu Tomcat báo không thấy driver, copy `lib/sqljdbc42.jar` vào thư mục `lib` của Tomcat rồi restart Tomcat.
 8. Stop Tomcat, chạy **Clean and Build**, rồi Run lại để WAR mới chứa cấu hình và JDBC driver.
