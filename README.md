@@ -53,8 +53,9 @@ Servlet API không nằm trong các JAR trên. NetBeans lấy Servlet API từ T
 5. Mở tab **Services > Servers**.
 6. Nếu chưa có Tomcat, chọn **Add Server > Apache Tomcat or TomEE**, sau đó chọn thư mục Tomcat 10.1 trên máy.
 7. Vào **Project Properties > Run**, chọn Tomcat 10.1 vừa thêm.
-8. Stop Tomcat nếu server đang chạy, sau đó chọn **Clean and Build**.
-9. Run project.
+8. Nếu NetBeans hiện **Resolve Data Sources** cho `jdbc/CBMS`, bấm **Add Connection...** và cấu hình theo mục **Dấu chấm than `jdbc/CBMS` trong NetBeans** bên dưới.
+9. Stop Tomcat nếu server đang chạy, sau đó chọn **Clean and Build**.
+10. Run project.
 
 Mỗi máy chỉ cần cấu hình JDK và Tomcat một lần.
 
@@ -139,7 +140,28 @@ Kiểm tra thư mục `lib/` có đủ các JAR của project. Không trỏ lạ
 
 Kiểm tra `lib/sqljdbc42.jar` tồn tại, sau đó Stop Tomcat và Clean and Build. Trong WAR phải có `WEB-INF/lib/sqljdbc42.jar`.
 
-### Không tìm thấy `jdbc/CBMS`
+### Dấu chấm than `jdbc/CBMS` trong NetBeans
+
+Project dùng `web/META-INF/context.xml` để khai báo Tomcat connection pool `jdbc/CBMS`. Vì vậy NetBeans có thể hiện hộp **Resolve Data Sources** trên từng máy. Đây là cấu hình local của IDE, không push được qua Git.
+
+Khi bấm **Add Connection...**, cấu hình:
+
+- Driver Class: `com.microsoft.sqlserver.jdbc.SQLServerDriver`
+- Host: `localhost`
+- Port: `1433`
+- Database: `CBMS`
+- User: `sa`
+- Password: mật khẩu SQL Server của máy đó
+- JDBC URL: `jdbc:sqlserver://localhost:1433;databaseName=CBMS;encrypt=true;trustServerCertificate=true`
+
+Nếu **Test Connection** báo `javax/xml/bind/DatatypeConverter`, driver SQL Server trong NetBeans đang thiếu JAXB. Vào phần JDBC Driver của NetBeans và bảo đảm **Driver File(s)** có đủ 2 file:
+
+1. `lib/sqljdbc42.jar`
+2. `lib/jaxb-api-2.1.jar`
+
+Sau đó bấm **Test Connection** lại. Khi test thành công, bấm **Finish**. Nếu chỉ bấm **Close**, lần sau mở NetBeans sẽ hiện dấu chấm than lại.
+
+### Không tìm thấy `jdbc/CBMS` khi chạy web
 
 Kiểm tra `web/META-INF/context.xml` có khai báo Resource `jdbc/CBMS`, sau đó Stop Tomcat, Clean and Build và Run lại project.
 
