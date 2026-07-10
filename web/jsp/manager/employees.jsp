@@ -133,9 +133,9 @@
                         <footer class="table-footer">
                             <span>Hiển thị <strong>${fn:length(staffList)}</strong> nhân viên</span>
                             <div class="pagination">
-                                <button disabled>â€¹</button>
+                                <button disabled>&lsaquo;</button>
                                 <b>1</b>
-                                <button disabled>â€º</button>
+                                <button disabled>&rsaquo;</button>
                             </div>
                         </footer>
                     </section>

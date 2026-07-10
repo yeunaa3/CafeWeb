@@ -14,7 +14,7 @@
         <main class="payment-result-card ${paymentSuccess?'success':'failed'}">
             <div class="result-symbol">
                 <c:choose>
-                    <c:when test="${paymentSuccess}">âœ“</c:when>
+                    <c:when test="${paymentSuccess}">&#10003;</c:when>
                     <c:otherwise>×</c:otherwise>
                 </c:choose>
             </div>

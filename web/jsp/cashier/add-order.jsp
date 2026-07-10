@@ -69,7 +69,7 @@
                                         <option>L</option>
                                     </select>
                                     <div class="quantity-control">
-                                        <button type="button" data-quantity-minus ${product.status?'':'disabled'}>âˆ’</button>
+                                        <button type="button" data-quantity-minus ${product.status?'':'disabled'}>&minus;</button>
                                         <input name="quantity_${product.productId}" value="0" min="0" max="99" readonly>
                                         <button type="button" data-quantity-plus ${product.status?'':'disabled'}>+</button>
                                     </div>
