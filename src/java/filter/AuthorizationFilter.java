@@ -62,8 +62,7 @@ public class AuthorizationFilter implements Filter {
     }
 
     private boolean isCustomerOnly(String path) {
-        return "/profile".equals(path)
-                || "/redeem".equals(path)
+        return "/redeem".equals(path)
                 || "/checkout".equals(path)
                 || "/checkout/payment".equals(path);
     }

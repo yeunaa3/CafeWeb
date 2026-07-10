@@ -20,7 +20,7 @@ public final class CashierPageSupport {
             return null;
         }
         User user = (User) value;
-        if (user.getRoleId() != 2 || !"Thu ngân".equalsIgnoreCase(user.getStaffPosition())) {
+        if (user.getRoleId() != 2) {
             response.sendError(HttpServletResponse.SC_FORBIDDEN);
             return null;
         }

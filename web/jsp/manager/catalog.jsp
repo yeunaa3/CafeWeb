@@ -118,7 +118,7 @@
                         </div>
                         <footer class="table-footer">
                             <span>Hiển thị <strong>${fn:length(categoryList)}</strong> danh mục</span>
-                            <div class="pagination"><button disabled>â€¹</button><b>1</b><button disabled>â€º</button></div>
+                            <div class="pagination"><button disabled>&lsaquo;</button><b>1</b><button disabled>&rsaquo;</button></div>
                         </footer>
                     </section>
 
@@ -200,7 +200,7 @@
                         </div>
                         <footer class="table-footer">
                             <span>Hiển thị <strong>${fn:length(toppingList)}</strong> topping</span>
-                            <div class="pagination"><button disabled>â€¹</button><b>1</b><button disabled>â€º</button></div>
+                            <div class="pagination"><button disabled>&lsaquo;</button><b>1</b><button disabled>&rsaquo;</button></div>
                         </footer>
                     </section>
                 </main>

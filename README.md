@@ -76,6 +76,7 @@ Nếu database đã được tạo từ phiên bản cũ, mở SSMS và chạy l
 
 1. `database/migrations/001_add_user_gender.sql`
 2. `database/migrations/002_task7_manager.sql`
+3. `database/migrations/003_update_product_image_paths.sql`
 
 Database tạo mới bằng `CBMS.sql` đã có sẵn các cột này. Tài khoản Manager mẫu là `admin01` / `123456`.
 

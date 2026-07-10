@@ -379,16 +379,16 @@ INSERT INTO dbo.Categories (category_name, description, status) VALUES
 (N'Đồ ăn nhẹ', N'Bánh và món ăn kèm', 1);
 
 INSERT INTO dbo.Products (product_name, category_id, price, image_url, description, status, created_at) VALUES
-(N'Cà phê sữa đá',             1, 29000, '/images/products/ca-phe-sua-da.png',       N'Cà phê đậm vị cùng sữa đặc', 1, '2026-01-10'),
-(N'Bạc xỉu',                    1, 32000, '/images/products/bac-xiu.png',             N'Nhiều sữa, nhẹ vị cà phê', 1, '2026-01-10'),
-(N'Cappuccino',                 1, 39000, '/images/products/cappuccino.png',          N'Espresso và bọt sữa mịn', 1, '2026-01-10'),
-(N'Trà sữa trân châu đường đen',2, 45000, '/images/products/tra-sua-duong-den.png',  N'Trà sữa cùng trân châu đường đen', 1, '2026-01-11'),
-(N'Trà sữa Matcha',             2, 47000, '/images/products/tra-sua-matcha.png',     N'Matcha Nhật Bản và sữa tươi', 1, '2026-01-11'),
-(N'Trà đào cam sả',             3, 42000, '/images/products/tra-dao-cam-sa.png',     N'Đào, cam và sả thanh mát', 1, '2026-01-12'),
-(N'Trà vải',                    3, 39000, '/images/products/tra-vai.png',            N'Trà thơm kết hợp quả vải', 1, '2026-01-12'),
-(N'Nước ép cam',                4, 35000, '/images/products/nuoc-ep-cam.png',        N'Nước cam ép nguyên chất', 1, '2026-01-13'),
-(N'Nước ép dưa hấu',            4, 35000, '/images/products/nuoc-ep-dua-hau.png',    N'Dưa hấu tươi mát', 1, '2026-01-13'),
-(N'Bánh Croissant',             5, 28000, '/images/products/banh-croissant.png',     N'Bánh sừng bò thơm bơ', 1, '2026-01-14');
+(N'Cà phê sữa đá',             1, 29000, '/images/products/uploads/product-1783652364053.jpg', N'Cà phê đậm vị cùng sữa đặc', 1, '2026-01-10'),
+(N'Bạc xỉu',                    1, 32000, '/images/products/uploads/product-1783652376341.jpg', N'Nhiều sữa, nhẹ vị cà phê', 1, '2026-01-10'),
+(N'Cappuccino',                 1, 39000, '/images/products/uploads/product-1783652386892.jpg', N'Espresso và bọt sữa mịn', 1, '2026-01-10'),
+(N'Trà sữa trân châu đường đen',2, 45000, '/images/products/uploads/product-1783652412242.jpg', N'Trà sữa cùng trân châu đường đen', 1, '2026-01-11'),
+(N'Trà sữa Matcha',             2, 47000, '/images/products/uploads/product-1783652423318.jpg', N'Matcha Nhật Bản và sữa tươi', 1, '2026-01-11'),
+(N'Trà đào cam sả',             3, 42000, '/images/products/uploads/product-1783652475947.jpg', N'Đào, cam và sả thanh mát', 1, '2026-01-12'),
+(N'Trà vải',                    3, 39000, '/images/products/uploads/product-1783652497062.jpg', N'Trà thơm kết hợp quả vải', 1, '2026-01-12'),
+(N'Nước ép cam',                4, 35000, '/images/products/uploads/product-1783652520082.jpg', N'Nước cam ép nguyên chất', 1, '2026-01-13'),
+(N'Nước ép dưa hấu',            4, 35000, '/images/products/uploads/product-1783652531970.jpg', N'Dưa hấu tươi mát', 1, '2026-01-13'),
+(N'Bánh Croissant',             5, 28000, '/images/products/uploads/product-1783652557130.jpg', N'Bánh sừng bò thơm bơ', 1, '2026-01-14');
 
 INSERT INTO dbo.Sizes (size_code, size_name, price_modifier, status) VALUES
 ('S', N'Nhỏ', -3000, 1),
