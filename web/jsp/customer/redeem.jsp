@@ -8,7 +8,7 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Đổi voucher - Cafe & Bubble tea</title>
-        <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/customer.css?v=20260709-orderflow1">
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/css/customer.css?v=20260709-orderflow1">
     </head>
     <body class="account-page" data-context-path="${pageContext.request.contextPath}">
         <main class="account-shell">
@@ -30,9 +30,9 @@
                     </button>
                     <a class="avatar-button" href="${pageContext.request.contextPath}/profile" title="Hồ sơ">
                         <c:choose>
-                            <c:when test="${not empty customer.avatarUrl}">
+                            <c:when test="${not empty customer.displayAvatarUrl}">
                                 <span class="avatar-fallback" hidden>${fn:substring(customer.fullName, 0, 1)}</span>
-                                <img src="${pageContext.request.contextPath}/${customer.avatarUrl}" alt="" onerror="this.hidden=true;this.previousElementSibling.hidden=false;">
+                                <img src="${pageContext.request.contextPath}${customer.displayAvatarUrl}" alt="" onerror="this.hidden=true;this.previousElementSibling.hidden=false;">
                             </c:when>
                             <c:otherwise>${fn:substring(customer.fullName, 0, 1)}</c:otherwise>
                         </c:choose>
@@ -78,9 +78,9 @@
                 <section class="account-content redeem-content">
                     <div class="customer-summary">
                         <c:choose>
-                            <c:when test="${not empty customer.avatarUrl}">
+                            <c:when test="${not empty customer.displayAvatarUrl}">
                                 <span class="profile-avatar avatar-fallback" hidden>${fn:substring(customer.fullName, 0, 1)}</span>
-                                <img class="profile-avatar" src="${pageContext.request.contextPath}/${customer.avatarUrl}" alt="Ảnh đại diện" onerror="this.hidden=true;this.previousElementSibling.hidden=false;">
+                                <img class="profile-avatar" src="${pageContext.request.contextPath}${customer.displayAvatarUrl}" alt="Ảnh đại diện" onerror="this.hidden=true;this.previousElementSibling.hidden=false;">
                             </c:when>
                             <c:otherwise>
                                 <span class="profile-avatar">${fn:substring(customer.fullName, 0, 1)}</span>
@@ -198,7 +198,7 @@
                 </c:choose>
             </section>
         </div>
-        <script src="${pageContext.request.contextPath}/assets/js/customer.js?v=20260709-orderflow1">
+        <script src="${pageContext.request.contextPath}/js/customer.js?v=20260709-orderflow1">
         </script>
     </body>
 </html>

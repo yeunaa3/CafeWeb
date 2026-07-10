@@ -84,6 +84,7 @@ public class CartItem {
 
     public String getImageUrl() { return imageUrl; }
     public void setImageUrl(String imageUrl) { this.imageUrl = imageUrl; }
+    public String getDisplayImageUrl() { return Product.normalizeImageUrl(imageUrl); }
 
     public int getQuantity() { return quantity; }
     public void setQuantity(int quantity) { this.quantity = quantity; }

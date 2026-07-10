@@ -8,8 +8,8 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>Đặt hàng tại quầy - CBMS</title>
-        <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/manager.css?v=20260709-orderflow1">
-        <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/cashier.css?v=20260709-orderflow1">
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/css/manager.css?v=20260709-orderflow1">
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/css/cashier.css?v=20260709-orderflow1">
     </head>
     <body class="manager-page">
         <div class="manager-shell">
@@ -47,8 +47,8 @@
                                 <article class="pos-item">
                                     <span class="pos-product-image">
                                         <c:choose>
-                                            <c:when test="${not empty item.imageUrl}">
-                                                <img src="${pageContext.request.contextPath}/${fn:startsWith(item.imageUrl, 'uploads/') ? item.imageUrl : 'assets/images/'.concat(item.imageUrl)}" alt="">
+                                            <c:when test="${not empty item.displayImageUrl}">
+                                                <img src="${pageContext.request.contextPath}${item.displayImageUrl}" alt="" onerror="this.hidden=true;">
                                             </c:when>
                                             <c:otherwise>
                                                 ${fn:substring(item.productName, 0, 1)}
@@ -144,9 +144,9 @@
                                 <div class="qr-payment" data-qr-payment hidden>
                                     <img
                                         class="qr-image"
-                                        src="${pageContext.request.contextPath}/assets/images/payment-qr.jpg"
+                                        src="${pageContext.request.contextPath}/images/payment-qr.jpg"
                                         alt="QR thanh toán"
-                                        onerror="if(!this.dataset.triedPng){this.dataset.triedPng='true';this.src='${pageContext.request.contextPath}/assets/images/payment-qr.png';}else{this.hidden=true;this.nextElementSibling.hidden=false;}"
+                                        onerror="if(!this.dataset.triedPng){this.dataset.triedPng='true';this.src='${pageContext.request.contextPath}/images/payment-qr.png';}else{this.hidden=true;this.nextElementSibling.hidden=false;}"
                                         >
                                     <div class="qr-visual" hidden aria-label="QR thanh toán demo">
                                         <i class="finder one">
@@ -157,7 +157,7 @@
 </i>
                                     </div>
                                     <strong>Quét mã để thanh toán</strong>
-                                    <small>Đặt ảnh QR thật tại web/assets/images/payment-qr.jpg hoặc payment-qr.png</small>
+                                    <small>Đặt ảnh QR thật tại web/images/payment-qr.jpg hoặc payment-qr.png</small>
                                 </div>
 
                                 <div class="payment-total">
@@ -229,9 +229,9 @@
             </div>
         </div>
 
-        <script src="${pageContext.request.contextPath}/assets/js/manager.js?v=20260709-orderflow1">
+        <script src="${pageContext.request.contextPath}/js/manager.js?v=20260709-orderflow1">
 </script>
-        <script src="${pageContext.request.contextPath}/assets/js/cashier.js?v=20260709-orderflow1">
+        <script src="${pageContext.request.contextPath}/js/cashier.js?v=20260709-orderflow1">
 </script>
     </body>
 </html>

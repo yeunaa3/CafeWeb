@@ -8,8 +8,8 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width,initial-scale=1">
         <title>Hóa đơn tại quầy - CBMS</title>
-        <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/manager.css?v=20260709-orderflow1">
-        <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/cashier.css?v=20260709-orderflow1">
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/css/manager.css?v=20260709-orderflow1">
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/css/cashier.css?v=20260709-orderflow1">
     </head>
     <body class="manager-page">
         <div class="manager-shell">
@@ -86,9 +86,9 @@
                         <footer class="table-footer">
                             <span>${fn:length(invoiceList)} hóa đơn</span>
                             <div class="pagination">
-                                <button disabled>‹</button>
+                                <button disabled>â€¹</button>
                                 <b>1</b>
-                                <button disabled>›</button>
+                                <button disabled>â€º</button>
                             </div>
                         </footer>
                     </section>
@@ -102,7 +102,7 @@
                 <section class="manager-dialog order-dialog">
                     <div class="dialog-heading">
                         <div>
-                            <span>HÓA ĐƠN</span>
+                            <span>HồA ĐƠN</span>
                             <h2>#${selectedOrder.orderId}</h2>
                         </div>
                         <a href="${pageContext.request.contextPath}/cashier/invoices">×</a>
@@ -127,7 +127,7 @@
                 </section>
             </div>
         </c:if>
-        <script src="${pageContext.request.contextPath}/assets/js/manager.js?v=20260709-orderflow1">
+        <script src="${pageContext.request.contextPath}/js/manager.js?v=20260709-orderflow1">
         </script>
     </body>
 </html>

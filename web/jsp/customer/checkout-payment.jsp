@@ -8,7 +8,7 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Thanh toán online - Cafe & Bubble tea</title>
-        <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/customer.css?v=20260709-orderflow1">
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/css/customer.css?v=20260709-orderflow1">
     </head>
     <body data-context-path="${pageContext.request.contextPath}">
         <main class="page-shell checkout-shell payment-shell">
@@ -21,9 +21,9 @@
                     <c:if test="${not empty sessionScope.user}">
                         <a class="customer-nav-avatar" href="${pageContext.request.contextPath}/profile" title="Thông tin cá nhân" aria-label="Thông tin cá nhân">
                             <c:choose>
-                                <c:when test="${not empty sessionScope.user.avatarUrl}">
+                                <c:when test="${not empty sessionScope.user.displayAvatarUrl}">
                                     <span class="avatar-fallback" hidden>${fn:substring(sessionScope.user.fullName,0,1)}</span>
-                                    <img src="${pageContext.request.contextPath}/${sessionScope.user.avatarUrl}" alt="" onerror="this.hidden=true;this.previousElementSibling.hidden=false;">
+                                    <img src="${pageContext.request.contextPath}${sessionScope.user.displayAvatarUrl}" alt="" onerror="this.hidden=true;this.previousElementSibling.hidden=false;">
                                 </c:when>
                                 <c:otherwise>${fn:substring(sessionScope.user.fullName,0,1)}</c:otherwise>
                             </c:choose>
@@ -43,8 +43,8 @@
                     </c:if>
 
                     <div class="payment-qr-card">
-                        <img src="${pageContext.request.contextPath}/assets/images/payment-qr.jpg"
-                             onerror="this.onerror=null;this.src='${pageContext.request.contextPath}/assets/images/payment-qr.png';"
+                        <img src="${pageContext.request.contextPath}/images/payment-qr.jpg"
+                             onerror="this.onerror=null;this.src='${pageContext.request.contextPath}/images/payment-qr.png';"
                              alt="QR thanh toán">
                         <div>
                             <strong>Nội dung chuyển khoản</strong>

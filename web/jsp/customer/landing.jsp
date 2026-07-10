@@ -8,7 +8,7 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Cafe & Bubble tea</title>
-        <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/customer.css?v=20260709-orderflow1">
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/css/customer.css?v=20260709-orderflow1">
     </head>
     <body>
         <main class="page-shell">
@@ -23,9 +23,9 @@
                         <c:when test="${not empty sessionScope.user}">
 <a class="customer-nav-avatar" href="${pageContext.request.contextPath}/profile" title="Thông tin cá nhân" aria-label="Thông tin cá nhân">
 <c:choose>
-<c:when test="${not empty sessionScope.user.avatarUrl}">
+<c:when test="${not empty sessionScope.user.displayAvatarUrl}">
 <span class="avatar-fallback" hidden>${fn:substring(sessionScope.user.fullName,0,1)}</span>
-<img src="${pageContext.request.contextPath}/${sessionScope.user.avatarUrl}" alt="" onerror="this.hidden=true;this.previousElementSibling.hidden=false;">
+<img src="${pageContext.request.contextPath}${sessionScope.user.displayAvatarUrl}" alt="" onerror="this.hidden=true;this.previousElementSibling.hidden=false;">
 </c:when>
 <c:otherwise>${fn:substring(sessionScope.user.fullName,0,1)}</c:otherwise>
 </c:choose>
@@ -51,7 +51,7 @@
                 <div class="recommend-grid">
                     <c:forEach var="product" items="${recommendedProducts}">
                         <a class="recommend-item" href="${pageContext.request.contextPath}/menu">
-                            <img src="${pageContext.request.contextPath}/assets/images/${product.imageUrl}"
+                            <img src="${pageContext.request.contextPath}${product.displayImageUrl}"
                                  onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1572490122747-3968b75cc699?auto=format&fit=crop&w=600&q=80';"
                                  alt="${product.productName}">
                             <span>${product.productName}</span>

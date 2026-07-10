@@ -7,8 +7,8 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width,initial-scale=1">
         <title>Tài khoản thu ngân - CBMS</title>
-        <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/manager.css?v=20260709-orderflow1">
-        <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/cashier.css?v=20260709-orderflow1">
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/css/manager.css?v=20260709-orderflow1">
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/css/cashier.css?v=20260709-orderflow1">
     </head>
     <body class="manager-page">
         <div class="manager-shell">
@@ -31,8 +31,8 @@
                             <form class="avatar-upload-form" method="post" action="${pageContext.request.contextPath}/avatar/upload" enctype="multipart/form-data">
                                 <label class="account-avatar-picker" title="Đổi ảnh đại diện">
                                     <c:choose>
-                                        <c:when test="${not empty cashier.avatarUrl}">
-                                            <img src="${pageContext.request.contextPath}/${cashier.avatarUrl}" alt="Ảnh đại diện">
+                                        <c:when test="${not empty cashier.displayAvatarUrl}">
+                                            <img src="${pageContext.request.contextPath}${cashier.displayAvatarUrl}" alt="Ảnh đại diện">
                                         </c:when>
                                         <c:otherwise>${fn:substring(cashier.fullName,0,1)}</c:otherwise>
                                     </c:choose>
@@ -84,7 +84,7 @@
                 </main>
             </div>
         </div>
-        <script src="${pageContext.request.contextPath}/assets/js/manager.js?v=20260709-orderflow1">
+        <script src="${pageContext.request.contextPath}/js/manager.js?v=20260709-orderflow1">
         </script>
     </body>
 </html>

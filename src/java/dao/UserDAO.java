@@ -1,4 +1,4 @@
-package dal;
+package dao;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -117,6 +117,45 @@ public class UserDAO extends DBContext {
             closeConnection(con, ps, rs);
         }
         return null;
+    }
+
+    public User getActiveUserByEmail(String email) {
+        String sql = "SELECT " + userColumns() + " FROM Users WHERE LOWER(email) = LOWER(?) AND status = 1";
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            con = getConnection();
+            ps = con.prepareStatement(sql);
+            ps.setString(1, email);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                return mapUser(rs);
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        } finally {
+            closeConnection(con, ps, rs);
+        }
+        return null;
+    }
+
+    public boolean resetPasswordByEmail(String email, String newPassword) {
+        String sql = "UPDATE Users SET password = ? WHERE LOWER(email) = LOWER(?) AND status = 1";
+        Connection con = null;
+        PreparedStatement ps = null;
+        try {
+            con = getConnection();
+            ps = con.prepareStatement(sql);
+            ps.setString(1, newPassword);
+            ps.setString(2, email);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            return false;
+        } finally {
+            closeConnection(con, ps, null);
+        }
     }
 
     public User getDefaultCustomer() {
@@ -286,7 +325,7 @@ public class UserDAO extends DBContext {
         try {
             con = getConnection();
             ps = con.prepareStatement(sql);
-            ps.setString(1, avatarUrl);
+            ps.setString(1, model.User.normalizeAvatarUrl(avatarUrl));
             ps.setInt(2, userId);
             return ps.executeUpdate() == 1;
         } catch (SQLException ex) {

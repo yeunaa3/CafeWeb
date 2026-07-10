@@ -1,4 +1,4 @@
-package dal;
+package dao;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -211,12 +211,7 @@ public class ProductDAO extends DBContext {
             ps = con.prepareStatement(sql);
             rs = ps.executeQuery();
             while (rs.next()) {
-                Category category = new Category();
-                category.setCategoryId(rs.getInt("category_id"));
-                category.setCategoryName(rs.getString("category_name"));
-                category.setDescription(rs.getString("description"));
-                category.setStatus(rs.getBoolean("status"));
-                categories.add(category);
+                categories.add(mapCategory(rs));
             }
         } catch (SQLException ex) {
             ex.printStackTrace();
@@ -224,6 +219,225 @@ public class ProductDAO extends DBContext {
             closeConnection(con, ps, rs);
         }
         return categories;
+    }
+
+    public List<Category> getCategoriesForAdmin(String keyword) {
+        List<Category> categories = new ArrayList<Category>();
+        String search = keyword == null ? "" : keyword.trim();
+        String sql = "SELECT category_id, category_name, description, status FROM Categories "
+                + "WHERE (?='' OR category_name LIKE ? OR description LIKE ?) ORDER BY category_id DESC";
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            con = getConnection();
+            ps = con.prepareStatement(sql);
+            ps.setString(1, search);
+            ps.setString(2, "%" + search + "%");
+            ps.setString(3, "%" + search + "%");
+            rs = ps.executeQuery();
+            while (rs.next()) categories.add(mapCategory(rs));
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        } finally {
+            closeConnection(con, ps, rs);
+        }
+        return categories;
+    }
+
+    public Category getCategoryForAdmin(int categoryId) {
+        String sql = "SELECT category_id, category_name, description, status FROM Categories WHERE category_id=?";
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            con = getConnection();
+            ps = con.prepareStatement(sql);
+            ps.setInt(1, categoryId);
+            rs = ps.executeQuery();
+            return rs.next() ? mapCategory(rs) : null;
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            return null;
+        } finally {
+            closeConnection(con, ps, rs);
+        }
+    }
+
+    public boolean createCategory(Category category) {
+        String sql = "INSERT INTO Categories(category_name,description,status) VALUES(?,?,?)";
+        return saveCategory(sql, category, false);
+    }
+
+    public boolean updateCategory(Category category) {
+        String sql = "UPDATE Categories SET category_name=?,description=?,status=? WHERE category_id=?";
+        return saveCategory(sql, category, true);
+    }
+
+    private boolean saveCategory(String sql, Category category, boolean editing) {
+        Connection con = null;
+        PreparedStatement ps = null;
+        try {
+            con = getConnection();
+            ps = con.prepareStatement(sql);
+            ps.setString(1, category.getCategoryName());
+            ps.setString(2, category.getDescription());
+            ps.setBoolean(3, category.isStatus());
+            if (editing) ps.setInt(4, category.getCategoryId());
+            return ps.executeUpdate() == 1;
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            return false;
+        } finally {
+            closeConnection(con, ps, null);
+        }
+    }
+
+    public boolean setCategoryStatus(int categoryId, boolean active) {
+        String sql = "UPDATE Categories SET status=? WHERE category_id=?";
+        Connection con = null;
+        PreparedStatement ps = null;
+        try {
+            con = getConnection();
+            ps = con.prepareStatement(sql);
+            ps.setBoolean(1, active);
+            ps.setInt(2, categoryId);
+            return ps.executeUpdate() == 1;
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            return false;
+        } finally {
+            closeConnection(con, ps, null);
+        }
+    }
+
+    public boolean deleteCategory(int categoryId) {
+        String sql = "DELETE FROM Categories WHERE category_id=? "
+                + "AND NOT EXISTS(SELECT 1 FROM Products WHERE category_id=?)";
+        Connection con = null;
+        PreparedStatement ps = null;
+        try {
+            con = getConnection();
+            ps = con.prepareStatement(sql);
+            ps.setInt(1, categoryId);
+            ps.setInt(2, categoryId);
+            return ps.executeUpdate() == 1;
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            return false;
+        } finally {
+            closeConnection(con, ps, null);
+        }
+    }
+
+    public List<Topping> getToppingsForAdmin(String keyword) {
+        List<Topping> toppings = new ArrayList<Topping>();
+        String search = keyword == null ? "" : keyword.trim();
+        String sql = "SELECT topping_id, topping_name, price, status FROM Toppings "
+                + "WHERE (?='' OR topping_name LIKE ?) ORDER BY topping_id DESC";
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            con = getConnection();
+            ps = con.prepareStatement(sql);
+            ps.setString(1, search);
+            ps.setString(2, "%" + search + "%");
+            rs = ps.executeQuery();
+            while (rs.next()) toppings.add(mapTopping(rs));
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        } finally {
+            closeConnection(con, ps, rs);
+        }
+        return toppings;
+    }
+
+    public Topping getToppingForAdmin(int toppingId) {
+        String sql = "SELECT topping_id, topping_name, price, status FROM Toppings WHERE topping_id=?";
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            con = getConnection();
+            ps = con.prepareStatement(sql);
+            ps.setInt(1, toppingId);
+            rs = ps.executeQuery();
+            return rs.next() ? mapTopping(rs) : null;
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            return null;
+        } finally {
+            closeConnection(con, ps, rs);
+        }
+    }
+
+    public boolean createTopping(Topping topping) {
+        String sql = "INSERT INTO Toppings(topping_name,price,status) VALUES(?,?,?)";
+        return saveTopping(sql, topping, false);
+    }
+
+    public boolean updateTopping(Topping topping) {
+        String sql = "UPDATE Toppings SET topping_name=?,price=?,status=? WHERE topping_id=?";
+        return saveTopping(sql, topping, true);
+    }
+
+    private boolean saveTopping(String sql, Topping topping, boolean editing) {
+        Connection con = null;
+        PreparedStatement ps = null;
+        try {
+            con = getConnection();
+            ps = con.prepareStatement(sql);
+            ps.setString(1, topping.getToppingName());
+            ps.setDouble(2, topping.getPrice());
+            ps.setBoolean(3, topping.isStatus());
+            if (editing) ps.setInt(4, topping.getToppingId());
+            return ps.executeUpdate() == 1;
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            return false;
+        } finally {
+            closeConnection(con, ps, null);
+        }
+    }
+
+    public boolean setToppingStatus(int toppingId, boolean active) {
+        String sql = "UPDATE Toppings SET status=? WHERE topping_id=?";
+        Connection con = null;
+        PreparedStatement ps = null;
+        try {
+            con = getConnection();
+            ps = con.prepareStatement(sql);
+            ps.setBoolean(1, active);
+            ps.setInt(2, toppingId);
+            return ps.executeUpdate() == 1;
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            return false;
+        } finally {
+            closeConnection(con, ps, null);
+        }
+    }
+
+    public boolean deleteTopping(int toppingId) {
+        String sql = "DELETE FROM Toppings WHERE topping_id=? "
+                + "AND NOT EXISTS(SELECT 1 FROM ProductToppings WHERE topping_id=?) "
+                + "AND NOT EXISTS(SELECT 1 FROM OrderDetailToppings WHERE topping_id=?)";
+        Connection con = null;
+        PreparedStatement ps = null;
+        try {
+            con = getConnection();
+            ps = con.prepareStatement(sql);
+            ps.setInt(1, toppingId);
+            ps.setInt(2, toppingId);
+            ps.setInt(3, toppingId);
+            return ps.executeUpdate() == 1;
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            return false;
+        } finally {
+            closeConnection(con, ps, null);
+        }
     }
 
     public List<Product> getAdminProducts(String keyword) {
@@ -291,7 +505,7 @@ public class ProductDAO extends DBContext {
             ps.setString(1, product.getProductName());
             ps.setInt(2, product.getCategoryId());
             ps.setDouble(3, product.getPrice());
-            ps.setString(4, product.getImageUrl());
+            ps.setString(4, Product.normalizeImageUrl(product.getImageUrl()));
             ps.setString(5, product.getDescription());
             ps.setBoolean(6, product.isStatus());
             if (editing) ps.setInt(7, product.getProductId());
@@ -347,5 +561,14 @@ public class ProductDAO extends DBContext {
         Product product = mapProduct(rs);
         product.setCategoryName(rs.getString("category_name"));
         return product;
+    }
+
+    private Category mapCategory(ResultSet rs) throws SQLException {
+        Category category = new Category();
+        category.setCategoryId(rs.getInt("category_id"));
+        category.setCategoryName(rs.getString("category_name"));
+        category.setDescription(rs.getString("description"));
+        category.setStatus(rs.getBoolean("status"));
+        return category;
     }
 }

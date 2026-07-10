@@ -1,7 +1,7 @@
 package controller.cashier;
 
-import dal.OrderDAO;
-import dal.VoucherDAO;
+import dao.OrderDAO;
+import dao.VoucherDAO;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;

@@ -8,7 +8,7 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width,initial-scale=1">
         <title>Nhân viên - CBMS</title>
-        <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/manager.css?v=20260709-orderflow1">
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/css/manager.css?v=20260709-orderflow1">
     </head>
     <body class="manager-page">
         <div class="manager-shell">
@@ -133,9 +133,9 @@
                         <footer class="table-footer">
                             <span>Hiển thị <strong>${fn:length(staffList)}</strong> nhân viên</span>
                             <div class="pagination">
-                                <button disabled>‹</button>
+                                <button disabled>â€¹</button>
                                 <b>1</b>
-                                <button disabled>›</button>
+                                <button disabled>â€º</button>
                             </div>
                         </footer>
                     </section>
@@ -182,7 +182,7 @@
                 </section>
             </div>
         </c:if>
-        <script src="${pageContext.request.contextPath}/assets/js/manager.js?v=20260709-orderflow1">
+        <script src="${pageContext.request.contextPath}/js/manager.js?v=20260709-orderflow1">
         </script>
     </body>
 </html>

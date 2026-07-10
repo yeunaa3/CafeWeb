@@ -1,22 +1,16 @@
 package controller.customer;
 
-import java.io.IOException;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
+import dao.UserDAO;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import java.io.IOException;
 
 @WebServlet(name = "VerifyOTPController", urlPatterns = {"/verify-otp"})
 public class VerifyOTPController extends HttpServlet {
-
-    private static final String DB_URL = "jdbc:sqlserver://localhost:1433;databaseName=CBMS;encrypt=false;trustServerCertificate=true";
-    private static final String DB_USER = "sa"; 
-    private static final String DB_PASS = "123456"; 
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -33,80 +27,91 @@ public class VerifyOTPController extends HttpServlet {
         HttpSession session = request.getSession();
         String action = request.getParameter("action");
 
-        // XỬ LÝ BƯỚC 2: Người dùng nhấn nút đổi mật khẩu mới từ file reset-password.jsp
-        if (action != null && action.equals("resetPassword")) {
-            String newPassword = request.getParameter("new_password");
-            String confirmPassword = request.getParameter("confirm_password");
-            String email = (String) session.getAttribute("email");
-
-            if (email == null) {
-                request.setAttribute("error", "Phiên làm việc hết hạn. Vui lòng thử lại từ đầu!");
-                request.getRequestDispatcher("/forgot-password.jsp").forward(request, response);
-                return;
-            }
-
-            if (newPassword == null || !newPassword.equals(confirmPassword)) {
-                request.setAttribute("error", "Mật khẩu xác nhận không trùng khớp!");
-                request.getRequestDispatcher("/reset-password.jsp").forward(request, response);
-                return;
-            }
-
-            Connection conn = null;
-            PreparedStatement ps = null;
-            try {
-                Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
-                conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS);
-                
-                String updateSql = "UPDATE dbo.Users SET password = ? WHERE LOWER(email) = LOWER(?)";
-                ps = conn.prepareStatement(updateSql);
-                ps.setString(1, newPassword); // Nếu hệ thống dùng mã hóa MD5/Bcrypt thì xử lý ở đây
-                ps.setString(2, email.trim());
-                
-                int rows = ps.executeUpdate();
-                if (rows > 0) {
-                    // Xóa thông tin OTP và Email trong session sau khi đổi thành công
-                    session.removeAttribute("otp");
-                    session.removeAttribute("email");
-                    
-                    request.setAttribute("message", "Đổi mật khẩu thành công! Vui lòng đăng nhập lại.");
-                    request.getRequestDispatcher("/login").forward(request, response); 
-                    // Hoặc đổi thành đường dẫn trang đăng nhập của bạn (ví dụ: /login.jsp)
-                    return;
-                }
-            } catch (Exception e) {
-                request.setAttribute("error", "Lỗi cập nhật mật khẩu: " + e.getMessage());
-                request.getRequestDispatcher("/reset-password.jsp").forward(request, response);
-                return;
-            } finally {
-                try { if (ps != null) ps.close(); } catch (Exception e) {}
-                try { if (conn != null) conn.close(); } catch (Exception e) {}
-            }
+        if ("resetPassword".equals(action)) {
+            resetPassword(request, response, session);
+            return;
         }
 
-        // XỬ LÝ BƯỚC 1: Kiểm tra mã OTP gửi từ trang enter-otp.jsp
+        verifyOtp(request, response, session);
+    }
+
+    private void verifyOtp(HttpServletRequest request, HttpServletResponse response, HttpSession session)
+            throws ServletException, IOException {
         String otpInput = request.getParameter("otp_input");
-        Integer otpSystem = (Integer) session.getAttribute("otp");
-        String email = (String) session.getAttribute("email");
+        Integer otpSystem = (Integer) session.getAttribute(ForgotPasswordController.OTP_SESSION_KEY);
+        String email = (String) session.getAttribute(ForgotPasswordController.OTP_EMAIL_SESSION_KEY);
 
         if (otpSystem == null || email == null) {
+            expireOtp(session);
             request.setAttribute("error", "Phiên làm việc đã hết hạn hoặc không hợp lệ. Vui lòng thử lại!");
             request.getRequestDispatcher("/forgot-password.jsp").forward(request, response);
             return;
         }
 
-        try {
-            int inputValues = Integer.parseInt(otpInput.trim());
+        if (isOtpExpired(session)) {
+            expireOtp(session);
+            request.setAttribute("error", "Mã OTP đã hết hạn sau 5 phút. Vui lòng yêu cầu mã mới!");
+            request.getRequestDispatcher("/forgot-password.jsp").forward(request, response);
+            return;
+        }
 
-            if (inputValues == otpSystem) {
-                // ĐÚNG OTP -> Chuyển tiếp sang giao diện nhập mật khẩu mới reset-password.jsp
+        try {
+            int inputValue = Integer.parseInt(otpInput == null ? "" : otpInput.trim());
+            if (inputValue == otpSystem) {
+                session.setAttribute("otpVerified", Boolean.TRUE);
                 request.getRequestDispatcher("/reset-password.jsp").forward(request, response);
             } else {
                 request.setAttribute("error", "Mã OTP không chính xác. Vui lòng kiểm tra lại!");
                 request.getRequestDispatcher("/enter-otp.jsp").forward(request, response);
             }
-        } catch (NumberFormatException e) {
+        } catch (NumberFormatException ex) {
             request.setAttribute("error", "Mã OTP phải là chuỗi gồm 6 chữ số!");
             request.getRequestDispatcher("/enter-otp.jsp").forward(request, response);
         }
+    }
+
+    private void resetPassword(HttpServletRequest request, HttpServletResponse response, HttpSession session)
+            throws ServletException, IOException {
+        String newPassword = request.getParameter("new_password");
+        String confirmPassword = request.getParameter("confirm_password");
+        String email = (String) session.getAttribute(ForgotPasswordController.OTP_EMAIL_SESSION_KEY);
+        Boolean verified = (Boolean) session.getAttribute("otpVerified");
+
+        if (email == null || !Boolean.TRUE.equals(verified) || isOtpExpired(session)) {
+            expireOtp(session);
+            request.setAttribute("error", "Phiên đặt lại mật khẩu đã hết hạn. Vui lòng thử lại từ đầu!");
+            request.getRequestDispatcher("/forgot-password.jsp").forward(request, response);
+            return;
+        }
+
+        if (newPassword == null || !newPassword.equals(confirmPassword)) {
+            request.setAttribute("error", "Mật khẩu xác nhận không trùng khớp!");
+            request.getRequestDispatcher("/reset-password.jsp").forward(request, response);
+            return;
+        }
+
+        if (new UserDAO().resetPasswordByEmail(email, newPassword)) {
+            expireOtp(session);
+            request.setAttribute("message", "Đổi mật khẩu thành công! Vui lòng đăng nhập lại.");
+            request.getRequestDispatcher("/login").forward(request, response);
+        } else {
+            request.setAttribute("error", "Không thể cập nhật mật khẩu. Vui lòng thử lại!");
+            request.getRequestDispatcher("/reset-password.jsp").forward(request, response);
+        }
+    }
+
+    private boolean isOtpExpired(HttpSession session) {
+        Object createdAt = session.getAttribute(ForgotPasswordController.OTP_CREATED_AT_SESSION_KEY);
+        if (!(createdAt instanceof Long)) {
+            return true;
+        }
+        return System.currentTimeMillis() - ((Long) createdAt) > ForgotPasswordController.OTP_TTL_MILLIS;
+    }
+
+    private void expireOtp(HttpSession session) {
+        session.removeAttribute(ForgotPasswordController.OTP_SESSION_KEY);
+        session.removeAttribute(ForgotPasswordController.OTP_EMAIL_SESSION_KEY);
+        session.removeAttribute(ForgotPasswordController.OTP_CREATED_AT_SESSION_KEY);
+        session.removeAttribute("otpVerified");
     }
 }

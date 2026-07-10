@@ -1,6 +1,6 @@
 package controller.manager;
 
-import dal.OrderDAO;
+import dao.OrderDAO;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;

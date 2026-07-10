@@ -7,14 +7,14 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width,initial-scale=1">
         <title>Kết quả thanh toán - CBMS</title>
-        <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/manager.css?v=20260709-orderflow1">
-        <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/cashier.css?v=20260709-orderflow1">
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/css/manager.css?v=20260709-orderflow1">
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/css/cashier.css?v=20260709-orderflow1">
     </head>
     <body class="payment-result-page">
         <main class="payment-result-card ${paymentSuccess?'success':'failed'}">
             <div class="result-symbol">
                 <c:choose>
-                    <c:when test="${paymentSuccess}">✓</c:when>
+                    <c:when test="${paymentSuccess}">âœ“</c:when>
                     <c:otherwise>×</c:otherwise>
                 </c:choose>
             </div>

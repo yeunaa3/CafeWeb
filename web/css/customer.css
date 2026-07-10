@@ -925,6 +925,24 @@ body,
     }
 }
 
+.product-grid {
+    display: flex !important;
+    gap: 14px !important;
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    scroll-snap-type: x proximity;
+    padding-bottom: 10px;
+}
+
+.product-grid .product-card {
+    flex: 0 0 min(220px, 72vw) !important;
+    scroll-snap-align: start;
+}
+
+.menu-pagination {
+    display: none !important;
+}
+
 :root {
     --coffee-900: #30231b;
     --coffee-700: #765038;

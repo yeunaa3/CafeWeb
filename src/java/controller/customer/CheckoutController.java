@@ -1,6 +1,6 @@
 package controller.customer;
 
-import dal.VoucherDAO;
+import dao.VoucherDAO;
 import java.io.IOException;
 import java.util.List;
 import jakarta.servlet.ServletException;

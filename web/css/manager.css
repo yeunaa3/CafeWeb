@@ -467,6 +467,24 @@ svg {
     background:var(--coffee-700);
     color:#fff;
 }
+.pagination button.is-active {
+    background:var(--coffee-700);
+    color:#fff;
+}
+.pagination button:disabled {
+    opacity:.45;
+    cursor:not-allowed;
+}
+.panel-title-row {
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:16px;
+    margin-bottom:16px;
+}
+.panel-title-row h2 {
+    margin:0;
+}
 .manager-modal {
     position:fixed;
     z-index:20;

@@ -1,7 +1,7 @@
 package controller.customer;
 
-import dal.OrderDAO;
-import dal.UserDAO;
+import dao.OrderDAO;
+import dao.UserDAO;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import java.util.List;

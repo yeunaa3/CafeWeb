@@ -7,7 +7,7 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width,initial-scale=1">
         <title>Tài khoản của tôi - CBMS</title>
-        <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/manager.css?v=20260709-orderflow1">
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/css/manager.css?v=20260709-orderflow1">
     </head>
     <body class="manager-page">
         <div class="manager-shell">
@@ -30,8 +30,8 @@
                             <form class="avatar-upload-form" method="post" action="${pageContext.request.contextPath}/avatar/upload" enctype="multipart/form-data">
                                 <label class="account-avatar-picker" title="Đổi ảnh đại diện">
                                     <c:choose>
-                                        <c:when test="${not empty manager.avatarUrl}">
-                                            <img src="${pageContext.request.contextPath}/${manager.avatarUrl}" alt="Ảnh đại diện">
+                                        <c:when test="${not empty manager.displayAvatarUrl}">
+                                            <img src="${pageContext.request.contextPath}${manager.displayAvatarUrl}" alt="Ảnh đại diện">
                                         </c:when>
                                         <c:otherwise>${fn:substring(manager.fullName,0,1)}</c:otherwise>
                                     </c:choose>
@@ -83,7 +83,7 @@
                 </main>
             </div>
         </div>
-        <script src="${pageContext.request.contextPath}/assets/js/manager.js?v=20260709-orderflow1">
+        <script src="${pageContext.request.contextPath}/js/manager.js?v=20260709-orderflow1">
         </script>
     </body>
 </html>

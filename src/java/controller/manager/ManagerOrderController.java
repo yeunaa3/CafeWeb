@@ -1,6 +1,6 @@
 package controller.manager;
 
-import dal.OrderDAO;
+import dao.OrderDAO;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
