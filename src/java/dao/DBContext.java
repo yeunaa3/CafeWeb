@@ -17,7 +17,7 @@ public class DBContext {
             Logger.getLogger(DBContext.class.getName()).log(
                     Level.SEVERE,
                     "Cannot connect to CBMS database. Check SQL Server service, TCP/IP/port, "
-                    + "database name, SQL Authentication and WEB-INF/classes/ConnectDB.properties.",
+                    + "database name, SQL Authentication and Tomcat jdbc/CBMS Resource in context.xml.",
                     ex);
             throw new IllegalStateException(
                     "Cannot connect to CBMS database. See the server log for the root cause.", ex);
