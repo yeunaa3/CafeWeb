@@ -57,7 +57,7 @@ public class LoginController extends HttpServlet {
         session.setAttribute("userId", user.getUserId());
         session.setMaxInactiveInterval(30 * 60);
 
-        if (!returnUrl.isEmpty()) {
+        if (user.getRoleId() == 3 && isCustomerReturnUrl(returnUrl)) {
             response.sendRedirect(request.getContextPath() + returnUrl);
         } else {
             response.sendRedirect(request.getContextPath() + destinationFor(user));
@@ -82,9 +82,17 @@ public class LoginController extends HttpServlet {
         return value == null ? "" : value.trim();
     }
 
+    private boolean isCustomerReturnUrl(String returnUrl) {
+        return returnUrl.equals("/menu")
+                || returnUrl.equals("/checkout")
+                || returnUrl.equals("/checkout/payment")
+                || returnUrl.equals("/profile")
+                || returnUrl.equals("/redeem");
+    }
+
     private String destinationFor(User user) {
         if (user.getRoleId() == 1) return "/manager/dashboard";
-        if (user.getRoleId() == 2 && "Thu ngân".equalsIgnoreCase(user.getStaffPosition())) return "/cashier/order";
+        if (user.getRoleId() == 2) return "/cashier/order";
         if (user.getRoleId() == 3) return "/profile";
         return "/home";
     }
