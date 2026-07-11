@@ -70,7 +70,7 @@
             </section>
 
             <footer class="site-footer">
-                <strong>Cafe & Bubble tea</strong>
+                <h2><strong>Contact</strong></h2>
                 <div class="social-row">
                     <a href="https://www.facebook.com/n.khanh.290706" target="_blank" rel="noopener" aria-label="Facebook">f</a>
                     <a href="https://www.youtube.com/watch?v=8sVtL0o-v7U&list=RD8sVtL0o-v7U&start_radio=1" target="_blank" rel="noopener" aria-label="YouTube">yt</a>

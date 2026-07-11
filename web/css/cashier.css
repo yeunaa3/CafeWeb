@@ -1033,3 +1033,234 @@ textarea {
 .status-tabs + .toolbar-band .search-box {
     width: 100% !important;
 }
+/* ======================================================================
+   UI POLISH DETAIL BUTTON + ACCOUNT PANEL 2026-07-11M
+   ====================================================================== */
+.detail-button,
+.manager-table .detail-button,
+.data-table .detail-button,
+table .detail-button {
+    position: relative !important;
+    width: auto !important;
+    min-width: 106px !important;
+    height: 38px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 8px !important;
+    padding: 0 14px !important;
+    border: 1px solid #dfc5a6 !important;
+    border-radius: 999px !important;
+    background: #fff9f1 !important;
+    color: #7b543d !important;
+    font-size: 12px !important;
+    font-weight: 900 !important;
+    line-height: 1 !important;
+    text-decoration: none !important;
+    box-shadow: 0 10px 22px rgba(70, 46, 29, .06) !important;
+    transition: transform .16s ease, box-shadow .16s ease, background .16s ease, color .16s ease, border-color .16s ease !important;
+}
+
+.detail-button svg,
+.manager-table .detail-button svg,
+.data-table .detail-button svg,
+table .detail-button svg {
+    display: none !important;
+}
+
+.detail-button::before,
+.manager-table .detail-button::before,
+.data-table .detail-button::before,
+table .detail-button::before {
+    content: "i" !important;
+    position: static !important;
+    width: 20px !important;
+    height: 20px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    border: 1px solid currentColor !important;
+    border-radius: 999px !important;
+    background: rgba(123, 84, 61, .08) !important;
+    font-size: 12px !important;
+    font-weight: 950 !important;
+    transform: none !important;
+}
+
+.detail-button::after,
+.manager-table .detail-button::after,
+.data-table .detail-button::after,
+table .detail-button::after {
+    content: "Chi tiết" !important;
+    position: static !important;
+    width: auto !important;
+    height: auto !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+    transform: none !important;
+}
+
+.detail-button:hover,
+.manager-table .detail-button:hover,
+.data-table .detail-button:hover,
+table .detail-button:hover {
+    transform: translateY(-1px) !important;
+    border-color: #7b543d !important;
+    background: #7b543d !important;
+    color: #fffaf3 !important;
+    box-shadow: 0 14px 28px rgba(70, 46, 29, .18) !important;
+}
+
+.account-panel {
+    max-width: 1180px !important;
+    margin: 0 auto !important;
+    overflow: hidden !important;
+    border: 1px solid #e7d2b6 !important;
+    border-radius: 24px !important;
+    background: linear-gradient(145deg, #fffdf8 0%, #fff8ee 100%) !important;
+    box-shadow: 0 28px 70px rgba(72, 49, 31, .12) !important;
+}
+
+.account-summary {
+    display: grid !important;
+    grid-template-columns: auto 1fr auto !important;
+    align-items: center !important;
+    gap: 22px !important;
+    padding: 34px 36px !important;
+    border-bottom: 1px solid #ecdac3 !important;
+    background:
+        radial-gradient(circle at top left, rgba(242, 140, 40, .14), transparent 34%),
+        rgba(255, 250, 243, .72) !important;
+}
+
+.account-avatar-picker {
+    position: relative !important;
+    width: 92px !important;
+    height: 92px !important;
+    display: grid !important;
+    place-items: center !important;
+    overflow: hidden !important;
+    border: 4px solid #fffaf3 !important;
+    border-radius: 28px !important;
+    background: linear-gradient(145deg, #8b5b3d, #3d2519) !important;
+    color: #ffffff !important;
+    font-size: 34px !important;
+    font-weight: 950 !important;
+    box-shadow: 0 18px 34px rgba(72, 49, 31, .18) !important;
+    cursor: pointer !important;
+}
+
+.account-avatar-picker img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+}
+
+.account-avatar-picker span {
+    position: absolute !important;
+    left: 50% !important;
+    bottom: 8px !important;
+    transform: translateX(-50%) !important;
+    width: max-content !important;
+    padding: 5px 10px !important;
+    border-radius: 999px !important;
+    background: #f28c28 !important;
+    color: #ffffff !important;
+    font-size: 10px !important;
+    font-weight: 900 !important;
+    box-shadow: 0 8px 18px rgba(242, 140, 40, .25) !important;
+}
+
+.account-summary strong {
+    display: block !important;
+    color: #24140e !important;
+    font-size: 25px !important;
+    font-weight: 950 !important;
+    letter-spacing: 0 !important;
+}
+
+.account-summary small {
+    display: block !important;
+    margin-top: 6px !important;
+    color: #7f7166 !important;
+    font-size: 14px !important;
+}
+
+.account-summary em {
+    display: inline-flex !important;
+    margin-top: 10px !important;
+    padding: 6px 10px !important;
+    border-radius: 999px !important;
+    background: #f7e7d4 !important;
+    color: #805537 !important;
+    font-style: normal !important;
+    font-size: 11px !important;
+    font-weight: 950 !important;
+    text-transform: uppercase !important;
+    letter-spacing: .06em !important;
+}
+
+.account-form {
+    padding: 34px 36px 38px !important;
+}
+
+.account-form .form-grid {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 22px 26px !important;
+}
+
+.account-form label {
+    display: grid !important;
+    gap: 9px !important;
+    color: #3d2519 !important;
+    font-size: 13px !important;
+    font-weight: 900 !important;
+}
+
+.account-form input,
+.account-form select {
+    min-height: 48px !important;
+    width: 100% !important;
+    border: 1px solid #e7d2b6 !important;
+    border-radius: 12px !important;
+    background: #fffaf3 !important;
+    color: #24140e !important;
+    padding: 0 15px !important;
+    font: inherit !important;
+    font-weight: 700 !important;
+    transition: border-color .16s ease, box-shadow .16s ease, background .16s ease !important;
+}
+
+.account-form input[readonly],
+.account-form select:disabled {
+    background: #f8f1e8 !important;
+    color: #84756a !important;
+}
+
+.account-form input:focus,
+.account-form select:focus {
+    outline: none !important;
+    border-color: #9a6846 !important;
+    box-shadow: 0 0 0 4px rgba(154, 104, 70, .12) !important;
+}
+
+.account-actions {
+    display: flex !important;
+    justify-content: flex-end !important;
+    gap: 12px !important;
+    margin-top: 28px !important;
+}
+
+@media (max-width: 780px) {
+    .account-summary,
+    .account-form .form-grid {
+        grid-template-columns: 1fr !important;
+    }
+
+    .account-summary .primary-action {
+        width: 100% !important;
+        justify-content: center !important;
+    }
+}
