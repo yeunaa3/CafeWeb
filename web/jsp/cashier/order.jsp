@@ -58,8 +58,8 @@
 
                                     <div class="pos-item-info">
                                         <strong>
-<c:out value="${item.productName}"/>
-</strong>
+                                            <c:out value="${item.productName}"/>
+                                        </strong>
                                         <small>
                                             <c:if test="${not empty item.toppings}">
                                                 <c:forEach var="topping" items="${item.toppings}" varStatus="loop">
@@ -114,7 +114,7 @@
                             <div>
                                 <small>Tạm tính</small>
                                 <strong>
-<fmt:formatNumber value="${cartTotal}" pattern="#,##0"/>đ</strong>
+                                    <fmt:formatNumber value="${cartTotal}" pattern="#,##0"/>đ</strong>
                             </div>
 
                             <div>
@@ -150,20 +150,20 @@
                                         >
                                     <div class="qr-visual" hidden aria-label="QR thanh toán demo">
                                         <i class="finder one">
-</i>
+                                        </i>
                                         <i class="finder two">
-</i>
+                                        </i>
                                         <i class="finder three">
-</i>
+                                        </i>
                                     </div>
                                     <strong>Quét mã để thanh toán</strong>
-                                    <small>Đặt ảnh QR thật tại web/images/payment-qr.jpg hoặc payment-qr.png</small>
+                                    <small>NGUYEN VAN KHANH</small>
                                 </div>
 
                                 <div class="payment-total">
                                     <span>Tổng</span>
                                     <strong>
-<fmt:formatNumber value="${cartTotal}" pattern="#,##0"/>đ</strong>
+                                        <fmt:formatNumber value="${cartTotal}" pattern="#,##0"/>đ</strong>
                                 </div>
 
                                 <button class="pay-button" type="submit" ${empty cart ? 'disabled' : ''}>
@@ -207,8 +207,8 @@
                                     <article>
                                         <div>
                                             <strong>
-<fmt:formatDate value="${held.createdAt}" pattern="HH:mm dd/MM"/>
-</strong>
+                                                <fmt:formatDate value="${held.createdAt}" pattern="HH:mm dd/MM"/>
+                                            </strong>
                                             <small>
                                                 ${held.itemCount} món ·
                                                 <fmt:formatNumber value="${held.total}" pattern="#,##0"/>đ
@@ -230,9 +230,9 @@
         </div>
 
         <script src="${pageContext.request.contextPath}/js/manager.js?v=20260709-orderflow1">
-</script>
+        </script>
         <script src="${pageContext.request.contextPath}/js/cashier.js?v=20260709-orderflow1">
-</script>
+        </script>
     </body>
 </html>
 

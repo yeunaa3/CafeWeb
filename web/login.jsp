@@ -59,10 +59,10 @@
             </section>
 
             <footer class="site-footer auth-simple-footer">
-                <strong>Cafe & Bubble tea</strong>
+                <strong>Contact</strong>
                 <div class="social-row">
-                    <a href="https://facebook.com/" target="_blank" rel="noopener" aria-label="Facebook">f</a>
-                    <a href="https://youtube.com/" target="_blank" rel="noopener" aria-label="YouTube">yt</a>
+                    <a href="https://www.facebook.com/n.khanh.290706" target="_blank" rel="noopener" aria-label="Facebook">f</a>
+                    <a href="https://www.youtube.com/watch?v=To8kS8j7PKQ&list=RDTo8kS8j7PKQ&start_radio=1" target="_blank" rel="noopener" aria-label="YouTube">yt</a>
                     <a href="https://instagram.com/" target="_blank" rel="noopener" aria-label="Instagram">ig</a>
                 </div>
             </footer>

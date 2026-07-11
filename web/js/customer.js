@@ -342,3 +342,415 @@
         }
     });
 })();
+
+(function () {
+    "use strict";
+
+    function ready(callback) {
+        if (document.readyState === "loading") {
+            document.addEventListener("DOMContentLoaded", callback);
+        } else {
+            callback();
+        }
+    }
+
+    ready(function () {
+        setupMenuCarousels();
+    });
+
+    function setupMenuCarousels() {
+        var grids = document.querySelectorAll(".product-section .product-grid");
+
+        for (var gridIndex = 0; gridIndex < grids.length; gridIndex++) {
+            setupOneCarousel(grids[gridIndex], gridIndex);
+        }
+    }
+
+    function setupOneCarousel(grid, index) {
+        var cards = grid.querySelectorAll(".product-card");
+
+        if (cards.length < 2) {
+            return;
+        }
+
+        grid.classList.add("is-carousel-ready");
+        grid.setAttribute("data-carousel-index", String(index));
+
+        var isPointerDown = false;
+        var isPaused = false;
+        var startX = 0;
+        var startScrollLeft = 0;
+        var speed = 0.35 + (index % 3) * 0.04;
+        var frameId = 0;
+        var lastFrameTime = 0;
+
+        grid.addEventListener("mouseenter", function () {
+            isPaused = true;
+        });
+
+        grid.addEventListener("mouseleave", function () {
+            isPaused = false;
+            isPointerDown = false;
+            grid.classList.remove("is-dragging");
+        });
+
+        grid.addEventListener("focusin", function () {
+            isPaused = true;
+        });
+
+        grid.addEventListener("focusout", function () {
+            isPaused = false;
+        });
+
+        grid.addEventListener("pointerdown", function (event) {
+            isPointerDown = true;
+            isPaused = true;
+            startX = event.clientX;
+            startScrollLeft = grid.scrollLeft;
+            grid.classList.add("is-dragging");
+            if (grid.setPointerCapture) {
+                grid.setPointerCapture(event.pointerId);
+            }
+        });
+
+        grid.addEventListener("pointermove", function (event) {
+            if (!isPointerDown) {
+                return;
+            }
+            var deltaX = event.clientX - startX;
+            grid.scrollLeft = startScrollLeft - deltaX;
+        });
+
+        grid.addEventListener("pointerup", stopDragging);
+        grid.addEventListener("pointercancel", stopDragging);
+
+        grid.addEventListener("wheel", function (event) {
+            if (Math.abs(event.deltaY) <= Math.abs(event.deltaX)) {
+                return;
+            }
+            grid.scrollLeft += event.deltaY;
+            event.preventDefault();
+        }, { passive: false });
+
+        function stopDragging() {
+            isPointerDown = false;
+            isPaused = false;
+            grid.classList.remove("is-dragging");
+        }
+
+        function animate(timestamp) {
+            if (!lastFrameTime) {
+                lastFrameTime = timestamp;
+            }
+
+            var elapsed = Math.min(timestamp - lastFrameTime, 40);
+            lastFrameTime = timestamp;
+
+            if (!isPaused && !isPointerDown && grid.scrollWidth > grid.clientWidth + 4) {
+                grid.scrollLeft += speed * elapsed;
+
+                if (grid.scrollLeft >= grid.scrollWidth - grid.clientWidth - 2) {
+                    grid.scrollLeft = 0;
+                }
+            }
+
+            frameId = window.requestAnimationFrame(animate);
+        }
+
+        frameId = window.requestAnimationFrame(animate);
+
+        window.addEventListener("beforeunload", function () {
+            window.cancelAnimationFrame(frameId);
+        });
+    }
+})();
+(function () {
+    "use strict";
+
+    function ready(callback) {
+        if (document.readyState === "loading") {
+            document.addEventListener("DOMContentLoaded", callback);
+        } else {
+            callback();
+        }
+    }
+
+    ready(function () {
+        hardenMenuCarouselLayout();
+        window.addEventListener("resize", hardenMenuCarouselLayout);
+    });
+
+    function hardenMenuCarouselLayout() {
+        var grids = document.querySelectorAll(".product-section .product-grid");
+        var smallScreen = window.matchMedia("(max-width: 980px)").matches;
+
+        for (var i = 0; i < grids.length; i++) {
+            var grid = grids[i];
+            grid.style.display = "flex";
+            grid.style.flexDirection = "row";
+            grid.style.flexWrap = "nowrap";
+            grid.style.overflowX = "auto";
+            grid.style.overflowY = "hidden";
+            grid.style.alignItems = "stretch";
+
+            var cards = grid.querySelectorAll(".product-card");
+            for (var c = 0; c < cards.length; c++) {
+                var basis = smallScreen ? "74vw" : "224px";
+                cards[c].style.flex = "0 0 " + basis;
+                cards[c].style.width = basis;
+                cards[c].style.minWidth = basis;
+                cards[c].style.maxWidth = smallScreen ? "330px" : "224px";
+            }
+        }
+    }
+})();
+(function () {
+    "use strict";
+
+    function markMenuPage() {
+        if (!document.querySelector(".menu-heading")) {
+            return;
+        }
+        document.body.classList.add("menu-page-enhanced");
+    }
+
+    if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", markMenuPage);
+    } else {
+        markMenuPage();
+    }
+}());
+(function () {
+    "use strict";
+
+    function stabilizeMenuInteractions() {
+        var grids = document.querySelectorAll(".product-section .product-grid");
+        var buttons = document.querySelectorAll(".add-product-btn");
+
+        for (var i = 0; i < grids.length; i++) {
+            grids[i].addEventListener("wheel", function (event) {
+                event.stopImmediatePropagation();
+            }, { capture: true, passive: true });
+        }
+
+        for (var b = 0; b < buttons.length; b++) {
+            buttons[b].addEventListener("pointerdown", function (event) {
+                event.stopPropagation();
+            }, true);
+            buttons[b].addEventListener("pointerup", function (event) {
+                event.stopPropagation();
+            }, true);
+            buttons[b].addEventListener("click", function (event) {
+                event.stopPropagation();
+            }, true);
+        }
+    }
+
+    if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", stabilizeMenuInteractions);
+    } else {
+        stabilizeMenuInteractions();
+    }
+}());
+(function () {
+    "use strict";
+
+    function formatVndFallback(value) {
+        return Math.round(Number(value) || 0).toLocaleString("vi-VN");
+    }
+
+    function setText(id, value) {
+        var element = document.getElementById(id);
+        if (element) {
+            element.textContent = value;
+        }
+    }
+
+    function setValue(id, value) {
+        var element = document.getElementById(id);
+        if (element) {
+            element.value = value;
+        }
+    }
+
+    function openDrinkModalFallback(button) {
+        var modal = document.getElementById("drinkModal");
+        var form = document.getElementById("addCartForm");
+
+        if (!modal || !form || !button) {
+            return;
+        }
+
+        var productCard = button.closest(".product-card");
+        var cardImage = productCard ? productCard.querySelector("img") : null;
+        var productId = button.getAttribute("data-product-id") || "";
+        var productName = button.getAttribute("data-product-name") || "Chọn món";
+        var productPrice = Number(button.getAttribute("data-product-price")) || 0;
+        var productImage = document.getElementById("modalProductImage");
+        var quantityInput;
+        var mediumSize;
+
+        form.reset();
+        form.setAttribute("data-base-price", String(productPrice));
+
+        setValue("modalProductId", productId);
+        setText("modalProductName", productName);
+        setText("modalProductPrice", formatVndFallback(productPrice) + "đ");
+        setText("modalTotal", formatVndFallback(productPrice) + "đ");
+
+        quantityInput = form.querySelector("input[name='quantity']");
+        if (quantityInput) {
+            quantityInput.value = "1";
+        }
+
+        mediumSize = form.querySelector("input[name='selectedSize'][value='M']");
+        if (mediumSize) {
+            mediumSize.checked = true;
+        }
+
+        if (productImage) {
+            productImage.src = cardImage && cardImage.currentSrc ? cardImage.currentSrc : (cardImage ? cardImage.src : "");
+            productImage.alt = productName;
+        }
+
+        modal.classList.add("is-open");
+        modal.setAttribute("aria-hidden", "false");
+        document.body.style.overflow = "hidden";
+    }
+
+    document.addEventListener("click", function (event) {
+        var button = event.target.closest(".add-product-btn");
+
+        if (!button) {
+            return;
+        }
+
+        openDrinkModalFallback(button);
+    }, true);
+}());
+(function () {
+    "use strict";
+
+    function installProductScrollRails() {
+        var grids = document.querySelectorAll(".product-section .product-grid");
+
+        for (var i = 0; i < grids.length; i++) {
+            installOneRail(grids[i]);
+        }
+    }
+
+    function installOneRail(grid) {
+        var rail = grid.parentElement.querySelector(".menu-scrollbar");
+        var thumb;
+        var dragging = false;
+        var dragStartX = 0;
+        var dragStartLeft = 0;
+
+        if (!rail) {
+            rail = document.createElement("div");
+            rail.className = "menu-scrollbar";
+            rail.setAttribute("aria-hidden", "true");
+            thumb = document.createElement("span");
+            thumb.className = "menu-scrollbar-thumb";
+            rail.appendChild(thumb);
+            grid.insertAdjacentElement("afterend", rail);
+        } else {
+            thumb = rail.querySelector(".menu-scrollbar-thumb");
+        }
+
+        if (!thumb) {
+            return;
+        }
+
+        function getMaxScroll() {
+            return Math.max(0, grid.scrollWidth - grid.clientWidth);
+        }
+
+        function getMaxThumbLeft() {
+            return Math.max(0, rail.clientWidth - thumb.offsetWidth);
+        }
+
+        function updateThumb() {
+            var maxScroll = getMaxScroll();
+            var ratio = grid.scrollWidth > 0 ? grid.clientWidth / grid.scrollWidth : 1;
+            var width = Math.max(54, Math.round(rail.clientWidth * Math.min(1, ratio)));
+            var left = maxScroll > 0 ? Math.round((grid.scrollLeft / maxScroll) * Math.max(0, rail.clientWidth - width)) : 0;
+
+            thumb.style.width = width + "px";
+            thumb.style.transform = "translateX(" + left + "px)";
+        }
+
+        function moveFromPointer(clientX) {
+            var delta = clientX - dragStartX;
+            var nextLeft = Math.max(0, Math.min(getMaxThumbLeft(), dragStartLeft + delta));
+            var maxScroll = getMaxScroll();
+            grid.scrollLeft = getMaxThumbLeft() > 0 ? (nextLeft / getMaxThumbLeft()) * maxScroll : 0;
+            updateThumb();
+        }
+
+        grid.addEventListener("scroll", updateThumb, { passive: true });
+        window.addEventListener("resize", updateThumb);
+
+        rail.addEventListener("pointerdown", function (event) {
+            dragging = true;
+            rail.classList.add("is-dragging");
+            dragStartX = event.clientX;
+            dragStartLeft = parseFloat((thumb.style.transform || "translateX(0px)").replace(/[^0-9.-]/g, "")) || 0;
+
+            if (event.target === rail) {
+                var rect = rail.getBoundingClientRect();
+                dragStartLeft = Math.max(0, Math.min(getMaxThumbLeft(), event.clientX - rect.left - thumb.offsetWidth / 2));
+                moveFromPointer(event.clientX);
+            }
+
+            if (rail.setPointerCapture) {
+                rail.setPointerCapture(event.pointerId);
+            }
+        });
+
+        rail.addEventListener("pointermove", function (event) {
+            if (!dragging) {
+                return;
+            }
+            moveFromPointer(event.clientX);
+        });
+
+        function stopDragging() {
+            dragging = false;
+            rail.classList.remove("is-dragging");
+        }
+
+        rail.addEventListener("pointerup", stopDragging);
+        rail.addEventListener("pointercancel", stopDragging);
+
+        var images = grid.querySelectorAll("img");
+        for (var i = 0; i < images.length; i++) {
+            images[i].addEventListener("load", updateThumb, { once: true });
+        }
+
+        window.setTimeout(updateThumb, 0);
+        window.setTimeout(updateThumb, 300);
+    }
+
+    if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", installProductScrollRails);
+    } else {
+        installProductScrollRails();
+    }
+}());
+(function () {
+    "use strict";
+
+    function removeCustomMenuScrollRails() {
+        var rails = document.querySelectorAll(".product-section .menu-scrollbar");
+        for (var i = 0; i < rails.length; i++) {
+            rails[i].remove();
+        }
+    }
+
+    if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", removeCustomMenuScrollRails);
+    } else {
+        removeCustomMenuScrollRails();
+    }
+}());
