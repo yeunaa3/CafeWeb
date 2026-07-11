@@ -60,7 +60,6 @@
                 </form>
             </section>
 
-            <img class="menu-cover" src="https://sukientuanviet.vn/wp-content/uploads/2024/06/bang-ron-khai-truong-quan-cafe-2.jpg" alt="Tea cover">
 
             <nav class="category-nav" aria-label="Danh mục thực đơn">
                 <c:forEach var="section" items="${sections}">
@@ -115,11 +114,11 @@
             </section>
 
             <footer class="site-footer">
-                <strong>Cafe & Bubble tea</strong>
+                <strong>Contact</strong>
                 <div class="social-row">
-                    <a href="https://www.facebook.com/n.khanh.290706" target="_blank" rel="noopener" aria-label="Facebook">f</a>
-                    <a href="https://www.youtube.com/watch?v=8sVtL0o-v7U&list=RDgJAbDSse5WM&index=4" target="_blank" rel="noopener" aria-label="YouTube">yt</a>
-                    <a href="https://instagram.com/" target="_blank" rel="noopener" aria-label="Instagram">ig</a>
+                    <a href="https://www.facebook.com/n.khanh.290706" target="_blank" rel="noopener" aria-label="Facebook">F</a>
+                    <a href="https://www.youtube.com/watch?v=8sVtL0o-v7U&list=RDgJAbDSse5WM&index=4" target="_blank" rel="noopener" aria-label="YouTube">YT</a>
+                    <a href="https://instagram.com/" target="_blank" rel="noopener" aria-label="Instagram">Ins</a>
                 </div>
             </footer>
         </main>

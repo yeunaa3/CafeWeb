@@ -721,3 +721,315 @@ button:hover,
     transform: translateY(-1px) !important;
     box-shadow: 0 10px 22px rgba(79, 52, 33, 0.12) !important;
 }
+
+/* =========================================================
+   VISUAL REFRESH 2026-07-11 - Cashier surface alignment
+   CSS only. No business logic changes.
+   ========================================================= */
+:root {
+    --app-font: "Be Vietnam Pro", "Inter", "Segoe UI", Arial, sans-serif;
+    --app-radius: 8px;
+    --app-line: #e8d9c5;
+    --app-card: #ffffff;
+    --app-bg: #f3eadc;
+    --app-text: #2f2119;
+    --app-brown: #7b543d;
+    --app-orange: #f28c28;
+}
+
+body,
+button,
+input,
+select,
+textarea {
+    font-family: var(--app-font) !important;
+    letter-spacing: 0 !important;
+}
+
+.cashier-order-page,
+.add-order-page,
+.payment-result-page {
+    background: var(--app-bg) !important;
+}
+
+.pos-items,
+.held-orders,
+.cashier-product-picker,
+.payment-summary,
+.payment-result-card,
+.result-receipt,
+.qr-payment {
+    border: 1px solid var(--app-line) !important;
+    border-radius: var(--app-radius) !important;
+    background: var(--app-card) !important;
+    box-shadow: 0 18px 42px rgba(74, 50, 32, .08) !important;
+}
+
+.pos-item,
+.picker-row,
+.product-row {
+    border-radius: var(--app-radius) !important;
+    transition: background-color .18s ease, transform .18s ease, box-shadow .18s ease !important;
+}
+
+.pos-item:hover,
+.picker-row:hover,
+.product-row:hover {
+    background: #fffaf3 !important;
+    transform: translateY(-1px) !important;
+}
+
+.pos-product-image,
+.picker-image,
+.qr-payment img,
+.qr-visual,
+.item-edit-form input,
+.item-edit-form select,
+.payment-form input,
+.payment-form select,
+.picker-row input,
+.picker-row select,
+.pay-button,
+.availability-button,
+.workflow-actions button,
+.pos-actions button,
+.held-list button {
+    border-radius: var(--app-radius) !important;
+}
+
+.item-edit-form input:focus,
+.item-edit-form select:focus,
+.payment-form input:focus,
+.payment-form select:focus,
+.picker-row input:focus,
+.picker-row select:focus {
+    border-color: #c99565 !important;
+    box-shadow: 0 0 0 4px rgba(201, 149, 101, .16) !important;
+    outline: 0 !important;
+}
+
+.pay-button,
+.workflow-actions button,
+.pos-actions button {
+    transition: background-color .18s ease, transform .18s ease, box-shadow .18s ease !important;
+}
+
+.pay-button:hover:not(:disabled),
+.workflow-actions button:hover,
+.pos-actions button:hover {
+    transform: translateY(-1px) !important;
+    box-shadow: 0 14px 28px rgba(74, 50, 32, .14) !important;
+}
+/* =========================================================
+   FIX 2026-07-11B - Cashier counter order visual refresh
+   ========================================================= */
+.manager-content.cashier-order-page {
+    width: min(100% - 64px, 1680px) !important;
+    padding: 34px 0 56px !important;
+    background: transparent !important;
+}
+
+.cashier-order-page .pos-heading {
+    margin-bottom: 24px !important;
+    padding: 20px 24px !important;
+    border: 1px solid #dfcab0 !important;
+    border-radius: 10px !important;
+    background: rgba(255, 250, 242, .88) !important;
+    box-shadow: 0 16px 36px rgba(70, 46, 29, .075) !important;
+}
+
+.cashier-order-page .pos-heading span {
+    color: #f28c28 !important;
+    font-size: 11px !important;
+    font-weight: 950 !important;
+    letter-spacing: .08em !important;
+    text-transform: uppercase !important;
+}
+
+.cashier-order-page .pos-heading h2 {
+    margin-top: 6px !important;
+    color: #2f2119 !important;
+    font-size: 30px !important;
+    font-weight: 950 !important;
+}
+
+.cashier-order-page .pos-layout {
+    grid-template-columns: minmax(0, 1.7fr) minmax(370px, .72fr) !important;
+    gap: 26px !important;
+    align-items: start !important;
+}
+
+.cashier-order-page .pos-items {
+    min-height: 520px !important;
+    padding: 10px !important;
+    border: 1px solid #dfcab0 !important;
+    border-radius: 10px !important;
+    background:
+        linear-gradient(180deg, rgba(255, 253, 248, .98), rgba(255, 248, 238, .96)) !important;
+    box-shadow: 0 24px 54px rgba(70, 46, 29, .11) !important;
+}
+
+.cashier-order-page .pos-empty {
+    min-height: 498px !important;
+    border: 1px dashed #d9bea0 !important;
+    border-radius: 8px !important;
+    background:
+        radial-gradient(circle at center, rgba(242, 140, 40, .08), transparent 240px),
+        #fffaf2 !important;
+}
+
+.cashier-order-page .pos-empty svg {
+    width: 56px !important;
+    height: 56px !important;
+    color: #9b7b65 !important;
+}
+
+.cashier-order-page .pos-empty h3 {
+    color: #2f2119 !important;
+    font-size: 20px !important;
+    font-weight: 950 !important;
+}
+
+.cashier-order-page .pos-empty a {
+    min-height: 38px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 0 18px !important;
+    border-radius: 8px !important;
+    background: #fff2e1 !important;
+    color: #7b543d !important;
+}
+
+.cashier-order-page .pos-item {
+    margin-bottom: 10px !important;
+    border: 1px solid #ead7bf !important;
+    border-radius: 8px !important;
+    background: #fffdf8 !important;
+    box-shadow: 0 10px 26px rgba(70, 46, 29, .055) !important;
+}
+
+.cashier-order-page .pos-item:hover {
+    background: #fff7eb !important;
+    transform: translateY(-1px) !important;
+    box-shadow: 0 16px 32px rgba(70, 46, 29, .10) !important;
+}
+
+.cashier-order-page .payment-summary {
+    position: sticky !important;
+    top: 96px !important;
+    padding: 26px !important;
+    border: 1px solid #dfcab0 !important;
+    border-radius: 10px !important;
+    background: rgba(255, 253, 248, .98) !important;
+    box-shadow: 0 24px 54px rgba(70, 46, 29, .13) !important;
+}
+
+.cashier-order-page .payment-summary > span {
+    color: #f28c28 !important;
+    font-size: 11px !important;
+    font-weight: 950 !important;
+    letter-spacing: .08em !important;
+}
+
+.cashier-order-page .payment-summary h2 {
+    color: #2f2119 !important;
+    font-size: 28px !important;
+    font-weight: 950 !important;
+}
+
+.cashier-order-page .payment-form input,
+.cashier-order-page .payment-form select,
+.cashier-order-page .item-edit-form input,
+.cashier-order-page .item-edit-form select {
+    height: 44px !important;
+    border-color: #e3ceb4 !important;
+    border-radius: 8px !important;
+    background: #fffaf3 !important;
+}
+
+.cashier-order-page .payment-form input:focus,
+.cashier-order-page .payment-form select:focus,
+.cashier-order-page .item-edit-form input:focus,
+.cashier-order-page .item-edit-form select:focus {
+    border-color: #c99565 !important;
+    box-shadow: 0 0 0 4px rgba(201, 149, 101, .16) !important;
+}
+
+.cashier-order-page .pay-button,
+.cashier-order-page .primary-action,
+.cashier-order-page .secondary-action,
+.cashier-order-page .item-edit-form button {
+    border-radius: 8px !important;
+}
+
+.cashier-order-page .pay-button {
+    min-height: 48px !important;
+    background: #7b543d !important;
+    color: #fff !important;
+}
+
+.cashier-order-page .pay-button:hover:not(:disabled) {
+    background: #2f2119 !important;
+}
+
+.cashier-order-page .pay-button:disabled {
+    background: #b8ada7 !important;
+    color: #fff !important;
+}
+
+.cashier-order-page .pos-actions {
+    margin-top: 22px !important;
+}
+
+@media (max-width: 1100px) {
+    .cashier-order-page .pos-layout {
+        grid-template-columns: 1fr !important;
+    }
+
+    .cashier-order-page .payment-summary {
+        position: static !important;
+    }
+}
+/* Mirror order toolbar/detail icon polish for cashier order management. */
+.status-tabs + .toolbar-band {
+    display: grid !important;
+    grid-template-columns: auto minmax(260px, 430px) !important;
+    align-items: center !important;
+    gap: 18px !important;
+}
+
+.status-tabs + .toolbar-band .result-count {
+    order: 1 !important;
+    width: max-content !important;
+    min-height: 40px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    padding: 0 14px !important;
+    border: 1px solid #dfcab0 !important;
+    border-radius: 999px !important;
+    background: #fffaf3 !important;
+    color: #7b543d !important;
+    font-size: 13px !important;
+    font-weight: 950 !important;
+}
+
+.status-tabs + .toolbar-band .result-count::before {
+    content: "" !important;
+    width: 8px !important;
+    height: 8px !important;
+    border-radius: 50% !important;
+    background: #f28c28 !important;
+    box-shadow: 0 0 0 4px rgba(242, 140, 40, .14) !important;
+}
+
+.status-tabs + .toolbar-band form {
+    order: 2 !important;
+    justify-self: end !important;
+    width: min(430px, 100%) !important;
+}
+
+.status-tabs + .toolbar-band .search-box {
+    width: 100% !important;
+}

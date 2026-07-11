@@ -17,23 +17,23 @@
                 <nav class="site-nav">
                     <a href="${pageContext.request.contextPath}/menu">Menu</a>
                     <a class="cart-link" href="${pageContext.request.contextPath}/checkout">Giỏ Hàng <span class="cart-count">${cartCount}</span>
-</a>
+                    </a>
                     <a href="#contact">Liên Hệ</a>
                     <c:choose>
                         <c:when test="${not empty sessionScope.user}">
-<a class="customer-nav-avatar" href="${pageContext.request.contextPath}/profile" title="Thông tin cá nhân" aria-label="Thông tin cá nhân">
-<c:choose>
-<c:when test="${not empty sessionScope.user.displayAvatarUrl}">
-<span class="avatar-fallback" hidden>${fn:substring(sessionScope.user.fullName,0,1)}</span>
-<img src="${pageContext.request.contextPath}${sessionScope.user.displayAvatarUrl}" alt="" onerror="this.hidden=true;this.previousElementSibling.hidden=false;">
-</c:when>
-<c:otherwise>${fn:substring(sessionScope.user.fullName,0,1)}</c:otherwise>
-</c:choose>
-</a>
-</c:when>
+                            <a class="customer-nav-avatar" href="${pageContext.request.contextPath}/profile" title="Thông tin cá nhân" aria-label="Thông tin cá nhân">
+                                <c:choose>
+                                    <c:when test="${not empty sessionScope.user.displayAvatarUrl}">
+                                        <span class="avatar-fallback" hidden>${fn:substring(sessionScope.user.fullName,0,1)}</span>
+                                        <img src="${pageContext.request.contextPath}${sessionScope.user.displayAvatarUrl}" alt="" onerror="this.hidden=true;this.previousElementSibling.hidden=false;">
+                                    </c:when>
+                                    <c:otherwise>${fn:substring(sessionScope.user.fullName,0,1)}</c:otherwise>
+                                </c:choose>
+                            </a>
+                        </c:when>
                         <c:otherwise>
-<a class="login-button" href="${pageContext.request.contextPath}/login">Đăng nhập</a>
-</c:otherwise>
+                            <a class="login-button" href="${pageContext.request.contextPath}/login">Đăng nhập</a>
+                        </c:otherwise>
                     </c:choose>
                 </nav>
             </header>
@@ -62,9 +62,9 @@
 
             <section class="about-section" id="contact">
                 <div>
-                    <h2>Về chúng tôi</h2>
+                    <h2>Since 1900</h2>
                     <p>Chúng tôi là một cửa hàng cà phê & trà sữa được tạo nên từ niềm đam mê với hương vị và trải nghiệm. Tại đây, mỗi ly đồ uống đều được chuẩn bị từ nguyên liệu chọn lọc, mang đến sự tươi mới và chút lắng đọng cho ngày của bạn.</p>
-                    <a class="primary-button" href="https://facebook.com/" target="_blank" rel="noopener">Facebook</a>
+                    <a class="primary-button" href="https://www.facebook.com/n.khanh.290706" target="_blank" rel="noopener">Facebook</a>
                 </div>
                 <img src="https://images.unsplash.com/photo-1527661591475-527312dd65f5?auto=format&fit=crop&w=900&q=80" alt="Cafe fruits">
             </section>
@@ -72,8 +72,8 @@
             <footer class="site-footer">
                 <strong>Cafe & Bubble tea</strong>
                 <div class="social-row">
-                    <a href="https://facebook.com/" target="_blank" rel="noopener" aria-label="Facebook">f</a>
-                    <a href="https://youtube.com/" target="_blank" rel="noopener" aria-label="YouTube">yt</a>
+                    <a href="https://www.facebook.com/n.khanh.290706" target="_blank" rel="noopener" aria-label="Facebook">f</a>
+                    <a href="https://www.youtube.com/watch?v=8sVtL0o-v7U&list=RD8sVtL0o-v7U&start_radio=1" target="_blank" rel="noopener" aria-label="YouTube">yt</a>
                     <a href="https://instagram.com/" target="_blank" rel="noopener" aria-label="Instagram">ig</a>
                 </div>
             </footer>
