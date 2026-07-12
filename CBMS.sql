@@ -371,6 +371,10 @@ VALUES
 ('customer04', '123456', N'Bùi Thanh Hà',          'customer04@gmail.com','0955667788', N'Hoài Đức',       N'Nữ',   NULL,        1, 1200, 3, '2026-03-01 09:00:00'),
 ('customer05', '123456', N'Ngô Gia Bảo',           'customer05@gmail.com','0888999000', N'Hà Đông',        N'Khác', NULL,        1,  540, 3, '2026-03-12 09:00:00');
 
+UPDATE dbo.Users SET avatar_url = '/images/avatars/uploads/avatar-1-1783753731072.jpg' WHERE username = 'admin01';
+UPDATE dbo.Users SET avatar_url = '/images/avatars/uploads/avatar-2-1783656457343.jpg' WHERE username = 'cashier01';
+UPDATE dbo.Users SET avatar_url = '/images/avatars/uploads/avatar-6-1783742549197.jpg' WHERE username = 'customer01';
+
 INSERT INTO dbo.Categories (category_name, description, status) VALUES
 (N'Cà phê', N'Cà phê máy và cà phê phin Việt Nam', 1),
 (N'Trà sữa', N'Trà sữa và thức uống từ sữa', 1),
