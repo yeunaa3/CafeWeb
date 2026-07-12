@@ -754,3 +754,41 @@
         removeCustomMenuScrollRails();
     }
 }());
+
+(function () {
+    "use strict";
+
+    function fixExternalImageUrls(root) {
+        var scope = root && root.querySelectorAll ? root : document;
+        var images = scope.querySelectorAll("img[src]");
+        for (var i = 0; i < images.length; i++) {
+            var rawSrc = images[i].getAttribute("src") || "";
+            var fullSrc = images[i].src || "";
+            var match = rawSrc.match(/(https?:\/\/.+)$/) || fullSrc.match(/(https?:\/\/.+)$/);
+            if (match && rawSrc.indexOf("http") > 0) {
+                images[i].hidden = false;
+                images[i].setAttribute("src", match[1]);
+            }
+        }
+    }
+
+    function startFixing() {
+        fixExternalImageUrls(document);
+        if (window.MutationObserver) {
+            var observer = new MutationObserver(function (mutations) {
+                for (var i = 0; i < mutations.length; i++) {
+                    for (var j = 0; j < mutations[i].addedNodes.length; j++) {
+                        fixExternalImageUrls(mutations[i].addedNodes[j]);
+                    }
+                }
+            });
+            observer.observe(document.documentElement, { childList: true, subtree: true });
+        }
+    }
+
+    if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", startFixing);
+    } else {
+        startFixing();
+    }
+}());
