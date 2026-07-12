@@ -15,7 +15,7 @@ public class VerifyOTPController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        request.getRequestDispatcher("/enter-otp.jsp").forward(request, response);
+        request.getRequestDispatcher("/jsp/auth/enter-otp.jsp").forward(request, response);
     }
 
     @Override
@@ -44,14 +44,14 @@ public class VerifyOTPController extends HttpServlet {
         if (otpSystem == null || email == null) {
             expireOtp(session);
             request.setAttribute("error", "Phiên làm việc đã hết hạn hoặc không hợp lệ. Vui lòng thử lại!");
-            request.getRequestDispatcher("/forgot-password.jsp").forward(request, response);
+            request.getRequestDispatcher("/jsp/auth/forgot-password.jsp").forward(request, response);
             return;
         }
 
         if (isOtpExpired(session)) {
             expireOtp(session);
             request.setAttribute("error", "Mã OTP đã hết hạn sau 5 phút. Vui lòng yêu cầu mã mới!");
-            request.getRequestDispatcher("/forgot-password.jsp").forward(request, response);
+            request.getRequestDispatcher("/jsp/auth/forgot-password.jsp").forward(request, response);
             return;
         }
 
@@ -59,14 +59,14 @@ public class VerifyOTPController extends HttpServlet {
             int inputValue = Integer.parseInt(otpInput == null ? "" : otpInput.trim());
             if (inputValue == otpSystem) {
                 session.setAttribute("otpVerified", Boolean.TRUE);
-                request.getRequestDispatcher("/reset-password.jsp").forward(request, response);
+                request.getRequestDispatcher("/jsp/auth/reset-password.jsp").forward(request, response);
             } else {
                 request.setAttribute("error", "Mã OTP không chính xác. Vui lòng kiểm tra lại!");
-                request.getRequestDispatcher("/enter-otp.jsp").forward(request, response);
+                request.getRequestDispatcher("/jsp/auth/enter-otp.jsp").forward(request, response);
             }
         } catch (NumberFormatException ex) {
             request.setAttribute("error", "Mã OTP phải là chuỗi gồm 6 chữ số!");
-            request.getRequestDispatcher("/enter-otp.jsp").forward(request, response);
+            request.getRequestDispatcher("/jsp/auth/enter-otp.jsp").forward(request, response);
         }
     }
 
@@ -80,13 +80,13 @@ public class VerifyOTPController extends HttpServlet {
         if (email == null || !Boolean.TRUE.equals(verified) || isOtpExpired(session)) {
             expireOtp(session);
             request.setAttribute("error", "Phiên đặt lại mật khẩu đã hết hạn. Vui lòng thử lại từ đầu!");
-            request.getRequestDispatcher("/forgot-password.jsp").forward(request, response);
+            request.getRequestDispatcher("/jsp/auth/forgot-password.jsp").forward(request, response);
             return;
         }
 
         if (newPassword == null || !newPassword.equals(confirmPassword)) {
             request.setAttribute("error", "Mật khẩu xác nhận không trùng khớp!");
-            request.getRequestDispatcher("/reset-password.jsp").forward(request, response);
+            request.getRequestDispatcher("/jsp/auth/reset-password.jsp").forward(request, response);
             return;
         }
 
@@ -96,7 +96,7 @@ public class VerifyOTPController extends HttpServlet {
             request.getRequestDispatcher("/login").forward(request, response);
         } else {
             request.setAttribute("error", "Không thể cập nhật mật khẩu. Vui lòng thử lại!");
-            request.getRequestDispatcher("/reset-password.jsp").forward(request, response);
+            request.getRequestDispatcher("/jsp/auth/reset-password.jsp").forward(request, response);
         }
     }
 

@@ -50,8 +50,24 @@ public class Product {
         if (path.isEmpty()) {
             return "";
         }
+        int webImageIndex = path.indexOf("/web/images/products/");
+        if (webImageIndex >= 0) {
+            return path.substring(webImageIndex + "/web".length());
+        }
         if (path.startsWith("http://") || path.startsWith("https://")) {
             return path;
+        }
+        if (path.startsWith("/CafeWeb/images/products/")) {
+            return path.substring("/CafeWeb".length());
+        }
+        if (path.startsWith("web/images/products/")) {
+            return "/" + path.substring("web/".length());
+        }
+        if (path.startsWith("/images/products/")) {
+            return path;
+        }
+        if (path.startsWith("images/products/")) {
+            return "/" + path;
         }
         if (path.startsWith("/assets/images/products/")) {
             return "/images/products/" + path.substring("/assets/images/products/".length());

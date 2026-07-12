@@ -34,7 +34,7 @@ public class ForgotPasswordController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        request.getRequestDispatcher("/forgot-password.jsp").forward(request, response);
+        request.getRequestDispatcher("/jsp/auth/forgot-password.jsp").forward(request, response);
     }
 
     @Override
@@ -46,7 +46,7 @@ public class ForgotPasswordController extends HttpServlet {
         String email = trim(request.getParameter("email"));
         if (email.isEmpty()) {
             request.setAttribute("error", "Vui lòng nhập địa chỉ email!");
-            request.getRequestDispatcher("/forgot-password.jsp").forward(request, response);
+            request.getRequestDispatcher("/jsp/auth/forgot-password.jsp").forward(request, response);
             return;
         }
 
@@ -54,7 +54,7 @@ public class ForgotPasswordController extends HttpServlet {
         if (user == null) {
             request.setAttribute("error", "Email không tồn tại trong hệ thống hoặc tài khoản đã bị khóa!");
             request.setAttribute("email", email);
-            request.getRequestDispatcher("/forgot-password.jsp").forward(request, response);
+            request.getRequestDispatcher("/jsp/auth/forgot-password.jsp").forward(request, response);
             return;
         }
 
@@ -64,7 +64,7 @@ public class ForgotPasswordController extends HttpServlet {
         } catch (Exception ex) {
             request.setAttribute("error", "Không thể gửi OTP. Vui lòng kiểm tra cấu hình Gmail SMTP.");
             request.setAttribute("email", email);
-            request.getRequestDispatcher("/forgot-password.jsp").forward(request, response);
+            request.getRequestDispatcher("/jsp/auth/forgot-password.jsp").forward(request, response);
             return;
         }
 
@@ -73,7 +73,7 @@ public class ForgotPasswordController extends HttpServlet {
         session.setAttribute(OTP_EMAIL_SESSION_KEY, email);
         session.setAttribute(OTP_CREATED_AT_SESSION_KEY, System.currentTimeMillis());
         request.setAttribute("message", "Mã OTP đã được gửi đến email của bạn thành công!");
-        request.getRequestDispatcher("/enter-otp.jsp").forward(request, response);
+        request.getRequestDispatcher("/jsp/auth/enter-otp.jsp").forward(request, response);
     }
 
     private void sendOtpEmail(String toEmail, int otpValue) throws Exception {

@@ -49,7 +49,7 @@
                         <div class="auth-help-links">
                             <span>Bạn chưa có tài khoản? <a href="${pageContext.request.contextPath}/register">Đăng ký tại đây</a>
                             </span>
-                            <span>Quên mật khẩu? <a href="${pageContext.request.contextPath}/forgot-password.jsp">Nhấn vào đây</a>
+                            <span>Quên mật khẩu? <a href="${pageContext.request.contextPath}/forgot-password">Nhấn vào đây</a>
                             </span>
                         </div>
 

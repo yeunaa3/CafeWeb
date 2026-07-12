@@ -350,6 +350,9 @@ GO
 -- ============================================================================
 -- 6. SAMPLE DATA
 -- Default password for every sample account: 123456
+-- Image columns store web-relative paths only, for example:
+-- /images/products/uploads/menu-cafe-01.jpg
+-- /images/avatars/uploads/avatar-1-1783753731072.jpg
 -- ============================================================================
 
 INSERT INTO dbo.Roles (role_name, description) VALUES
@@ -358,22 +361,18 @@ INSERT INTO dbo.Roles (role_name, description) VALUES
 ('Customer', N'Khách hàng đặt món và tích điểm');
 
 INSERT INTO dbo.Users
-    (username, password, full_name, email, phone, address, gender, staff_position, status, points, role_id, created_at)
+    (username, password, full_name, email, phone, address, gender, staff_position, avatar_url, status, points, role_id, created_at)
 VALUES
-('admin01',    '123456', N'Nguyễn Quản Lý',       'admin@cbms.com',      '0912345678', N'Hà Nội',         N'Nam',  N'Manager',   1,    0, 1, '2026-01-02 08:00:00'),
-('cashier01',  '123456', N'Lê Thu Ngân',           'cashier@cbms.com',    '0987654321', N'Hà Nội',         N'Nữ',   N'Thu ngân',  1,    0, 2, '2026-01-05 08:00:00'),
-('barista01',  '123456', N'Trần Pha Chế',          'barista@cbms.com',    '0944556677', N'Hà Nội',         N'Nam',  N'Pha chế',   1,    0, 2, '2026-01-06 08:00:00'),
-('shipper01',  '123456', N'Phạm Giao Hàng',        'shipper@cbms.com',    '0966112233', N'Hà Nội',         N'Nam',  N'Giao hàng', 1,    0, 2, '2026-01-07 08:00:00'),
-('staff02',    '123456', N'Vũ Nhân Viên Nghỉ',     'staff02@cbms.com',    '0977001122', N'Hà Nội',         N'Khác', N'Nhân viên', 0,    0, 2, '2026-01-08 08:00:00'),
-('customer01', '123456', N'Phan Khách Hàng Online','customer01@gmail.com','0909090909', N'Thạch Thất',      N'Nam',  NULL,        1, 2390, 3, '2026-02-01 09:00:00'),
-('customer02', '123456', N'Hoàng Minh Anh',        'customer02@gmail.com','0933221100', N'Cầu Giấy',       N'Nữ',   NULL,        1, 1908, 3, '2026-02-05 09:00:00'),
-('customer03', '123456', N'Đỗ Hải Nam',            'customer03@gmail.com','0922113344', N'Nam Từ Liêm',    N'Nam',  NULL,        1,  760, 3, '2026-02-10 09:00:00'),
-('customer04', '123456', N'Bùi Thanh Hà',          'customer04@gmail.com','0955667788', N'Hoài Đức',       N'Nữ',   NULL,        1, 1200, 3, '2026-03-01 09:00:00'),
-('customer05', '123456', N'Ngô Gia Bảo',           'customer05@gmail.com','0888999000', N'Hà Đông',        N'Khác', NULL,        1,  540, 3, '2026-03-12 09:00:00');
-
-UPDATE dbo.Users SET avatar_url = '/images/avatars/uploads/avatar-1-1783753731072.jpg' WHERE username = 'admin01';
-UPDATE dbo.Users SET avatar_url = '/images/avatars/uploads/avatar-2-1783656457343.jpg' WHERE username = 'cashier01';
-UPDATE dbo.Users SET avatar_url = '/images/avatars/uploads/avatar-6-1783742549197.jpg' WHERE username = 'customer01';
+('admin01',    '123456', N'Nguyễn Quản Lý',       'admin@cbms.com',      '0912345678', N'Hà Nội',         N'Nam',  N'Manager',   '/images/avatars/uploads/avatar-1-1783753731072.jpg', 1,    0, 1, '2026-01-02 08:00:00'),
+('cashier01',  '123456', N'Lê Thu Ngân',           'cashier@cbms.com',    '0987654321', N'Hà Nội',         N'Nữ',   N'Thu ngân',  '/images/avatars/uploads/avatar-2-1783656457343.jpg', 1,    0, 2, '2026-01-05 08:00:00'),
+('barista01',  '123456', N'Trần Pha Chế',          'barista@cbms.com',    '0944556677', N'Hà Nội',         N'Nam',  N'Pha chế',   NULL, 1,    0, 2, '2026-01-06 08:00:00'),
+('shipper01',  '123456', N'Phạm Giao Hàng',        'shipper@cbms.com',    '0966112233', N'Hà Nội',         N'Nam',  N'Giao hàng', NULL, 1,    0, 2, '2026-01-07 08:00:00'),
+('staff02',    '123456', N'Vũ Nhân Viên Nghỉ',     'staff02@cbms.com',    '0977001122', N'Hà Nội',         N'Khác', N'Nhân viên', NULL, 0,    0, 2, '2026-01-08 08:00:00'),
+('customer01', '123456', N'Phan Khách Hàng Online','customer01@gmail.com','0909090909', N'Thạch Thất',      N'Nam',  NULL,        '/images/avatars/uploads/avatar-6-1783742549197.jpg', 1, 2390, 3, '2026-02-01 09:00:00'),
+('customer02', '123456', N'Hoàng Minh Anh',        'customer02@gmail.com','0933221100', N'Cầu Giấy',       N'Nữ',   NULL,        NULL, 1, 1908, 3, '2026-02-05 09:00:00'),
+('customer03', '123456', N'Đỗ Hải Nam',            'customer03@gmail.com','0922113344', N'Nam Từ Liêm',    N'Nam',  NULL,        NULL, 1,  760, 3, '2026-02-10 09:00:00'),
+('customer04', '123456', N'Bùi Thanh Hà',          'customer04@gmail.com','0955667788', N'Hoài Đức',       N'Nữ',   NULL,        NULL, 1, 1200, 3, '2026-03-01 09:00:00'),
+('customer05', '123456', N'Ngô Gia Bảo',           'customer05@gmail.com','0888999000', N'Hà Đông',        N'Khác', NULL,        NULL, 1,  540, 3, '2026-03-12 09:00:00');
 
 INSERT INTO dbo.Categories (category_name, description, status) VALUES
 (N'Cà phê', N'Cà phê máy và cà phê phin Việt Nam', 1),
@@ -483,11 +482,11 @@ INSERT INTO dbo.ProductToppings (product_id, topping_id) VALUES
 (6,3),(6,4),(6,7),(7,3),(7,4),(7,7),(8,7),(9,4);
 
 INSERT INTO dbo.Combos (combo_name, combo_price, image_url, description, start_date, end_date, status) VALUES
-(N'Combo sáng tỉnh táo', 52000, 'combo-sang.png', N'Cà phê sữa đá và Croissant', '2026-01-01', '2027-12-31', 1),
-(N'Combo đôi ngọt ngào', 82000, 'combo-doi.png', N'Hai ly trà sữa', '2026-01-01', '2027-12-31', 1),
-(N'Combo văn phòng', 95000, 'combo-van-phong.png', N'Đồ uống cho nhóm nhỏ', '2026-01-01', '2027-12-31', 1),
-(N'Combo trà chiều', 65000, 'combo-tra-chieu.png', N'Trà trái cây và bánh', '2026-01-01', '2027-12-31', 1),
-(N'Combo năng lượng', 88000, 'combo-nang-luong.png', N'Cà phê và nước ép', '2026-01-01', '2027-12-31', 1);
+(N'Combo sáng tỉnh táo', 52000, '/images/products/uploads/menu-cafe-07.jpg', N'Cà phê sữa đá và Croissant', '2026-01-01', '2027-12-31', 1),
+(N'Combo đôi ngọt ngào', 82000, '/images/products/uploads/menu-tra-sua-13.jpg', N'Hai ly trà sữa', '2026-01-01', '2027-12-31', 1),
+(N'Combo văn phòng', 95000, '/images/products/uploads/menu-cafe-11.jpg', N'Đồ uống cho nhóm nhỏ', '2026-01-01', '2027-12-31', 1),
+(N'Combo trà chiều', 65000, '/images/products/uploads/menu-tra-trai-cay-10.jpg', N'Trà trái cây và bánh', '2026-01-01', '2027-12-31', 1),
+(N'Combo năng lượng', 88000, '/images/products/uploads/menu-nuoc-ep-06.jpg', N'Cà phê và nước ép', '2026-01-01', '2027-12-31', 1);
 
 INSERT INTO dbo.ComboItems (combo_id, product_id, quantity) VALUES
 (1,1,1),(1,10,1),(2,4,1),(2,5,1),(3,1,2),(3,10,1),(4,6,1),(4,10,1),(5,3,1),(5,8,1);
@@ -688,36 +687,3 @@ ORDER BY t.name;
 SELECT TOP (5) * FROM dbo.vw_DailyRevenue ORDER BY revenue_date DESC;
 SELECT TOP (5) * FROM dbo.vw_TopSellingProducts ORDER BY quantity_sold DESC, product_id;
 GO
-
-/* ======================================================================
-   IMAGE URL ONLINE FIX 2026-07-12
-   Đổi đường dẫn ảnh local trong database sang raw GitHub URL để máy khác vẫn hiển thị ảnh.
-   Lưu ý: các file ảnh trong web/images phải được commit và push lên GitHub trước.
-   ====================================================================== */
-DECLARE @ImageBase VARCHAR(255) = 'https://raw.githubusercontent.com/yeunaa3/CafeWeb/Khanh/web';
-
-UPDATE dbo.Products
-SET image_url = CASE
-    WHEN image_url LIKE '/images/products/%' THEN @ImageBase + image_url
-    WHEN image_url LIKE 'images/products/%' THEN @ImageBase + '/' + image_url
-    WHEN image_url LIKE '/uploads/products/%' THEN @ImageBase + '/images/products' + image_url
-    WHEN image_url LIKE 'uploads/products/%' THEN @ImageBase + '/images/products/' + image_url
-    ELSE image_url
-END
-WHERE image_url IS NOT NULL
-  AND image_url <> ''
-  AND image_url NOT LIKE 'http://%'
-  AND image_url NOT LIKE 'https://%';
-
-UPDATE dbo.Users
-SET avatar_url = CASE
-    WHEN avatar_url LIKE '/images/avatars/%' THEN @ImageBase + avatar_url
-    WHEN avatar_url LIKE 'images/avatars/%' THEN @ImageBase + '/' + avatar_url
-    WHEN avatar_url LIKE '/uploads/avatars/%' THEN @ImageBase + '/images/avatars' + avatar_url
-    WHEN avatar_url LIKE 'uploads/avatars/%' THEN @ImageBase + '/images/avatars/' + avatar_url
-    ELSE avatar_url
-END
-WHERE avatar_url IS NOT NULL
-  AND avatar_url <> ''
-  AND avatar_url NOT LIKE 'http://%'
-  AND avatar_url NOT LIKE 'https://%';

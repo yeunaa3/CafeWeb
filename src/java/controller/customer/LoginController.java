@@ -21,7 +21,7 @@ public class LoginController extends HttpServlet {
             return;
         }
         request.setAttribute("returnUrl", safeReturnUrl(request.getParameter("returnUrl")));
-        request.getRequestDispatcher("/login.jsp").forward(request, response);
+        request.getRequestDispatcher("/jsp/auth/login.jsp").forward(request, response);
     }
 
     @Override
@@ -36,19 +36,19 @@ public class LoginController extends HttpServlet {
         request.setAttribute("returnUrl", returnUrl);
         if (usernameOrEmail.isEmpty() || password == null || password.isEmpty()) {
             request.setAttribute("error", "Vui lòng nhập tài khoản và mật khẩu.");
-            request.getRequestDispatcher("/login.jsp").forward(request, response);
+            request.getRequestDispatcher("/jsp/auth/login.jsp").forward(request, response);
             return;
         }
 
         User user = new UserDAO().authenticate(usernameOrEmail, password);
         if (user == null) {
             request.setAttribute("error", "Tài khoản hoặc mật khẩu không chính xác.");
-            request.getRequestDispatcher("/login.jsp").forward(request, response);
+            request.getRequestDispatcher("/jsp/auth/login.jsp").forward(request, response);
             return;
         }
         if (!user.isStatus()) {
             request.setAttribute("error", "Tài khoản đã bị khóa. Vui lòng liên hệ quản lý.");
-            request.getRequestDispatcher("/login.jsp").forward(request, response);
+            request.getRequestDispatcher("/jsp/auth/login.jsp").forward(request, response);
             return;
         }
 

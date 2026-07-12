@@ -15,7 +15,7 @@ public class RegisterController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        request.getRequestDispatcher("/register.jsp").forward(request, response);
+        request.getRequestDispatcher("/jsp/auth/register.jsp").forward(request, response);
     }
 
     @Override
@@ -36,7 +36,7 @@ public class RegisterController extends HttpServlet {
         }
         if (error != null) {
             request.setAttribute("error", error);
-            request.getRequestDispatcher("/register.jsp").forward(request, response);
+            request.getRequestDispatcher("/jsp/auth/register.jsp").forward(request, response);
             return;
         }
 
@@ -49,7 +49,7 @@ public class RegisterController extends HttpServlet {
         user.setPassword(password);
         if (!userDAO.createCustomer(user)) {
             request.setAttribute("error", "Không thể tạo tài khoản. Vui lòng thử lại.");
-            request.getRequestDispatcher("/register.jsp").forward(request, response);
+            request.getRequestDispatcher("/jsp/auth/register.jsp").forward(request, response);
             return;
         }
         response.sendRedirect(request.getContextPath() + "/login?registered=true");

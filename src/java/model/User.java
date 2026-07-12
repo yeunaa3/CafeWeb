@@ -65,8 +65,24 @@ public class User {
         if (path.isEmpty()) {
             return "";
         }
+        int webAvatarIndex = path.indexOf("/web/images/avatars/");
+        if (webAvatarIndex >= 0) {
+            return path.substring(webAvatarIndex + "/web".length());
+        }
         if (path.startsWith("http://") || path.startsWith("https://")) {
             return path;
+        }
+        if (path.startsWith("/CafeWeb/images/avatars/")) {
+            return path.substring("/CafeWeb".length());
+        }
+        if (path.startsWith("web/images/avatars/")) {
+            return "/" + path.substring("web/".length());
+        }
+        if (path.startsWith("/images/avatars/")) {
+            return path;
+        }
+        if (path.startsWith("images/avatars/")) {
+            return "/" + path;
         }
         if (path.startsWith("/assets/images/avatars/")) {
             return "/images/avatars/" + path.substring("/assets/images/avatars/".length());

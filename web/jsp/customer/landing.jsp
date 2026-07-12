@@ -52,7 +52,8 @@
                     <c:forEach var="product" items="${recommendedProducts}">
                         <a class="recommend-item" href="${pageContext.request.contextPath}/menu">
                             <img src="${pageContext.request.contextPath}${product.displayImageUrl}"
-                                 onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1572490122747-3968b75cc699?auto=format&fit=crop&w=600&q=80';"
+                                 decoding="async"
+                                 onerror="this.onerror=null;this.src='${pageContext.request.contextPath}/images/products/uploads/menu-cafe-01.jpg';"
                                  alt="${product.productName}">
                             <span>${product.productName}</span>
                         </a>

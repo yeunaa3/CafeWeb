@@ -77,7 +77,9 @@
                             <c:forEach var="product" items="${section.products}">
                                 <article class="product-card">
                                     <img src="${pageContext.request.contextPath}${product.displayImageUrl}"
-                                         onerror="this.onerror=null;this.src='https://png.pngtree.com/png-clipart/20241213/original/pngtree-iced-coffee-with-milk-in-glass-black-png-image_17810628.png';"
+                                         loading="lazy"
+                                         decoding="async"
+                                         onerror="this.onerror=null;this.src='${pageContext.request.contextPath}/images/products/uploads/menu-cafe-01.jpg';"
                                          alt="${product.productName}">
                                     <div class="product-info">
                                         <div>
@@ -130,7 +132,7 @@
                 <input type="hidden" name="productId" id="modalProductId">
                 <button class="modal-close" type="button" aria-label="Đóng">×</button>
                 <div class="modal-product-summary">
-                    <img id="modalProductImage" src="" alt="" onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1572490122747-3968b75cc699?auto=format&fit=crop&w=300&q=80';">
+                    <img id="modalProductImage" src="" alt="" onerror="this.onerror=null;this.src='${pageContext.request.contextPath}/images/products/uploads/menu-cafe-01.jpg';">
                     <div>
                         <span>Tùy chỉnh món</span>
                         <h2 id="modalProductName">Chọn món</h2>
