@@ -1,7 +1,7 @@
 package controller.customer;
 
-import dal.UserDAO;
-import dal.VoucherDAO;
+import dao.UserDAO;
+import dao.VoucherDAO;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;

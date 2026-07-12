@@ -1,6 +1,6 @@
 package controller.customer;
 
-import dal.ProductDAO;
+import dao.ProductDAO;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;

@@ -53,6 +53,36 @@ public class User {
     public void setRoleId(int roleId) { this.roleId = roleId; }
     public String getAvatarUrl() { return avatarUrl; }
     public void setAvatarUrl(String avatarUrl) { this.avatarUrl = avatarUrl; }
+    public String getDisplayAvatarUrl() { return normalizeAvatarUrl(avatarUrl); }
     public Timestamp getCreatedAt() { return createdAt; }
     public void setCreatedAt(Timestamp createdAt) { this.createdAt = createdAt; }
+
+    public static String normalizeAvatarUrl(String value) {
+        if (value == null) {
+            return "";
+        }
+        String path = value.trim().replace('\\', '/');
+        if (path.isEmpty()) {
+            return "";
+        }
+        if (path.startsWith("http://") || path.startsWith("https://")) {
+            return path;
+        }
+        if (path.startsWith("/assets/images/avatars/")) {
+            return "/images/avatars/" + path.substring("/assets/images/avatars/".length());
+        }
+        if (path.startsWith("assets/images/avatars/")) {
+            return "/images/avatars/" + path.substring("assets/images/avatars/".length());
+        }
+        if (path.startsWith("/uploads/avatars/")) {
+            return "/images/avatars/uploads/" + path.substring("/uploads/avatars/".length());
+        }
+        if (path.startsWith("uploads/avatars/")) {
+            return "/images/avatars/uploads/" + path.substring("uploads/avatars/".length());
+        }
+        if (path.startsWith("/")) {
+            return path;
+        }
+        return "/images/avatars/" + path;
+    }
 }

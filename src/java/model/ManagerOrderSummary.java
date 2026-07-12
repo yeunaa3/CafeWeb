@@ -43,12 +43,10 @@ public class ManagerOrderSummary {
     public String getDisplayStatus() {
         if ("Pending".equals(status)) return "Chờ duyệt";
         if ("Approved".equals(status)) return "Đã duyệt";
-        if ("Processing".equals(status)) return "Đang xử lý";
-        if ("Ready".equals(status)) return "Sẵn sàng";
-        if ("Delivering".equals(status)) return "Đang giao";
         if ("Completed".equals(status)) return "Hoàn thành";
         if ("Cancelled".equals(status)) return "Đã hủy";
-        if ("Refunded".equals(status)) return "Đã hoàn tiền";
         return status;
     }
 }
+
+

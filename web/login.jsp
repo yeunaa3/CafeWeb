@@ -1,4 +1,4 @@
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE html>
 <html lang="vi">
@@ -6,7 +6,7 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Đăng nhập - Cafe & Bubble tea</title>
-        <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/customer.css?v=20260708-ui7">
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/css/customer.css?v=20260709-orderflow1">
     </head>
     <body class="auth-simple-page">
         <div class="auth-frame-title">Sign In</div>
@@ -59,13 +59,14 @@
             </section>
 
             <footer class="site-footer auth-simple-footer">
-                <strong>Cafe & Bubble tea</strong>
+                <strong>Contact</strong>
                 <div class="social-row">
-                    <a href="https://facebook.com/" target="_blank" rel="noopener" aria-label="Facebook">f</a>
-                    <a href="https://youtube.com/" target="_blank" rel="noopener" aria-label="YouTube">yt</a>
+                    <a href="https://www.facebook.com/n.khanh.290706" target="_blank" rel="noopener" aria-label="Facebook">f</a>
+                    <a href="https://www.youtube.com/watch?v=To8kS8j7PKQ&list=RDTo8kS8j7PKQ&start_radio=1" target="_blank" rel="noopener" aria-label="YouTube">yt</a>
                     <a href="https://instagram.com/" target="_blank" rel="noopener" aria-label="Instagram">ig</a>
                 </div>
             </footer>
         </main>
     </body>
 </html>
+

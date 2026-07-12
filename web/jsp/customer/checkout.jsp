@@ -1,4 +1,4 @@
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
@@ -8,7 +8,7 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Checkout - Cafe & Bubble tea</title>
-        <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/customer.css?v=20260708-ui7">
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/css/customer.css?v=20260709-orderflow1">
     </head>
     <body data-context-path="${pageContext.request.contextPath}">
         <main class="page-shell checkout-shell">
@@ -23,9 +23,9 @@
                         <c:when test="${not empty sessionScope.user}">
                             <a class="customer-nav-avatar" href="${pageContext.request.contextPath}/profile" title="Thông tin cá nhân" aria-label="Thông tin cá nhân">
                                 <c:choose>
-                                    <c:when test="${not empty sessionScope.user.avatarUrl}">
+                                    <c:when test="${not empty sessionScope.user.displayAvatarUrl}">
                                         <span class="avatar-fallback" hidden>${fn:substring(sessionScope.user.fullName,0,1)}</span>
-                                        <img src="${pageContext.request.contextPath}/${sessionScope.user.avatarUrl}" alt="" onerror="this.hidden=true;this.previousElementSibling.hidden=false;">
+                                        <img src="${pageContext.request.contextPath}${sessionScope.user.displayAvatarUrl}" alt="" onerror="this.hidden=true;this.previousElementSibling.hidden=false;">
                                     </c:when>
                                     <c:otherwise>${fn:substring(sessionScope.user.fullName,0,1)}</c:otherwise>
                                 </c:choose>
@@ -57,11 +57,7 @@
                             <div class="cart-list">
                                 <c:forEach var="item" items="${cart}">
                                     <article class="cart-item" data-cart-row="${item.cartKey}" data-unit-price="${item.unitPrice}">
-<<<<<<< Updated upstream
-                                        <img src="${pageContext.request.contextPath}/${empty item.imageUrl ? '' : (fn:startsWith(item.imageUrl, 'uploads/') ? item.imageUrl : 'assets/images/'.concat(item.imageUrl))}"
-=======
-                                        <img src="${fn:startsWith(item.displayImageUrl, 'http://') or fn:startsWith(item.displayImageUrl, 'https://') ? item.displayImageUrl : pageContext.request.contextPath.concat(item.displayImageUrl)}"
->>>>>>> Stashed changes
+                                        <img src="<c:url value='${item.displayImageUrl}'/>"
                                              onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1572490122747-3968b75cc699?auto=format&fit=crop&w=300&q=80';"
                                              alt="${item.productName}">
                                         <div>
@@ -105,19 +101,30 @@
                     <textarea name="note" rows="4" placeholder="Ghi chú thêm cho quán">
                         <c:out value="${param.note}"/>
                     </textarea>
+                    <div class="checkout-breakdown">
+                        <div>
+                            <span>Tạm tính</span>
+                            <strong>
+                                <span id="cartTotal">
+                                    <fmt:formatNumber value="${cartTotal}" pattern="#,##0"/>
+                                </span>đ</strong>
+                        </div>
+                        <div class="discount-row">
+                            <span>Giảm giá</span>
+                            <strong>-<fmt:formatNumber value="${appliedDiscount}" pattern="#,##0"/>đ</strong>
+                        </div>
+                    </div>
                     <div class="checkout-total">
-                        <span>Tổng tiền</span>
+                        <span>Tổng thanh toán</span>
                         <strong>
-                            <span id="cartTotal">
-                                <fmt:formatNumber value="${cartTotal}" pattern="#,##0"/>
-                            </span>đ</strong>
+                            <fmt:formatNumber value="${payableTotal}" pattern="#,##0"/>đ</strong>
                     </div>
                     <c:choose>
                         <c:when test="${empty cart}">
                             <button class="primary-button wide-button" type="submit" disabled>Đặt hàng</button>
                         </c:when>
                         <c:otherwise>
-                            <button class="primary-button wide-button" type="submit">Đặt hàng</button>
+                            <button class="primary-button wide-button" type="submit">Tiếp tục thanh toán</button>
                         </c:otherwise>
                     </c:choose>
                     <c:if test="${not empty cart}">
@@ -127,7 +134,9 @@
             </section>
         </main>
         <div class="toast" id="toast">Đã cập nhật giỏ hàng</div>
-        <script src="${pageContext.request.contextPath}/assets/js/customer.js?v=20260708-ui7">
+        <script src="${pageContext.request.contextPath}/js/customer.js?v=20260709-orderflow1">
         </script>
     </body>
 </html>
+
+

@@ -1,6 +1,6 @@
 package controller.manager;
 
-import dal.ProductDAO;
+import dao.ProductDAO;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
@@ -10,6 +10,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.Part;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.Locale;
 import model.Product;
 
@@ -20,6 +22,8 @@ import model.Product;
         maxRequestSize = 10 * 1024 * 1024
 )
 public class ManagerProductController extends HttpServlet {
+
+    private static final String PRODUCT_UPLOAD_PATH = "/images/products/uploads";
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -124,7 +128,7 @@ public class ManagerProductController extends HttpServlet {
             throw new ServletException("Vui long chon anh PNG, JPG, JPEG hoac WEBP.");
         }
 
-        String uploadPath = getServletContext().getRealPath("/uploads/products");
+        String uploadPath = getServletContext().getRealPath(PRODUCT_UPLOAD_PATH);
         if (uploadPath == null) {
             throw new IOException("Khong tim thay thu muc upload cua server.");
         }
@@ -135,8 +139,29 @@ public class ManagerProductController extends HttpServlet {
         }
 
         String fileName = "product-" + System.currentTimeMillis() + extension;
-        image.write(new File(uploadDir, fileName).getAbsolutePath());
-        return "uploads/products/" + fileName;
+        File savedFile = new File(uploadDir, fileName);
+        image.write(savedFile.getAbsolutePath());
+        copyToProjectAssetFolder(savedFile, PRODUCT_UPLOAD_PATH);
+        return PRODUCT_UPLOAD_PATH + "/" + fileName;
+    }
+
+    private void copyToProjectAssetFolder(File savedFile, String assetPath) {
+        try {
+            String realRoot = getServletContext().getRealPath("/");
+            if (realRoot == null) return;
+            File runtimeRoot = new File(realRoot).getCanonicalFile();
+            File projectRoot = runtimeRoot.getParentFile() == null ? null : runtimeRoot.getParentFile().getParentFile();
+            if (projectRoot == null || !new File(projectRoot, "nbproject").isDirectory()) return;
+
+            String relativeAssetPath = assetPath.startsWith("/") ? assetPath.substring(1) : assetPath;
+            File sourceDir = new File(projectRoot, "web" + File.separator + relativeAssetPath.replace('/', File.separatorChar));
+            if (!sourceDir.exists() && !sourceDir.mkdirs()) return;
+            File sourceFile = new File(sourceDir, savedFile.getName()).getCanonicalFile();
+            if (!sourceFile.equals(savedFile.getCanonicalFile())) {
+                Files.copy(savedFile.toPath(), sourceFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+            }
+        } catch (IOException ignored) {
+        }
     }
 
     private String extensionOf(String fileName) {

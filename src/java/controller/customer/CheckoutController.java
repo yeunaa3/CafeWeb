@@ -1,9 +1,7 @@
 package controller.customer;
 
-import dal.OrderDAO;
-import dal.VoucherDAO;
+import dao.VoucherDAO;
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.List;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -21,6 +19,9 @@ public class CheckoutController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        if (request.getParameter("successOrderId") != null) {
+            request.setAttribute("successOrderId", request.getParameter("successOrderId"));
+        }
         prepareCheckout(request);
         request.getRequestDispatcher("/jsp/customer/checkout.jsp").forward(request, response);
     }
@@ -69,25 +70,33 @@ public class CheckoutController extends HttpServlet {
             return;
         }
 
-        try {
-            OrderDAO orderDAO = new OrderDAO();
-            Integer voucherId = voucherResult.getVoucher() == null ? null : voucherResult.getVoucher().getVoucherId();
-            int orderId = orderDAO.createOnlineOrder(currentUserId, cart, shippingAddress, phone, note,
-                    voucherId, voucherResult.getDiscountAmount());
-            request.getSession().removeAttribute(CartController.CART_SESSION_KEY);
-            request.setAttribute("successOrderId", orderId);
-            request.setAttribute("appliedDiscount", voucherResult.getDiscountAmount());
-        } catch (SQLException ex) {
-            request.setAttribute("error", "Không thể tạo đơn hàng. Vui lòng thử lại.");
-        }
-        prepareCheckout(request);
-        request.getRequestDispatcher("/jsp/customer/checkout.jsp").forward(request, response);
+        HttpSession session = request.getSession();
+        session.setAttribute("checkoutShippingAddress", shippingAddress);
+        session.setAttribute("checkoutPhone", phone);
+        session.setAttribute("checkoutNote", note);
+        session.setAttribute("checkoutVoucherCode", voucherCode);
+
+        request.setAttribute("shippingAddress", shippingAddress);
+        request.setAttribute("phone", phone);
+        request.setAttribute("note", note);
+        request.setAttribute("voucherCode", voucherCode);
+        request.setAttribute("cartTotal", cartTotal);
+        request.setAttribute("appliedDiscount", voucherResult.getDiscountAmount());
+        request.setAttribute("payableTotal", Math.max(0, cartTotal - voucherResult.getDiscountAmount()));
+        request.getRequestDispatcher("/jsp/customer/checkout-payment.jsp").forward(request, response);
     }
 
     private void prepareCheckout(HttpServletRequest request) {
+        double total = CartController.getCartTotal(request);
         request.setAttribute("cart", CartController.getCart(request));
         request.setAttribute("cartCount", CartController.getCartCount(request));
-        request.setAttribute("cartTotal", CartController.getCartTotal(request));
+        request.setAttribute("cartTotal", total);
+        if (request.getAttribute("appliedDiscount") == null) {
+            request.setAttribute("appliedDiscount", 0);
+        }
+        if (request.getAttribute("payableTotal") == null) {
+            request.setAttribute("payableTotal", total);
+        }
     }
 
     private Integer getCurrentUserId(HttpServletRequest request) {

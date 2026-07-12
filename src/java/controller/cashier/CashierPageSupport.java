@@ -1,6 +1,6 @@
 package controller.cashier;
 
-import dal.OrderDAO;
+import dao.OrderDAO;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -20,7 +20,7 @@ public final class CashierPageSupport {
             return null;
         }
         User user = (User) value;
-        if (user.getRoleId() != 2 || !"Thu ngân".equalsIgnoreCase(user.getStaffPosition())) {
+        if (user.getRoleId() != 2) {
             response.sendError(HttpServletResponse.SC_FORBIDDEN);
             return null;
         }

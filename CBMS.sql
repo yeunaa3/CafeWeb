@@ -1,4 +1,4 @@
--- ============================================================================
+﻿-- ============================================================================
 -- CAFE & BUBBLE TEA MANAGEMENT SYSTEM (CBMS)
 -- Full database schema + sample data for all project tasks
 -- SQL Server, normalized to 3NF where practical
@@ -19,6 +19,12 @@ CREATE DATABASE CBMS;
 GO
 
 USE CBMS;
+GO
+
+-- Required by SQL Server for filtered indexes (for example the unique
+-- transaction-code index below), regardless of the client's defaults.
+SET ANSI_NULLS ON;
+SET QUOTED_IDENTIFIER ON;
 GO
 
 -- ============================================================================
@@ -176,7 +182,7 @@ CREATE TABLE dbo.Orders (
     CONSTRAINT CK_Orders_Total CHECK (total_price >= 0),
     CONSTRAINT CK_Orders_Discount CHECK (discount_amount >= 0),
     CONSTRAINT CK_Orders_ShippingFee CHECK (shipping_fee >= 0),
-    CONSTRAINT CK_Orders_Status CHECK (status IN ('Pending','Approved','Processing','Ready','Delivering','Completed','Cancelled','Refunded')),
+    CONSTRAINT CK_Orders_Status CHECK (status IN ('Pending','Approved','Completed','Cancelled')),
     CONSTRAINT CK_Orders_Type CHECK (order_type IN ('Online','At-Counter')),
     CONSTRAINT CK_Orders_PaymentMethod CHECK (payment_method IN ('Cash','QR-Code','Bank-Transfer')),
     CONSTRAINT CK_Orders_OnlineAddress CHECK (order_type = 'At-Counter' OR shipping_address IS NOT NULL)
@@ -288,7 +294,7 @@ CREATE TABLE dbo.OrderStatusHistory (
     note NVARCHAR(255) NULL,
     CONSTRAINT FK_OrderStatusHistory_Orders FOREIGN KEY (order_id) REFERENCES dbo.Orders(order_id) ON DELETE CASCADE,
     CONSTRAINT FK_OrderStatusHistory_Users FOREIGN KEY (changed_by) REFERENCES dbo.Users(user_id),
-    CONSTRAINT CK_OrderStatusHistory_NewStatus CHECK (new_status IN ('Pending','Approved','Processing','Ready','Delivering','Completed','Cancelled','Refunded'))
+    CONSTRAINT CK_OrderStatusHistory_NewStatus CHECK (new_status IN ('Pending','Approved','Completed','Cancelled'))
 );
 
 CREATE INDEX IX_OrderStatusHistory_OrderDate ON dbo.OrderStatusHistory(order_id, changed_at);
@@ -371,6 +377,10 @@ VALUES
 ('customer04', '123456', N'Bùi Thanh Hà',          'customer04@gmail.com','0955667788', N'Hoài Đức',       N'Nữ',   NULL,        1, 1200, 3, '2026-03-01 09:00:00'),
 ('customer05', '123456', N'Ngô Gia Bảo',           'customer05@gmail.com','0888999000', N'Hà Đông',        N'Khác', NULL,        1,  540, 3, '2026-03-12 09:00:00');
 
+UPDATE dbo.Users SET avatar_url = '/images/avatars/uploads/avatar-1-1783753731072.jpg' WHERE username = 'admin01';
+UPDATE dbo.Users SET avatar_url = '/images/avatars/uploads/avatar-2-1783656457343.jpg' WHERE username = 'cashier01';
+UPDATE dbo.Users SET avatar_url = '/images/avatars/uploads/avatar-6-1783742549197.jpg' WHERE username = 'customer01';
+
 INSERT INTO dbo.Categories (category_name, description, status) VALUES
 (N'Cà phê', N'Cà phê máy và cà phê phin Việt Nam', 1),
 (N'Trà sữa', N'Trà sữa và thức uống từ sữa', 1),
@@ -379,16 +389,85 @@ INSERT INTO dbo.Categories (category_name, description, status) VALUES
 (N'Đồ ăn nhẹ', N'Bánh và món ăn kèm', 1);
 
 INSERT INTO dbo.Products (product_name, category_id, price, image_url, description, status, created_at) VALUES
-(N'Cà phê sữa đá',             1, 29000, 'ca-phe-sua-da.png',       N'Cà phê đậm vị cùng sữa đặc', 1, '2026-01-10'),
-(N'Bạc xỉu',                    1, 32000, 'bac-xiu.png',             N'Nhiều sữa, nhẹ vị cà phê', 1, '2026-01-10'),
-(N'Cappuccino',                 1, 39000, 'cappuccino.png',          N'Espresso và bọt sữa mịn', 1, '2026-01-10'),
-(N'Trà sữa trân châu đường đen',2, 45000, 'tra-sua-duong-den.png',  N'Trà sữa cùng trân châu đường đen', 1, '2026-01-11'),
-(N'Trà sữa Matcha',             2, 47000, 'tra-sua-matcha.png',     N'Matcha Nhật Bản và sữa tươi', 1, '2026-01-11'),
-(N'Trà đào cam sả',             3, 42000, 'tra-dao-cam-sa.png',     N'Đào, cam và sả thanh mát', 1, '2026-01-12'),
-(N'Trà vải',                    3, 39000, 'tra-vai.png',            N'Trà thơm kết hợp quả vải', 1, '2026-01-12'),
-(N'Nước ép cam',                4, 35000, 'nuoc-ep-cam.png',        N'Nước cam ép nguyên chất', 1, '2026-01-13'),
-(N'Nước ép dưa hấu',            4, 35000, 'nuoc-ep-dua-hau.png',    N'Dưa hấu tươi mát', 1, '2026-01-13'),
-(N'Bánh Croissant',             5, 28000, 'banh-croissant.png',     N'Bánh sừng bò thơm bơ', 1, '2026-01-14');
+(N'Affogato', 1, 29000, '/images/products/uploads/menu-cafe-01.jpg', N'Affogato trong danh mục cafe', 1, '2026-07-12'),
+(N'Americano', 1, 32000, '/images/products/uploads/menu-cafe-02.jpg', N'Americano trong danh mục cafe', 1, '2026-07-12'),
+(N'bac-xiu', 1, 35000, '/images/products/uploads/menu-cafe-03.jpg', N'bac-xiu trong danh mục cafe', 1, '2026-07-12'),
+(N'Cafe Cốt Dừa', 1, 38000, '/images/products/uploads/menu-cafe-04.jpg', N'Cafe Cốt Dừa trong danh mục cafe', 1, '2026-07-12'),
+(N'Cafe Trứng', 1, 41000, '/images/products/uploads/menu-cafe-05.jpg', N'Cafe Trứng trong danh mục cafe', 1, '2026-07-12'),
+(N'cafe-kem-cheese-1', 1, 29000, '/images/products/uploads/menu-cafe-06.jpg', N'cafe-kem-cheese-1 trong danh mục cafe', 1, '2026-07-12'),
+(N'cafe-latte', 1, 32000, '/images/products/uploads/menu-cafe-07.jpg', N'cafe-latte trong danh mục cafe', 1, '2026-07-12'),
+(N'capheden', 1, 35000, '/images/products/uploads/menu-cafe-08.jpg', N'capheden trong danh mục cafe', 1, '2026-07-12'),
+(N'ca-phe-muoi', 1, 38000, '/images/products/uploads/menu-cafe-09.jpg', N'ca-phe-muoi trong danh mục cafe', 1, '2026-07-12'),
+(N'ca-phe-sua', 1, 41000, '/images/products/uploads/menu-cafe-10.jpg', N'ca-phe-sua trong danh mục cafe', 1, '2026-07-12'),
+(N'Cappuccino', 1, 29000, '/images/products/uploads/menu-cafe-11.jpg', N'Cappuccino trong danh mục cafe', 1, '2026-07-12'),
+(N'Caramel Frappe', 1, 32000, '/images/products/uploads/menu-cafe-12.jpg', N'Caramel Frappe trong danh mục cafe', 1, '2026-07-12'),
+(N'Caramel Macchiato', 1, 35000, '/images/products/uploads/menu-cafe-13.jpg', N'Caramel Macchiato trong danh mục cafe', 1, '2026-07-12'),
+(N'Cold Brew Sữa', 1, 38000, '/images/products/uploads/menu-cafe-14.jpg', N'Cold Brew Sữa trong danh mục cafe', 1, '2026-07-12'),
+(N'Cookie Coffee', 1, 41000, '/images/products/uploads/menu-cafe-15.jpg', N'Cookie Coffee trong danh mục cafe', 1, '2026-07-12'),
+(N'Espresso', 1, 29000, '/images/products/uploads/menu-cafe-16.jpg', N'Espresso trong danh mục cafe', 1, '2026-07-12'),
+(N'Hazelnut Latte', 1, 32000, '/images/products/uploads/menu-cafe-17.jpg', N'Hazelnut Latte trong danh mục cafe', 1, '2026-07-12'),
+(N'Mocha', 1, 35000, '/images/products/uploads/menu-cafe-18.jpg', N'Mocha trong danh mục cafe', 1, '2026-07-12'),
+(N'Vanilla Latte', 1, 38000, '/images/products/uploads/menu-cafe-19.jpg', N'Vanilla Latte trong danh mục cafe', 1, '2026-07-12'),
+(N'Trà sữa Dâu', 2, 39000, '/images/products/uploads/menu-tra-sua-01.jpg', N'Trà sữa Dâu trong danh mục trà sữa', 1, '2026-07-12'),
+(N'Trà sữa Hokkaido', 2, 42000, '/images/products/uploads/menu-tra-sua-02.jpg', N'Trà sữa Hokkaido trong danh mục trà sữa', 1, '2026-07-12'),
+(N'Trà sữa Kem Cheese', 2, 45000, '/images/products/uploads/menu-tra-sua-03.jpg', N'Trà sữa Kem Cheese trong danh mục trà sữa', 1, '2026-07-12'),
+(N'Trà sữa Kem Trứng', 2, 48000, '/images/products/uploads/menu-tra-sua-04.jpg', N'Trà sữa Kem Trứng trong danh mục trà sữa', 1, '2026-07-12'),
+(N'Trà sữa Khoai môn', 2, 51000, '/images/products/uploads/menu-tra-sua-05.jpg', N'Trà sữa Khoai môn trong danh mục trà sữa', 1, '2026-07-12'),
+(N'Trà sữa Matcha', 2, 39000, '/images/products/uploads/menu-tra-sua-06.jpg', N'Trà sữa Matcha trong danh mục trà sữa', 1, '2026-07-12'),
+(N'Trà sữa Oolong', 2, 42000, '/images/products/uploads/menu-tra-sua-07.jpg', N'Trà sữa Oolong trong danh mục trà sữa', 1, '2026-07-12'),
+(N'Trà sữa Oreo', 2, 45000, '/images/products/uploads/menu-tra-sua-08.jpg', N'Trà sữa Oreo trong danh mục trà sữa', 1, '2026-07-12'),
+(N'Trà sữa Phô mai', 2, 48000, '/images/products/uploads/menu-tra-sua-09.jpg', N'Trà sữa Phô mai trong danh mục trà sữa', 1, '2026-07-12'),
+(N'Trà sữa Pudding', 2, 51000, '/images/products/uploads/menu-tra-sua-10.jpg', N'Trà sữa Pudding trong danh mục trà sữa', 1, '2026-07-12'),
+(N'Trà sữa Socola', 2, 39000, '/images/products/uploads/menu-tra-sua-11.jpg', N'Trà sữa Socola trong danh mục trà sữa', 1, '2026-07-12'),
+(N'Trà sữa trân châu đen', 2, 42000, '/images/products/uploads/menu-tra-sua-12.jpg', N'Trà sữa trân châu đen trong danh mục trà sữa', 1, '2026-07-12'),
+(N'Trà sữa truyền thống', 2, 45000, '/images/products/uploads/menu-tra-sua-13.jpg', N'Trà sữa truyền thống trong danh mục trà sữa', 1, '2026-07-12'),
+(N'Trà sữa Việt Quất', 2, 48000, '/images/products/uploads/menu-tra-sua-14.jpg', N'Trà sữa Việt Quất trong danh mục trà sữa', 1, '2026-07-12'),
+(N'Trà sữa Xoài', 2, 51000, '/images/products/uploads/menu-tra-sua-15.jpg', N'Trà sữa Xoài trong danh mục trà sữa', 1, '2026-07-12'),
+(N'Hồng trà chanh dây thạch dừa', 3, 35000, '/images/products/uploads/menu-tra-trai-cay-01.jpg', N'Hồng trà chanh dây thạch dừa trong danh mục trà trái cây', 1, '2026-07-12'),
+(N'Hồng trà chanh sả gừng', 3, 38000, '/images/products/uploads/menu-tra-trai-cay-02.jpg', N'Hồng trà chanh sả gừng trong danh mục trà trái cây', 1, '2026-07-12'),
+(N'Hồng trà dâu tằm', 3, 41000, '/images/products/uploads/menu-tra-trai-cay-03.jpg', N'Hồng trà dâu tằm trong danh mục trà trái cây', 1, '2026-07-12'),
+(N'Hồng trà tắc mận muối', 3, 44000, '/images/products/uploads/menu-tra-trai-cay-04.jpg', N'Hồng trà tắc mận muối trong danh mục trà trái cây', 1, '2026-07-12'),
+(N'Trà lài bưởi hồng trân châu', 3, 47000, '/images/products/uploads/menu-tra-trai-cay-05.jpg', N'Trà lài bưởi hồng trân châu trong danh mục trà trái cây', 1, '2026-07-12'),
+(N'Trà lài đác thơm', 3, 35000, '/images/products/uploads/menu-tra-trai-cay-06.jpg', N'Trà lài đác thơm trong danh mục trà trái cây', 1, '2026-07-12'),
+(N'Trà lài dâu tây phô mai', 3, 38000, '/images/products/uploads/menu-tra-trai-cay-07.jpg', N'Trà lài dâu tây phô mai trong danh mục trà trái cây', 1, '2026-07-12'),
+(N'Trà lài kiwi nha đam', 3, 41000, '/images/products/uploads/menu-tra-trai-cay-08.jpg', N'Trà lài kiwi nha đam trong danh mục trà trái cây', 1, '2026-07-12'),
+(N'Trà lài vải', 3, 44000, '/images/products/uploads/menu-tra-trai-cay-09.jpg', N'Trà lài vải trong danh mục trà trái cây', 1, '2026-07-12'),
+(N'Trà ô long đào miếng', 3, 47000, '/images/products/uploads/menu-tra-trai-cay-10.jpg', N'Trà ô long đào miếng trong danh mục trà trái cây', 1, '2026-07-12'),
+(N'Trà ô long mãng cầu xiêm', 3, 35000, '/images/products/uploads/menu-tra-trai-cay-11.jpg', N'Trà ô long mãng cầu xiêm trong danh mục trà trái cây', 1, '2026-07-12'),
+(N'Trà ô long vải hoa hồng', 3, 38000, '/images/products/uploads/menu-tra-trai-cay-12.jpg', N'Trà ô long vải hoa hồng trong danh mục trà trái cây', 1, '2026-07-12'),
+(N'Trà ô long việt quất', 3, 41000, '/images/products/uploads/menu-tra-trai-cay-13.jpg', N'Trà ô long việt quất trong danh mục trà trái cây', 1, '2026-07-12'),
+(N'Trà ô long xoài macchiato', 3, 44000, '/images/products/uploads/menu-tra-trai-cay-14.jpg', N'Trà ô long xoài macchiato trong danh mục trà trái cây', 1, '2026-07-12'),
+(N'Trà xanh thái chanh dây', 3, 47000, '/images/products/uploads/menu-tra-trai-cay-15.jpg', N'Trà xanh thái chanh dây trong danh mục trà trái cây', 1, '2026-07-12'),
+(N'Nước ép bưởi da xanh', 4, 32000, '/images/products/uploads/menu-nuoc-ep-01.jpg', N'Nước ép bưởi da xanh trong danh mục nước ép', 1, '2026-07-12'),
+(N'Nước ép cà chua bi', 4, 35000, '/images/products/uploads/menu-nuoc-ep-02.jpg', N'Nước ép cà chua bi trong danh mục nước ép', 1, '2026-07-12'),
+(N'Nước ép cà rốt', 4, 38000, '/images/products/uploads/menu-nuoc-ep-03.jpg', N'Nước ép cà rốt trong danh mục nước ép', 1, '2026-07-12'),
+(N'Nước ép cóc bao tử', 4, 41000, '/images/products/uploads/menu-nuoc-ep-04.jpg', N'Nước ép cóc bao tử trong danh mục nước ép', 1, '2026-07-12'),
+(N'Nước ép dứa (thơm) mật ong', 4, 44000, '/images/products/uploads/menu-nuoc-ep-05.jpg', N'Nước ép dứa (thơm) mật ong trong danh mục nước ép', 1, '2026-07-12'),
+(N'Nước ép dưa hấu đỏ', 4, 32000, '/images/products/uploads/menu-nuoc-ep-06.jpg', N'Nước ép dưa hấu đỏ trong danh mục nước ép', 1, '2026-07-12'),
+(N'Nước ép lựu đỏ', 4, 35000, '/images/products/uploads/menu-nuoc-ep-07.jpg', N'Nước ép lựu đỏ trong danh mục nước ép', 1, '2026-07-12'),
+(N'Nước ép ổi xá lị', 4, 38000, '/images/products/uploads/menu-nuoc-ep-08.jpg', N'Nước ép ổi xá lị trong danh mục nước ép', 1, '2026-07-12'),
+(N'Sinh tố chanh tuyết bạc hà', 4, 41000, '/images/products/uploads/menu-nuoc-ep-09.jpg', N'Sinh tố chanh tuyết bạc hà trong danh mục nước ép', 1, '2026-07-12'),
+(N'Sinh tố dâu tây sữa chua', 4, 44000, '/images/products/uploads/menu-nuoc-ep-10.jpg', N'Sinh tố dâu tây sữa chua trong danh mục nước ép', 1, '2026-07-12'),
+(N'Sinh tố đu đủ nước cốt dừa', 4, 32000, '/images/products/uploads/menu-nuoc-ep-11.jpg', N'Sinh tố đu đủ nước cốt dừa trong danh mục nước ép', 1, '2026-07-12'),
+(N'Sinh tố dừa sáp cacao', 4, 35000, '/images/products/uploads/menu-nuoc-ep-12.jpg', N'Sinh tố dừa sáp cacao trong danh mục nước ép', 1, '2026-07-12'),
+(N'Sinh tố mãng cầu sữa đặc', 4, 38000, '/images/products/uploads/menu-nuoc-ep-13.jpg', N'Sinh tố mãng cầu sữa đặc trong danh mục nước ép', 1, '2026-07-12'),
+(N'Sinh tố sapoche (hồng xiêm) cà phê', 4, 41000, '/images/products/uploads/menu-nuoc-ep-14.jpg', N'Sinh tố sapoche (hồng xiêm) cà phê trong danh mục nước ép', 1, '2026-07-12'),
+(N'Sinh tố xoài cát chu', 4, 44000, '/images/products/uploads/menu-nuoc-ep-15.jpg', N'Sinh tố xoài cát chu trong danh mục nước ép', 1, '2026-07-12'),
+(N'Bánh su kem vỏ giòn', 5, 25000, '/images/products/uploads/menu-do-an-01.jpg', N'Bánh su kem vỏ giòn trong danh mục đồ ăn', 1, '2026-07-12'),
+(N'Biscotti nguyên cám hạt dinh dưỡng', 5, 28000, '/images/products/uploads/menu-do-an-02.jpg', N'Biscotti nguyên cám hạt dinh dưỡng trong danh mục đồ ăn', 1, '2026-07-12'),
+(N'Cheesecake Chanh dây', 5, 31000, '/images/products/uploads/menu-do-an-03.jpg', N'Cheesecake Chanh dây trong danh mục đồ ăn', 1, '2026-07-12'),
+(N'Cheesecake Việt quất', 5, 34000, '/images/products/uploads/menu-do-an-04.jpg', N'Cheesecake Việt quất trong danh mục đồ ăn', 1, '2026-07-12'),
+(N'Cookie Chocochip', 5, 37000, '/images/products/uploads/menu-do-an-05.jpg', N'Cookie Chocochip trong danh mục đồ ăn', 1, '2026-07-12'),
+(N'Croffle sốt dâu tằm kem tươi', 5, 25000, '/images/products/uploads/menu-do-an-06.jpg', N'Croffle sốt dâu tằm kem tươi trong danh mục đồ ăn', 1, '2026-07-12'),
+(N'Croissant bơ tỏi phô mai', 5, 28000, '/images/products/uploads/menu-do-an-07.jpg', N'Croissant bơ tỏi phô mai trong danh mục đồ ăn', 1, '2026-07-12'),
+(N'Fudge Brownie Socola', 5, 31000, '/images/products/uploads/menu-do-an-08.jpg', N'Fudge Brownie Socola trong danh mục đồ ăn', 1, '2026-07-12'),
+(N'Matcha Crepe Cake', 5, 34000, '/images/products/uploads/menu-do-an-09.jpg', N'Matcha Crepe Cake trong danh mục đồ ăn', 1, '2026-07-12'),
+(N'Mousse Đào sữa chua', 5, 37000, '/images/products/uploads/menu-do-an-10.jpg', N'Mousse Đào sữa chua trong danh mục đồ ăn', 1, '2026-07-12'),
+(N'Muffin Việt quất hạt chia', 5, 25000, '/images/products/uploads/menu-do-an-11.jpg', N'Muffin Việt quất hạt chia trong danh mục đồ ăn', 1, '2026-07-12'),
+(N'Panini thịt xông khói & trứng', 5, 28000, '/images/products/uploads/menu-do-an-12.jpg', N'Panini thịt xông khói & trứng trong danh mục đồ ăn', 1, '2026-07-12'),
+(N'Red Velvet Cake', 5, 31000, '/images/products/uploads/menu-do-an-13.jpg', N'Red Velvet Cake trong danh mục đồ ăn', 1, '2026-07-12'),
+(N'Sandwich gà xé phô mai nướng', 5, 34000, '/images/products/uploads/menu-do-an-14.jpg', N'Sandwich gà xé phô mai nướng trong danh mục đồ ăn', 1, '2026-07-12'),
+(N'Tiramisu truyền thống', 5, 37000, '/images/products/uploads/menu-do-an-15.jpg', N'Tiramisu truyền thống trong danh mục đồ ăn', 1, '2026-07-12');
 
 INSERT INTO dbo.Sizes (size_code, size_name, price_modifier, status) VALUES
 ('S', N'Nhỏ', -3000, 1),
@@ -437,13 +516,13 @@ VALUES
 (6, 2, 1,  70000, 15000, 15000, '2026-06-20 09:15:00', 'Completed', 1, 'Online',    N'Thạch Thất, Hà Nội',   '0909090909', 'QR-Code', N'Gọi trước khi giao'),
 (7, 2, NULL,58000,     0,     0, '2026-06-21 10:30:00', 'Completed', 1, 'At-Counter',NULL,                    NULL,         'Cash',    NULL),
 (8, NULL,NULL,42000,    0, 15000, '2026-07-05 08:20:00', 'Pending',   0, 'Online',    N'Nam Từ Liêm, Hà Nội', '0922113344', 'Cash',    N'Ít đá'),
-(9, 2, 2,  84000, 20000,     0, '2026-07-05 09:05:00', 'Processing',0, 'At-Counter',NULL,                    NULL,         'Cash',    NULL),
-(10,2, NULL,89000,     0, 15000, '2026-07-05 09:45:00', 'Delivering',0, 'Online',    N'Hà Đông, Hà Nội',      '0888999000', 'QR-Code', NULL),
+(9, 2, 2,  84000, 20000,     0, '2026-07-05 09:05:00', 'Approved',  0, 'At-Counter',NULL,                    NULL,         'Cash',    NULL),
+(10,2, NULL,89000,     0, 15000, '2026-07-05 09:45:00', 'Approved',  0, 'Online',    N'Hà Đông, Hà Nội',      '0888999000', 'QR-Code', NULL),
 (6, 2, 3, 120000, 30000,     0, '2026-06-25 14:10:00', 'Completed', 1, 'At-Counter',NULL,                    NULL,         'Cash',    NULL),
 (7, 2, NULL,47000,     0, 15000, '2026-06-26 11:00:00', 'Cancelled', 0, 'Online',    N'Cầu Giấy, Hà Nội',     '0933221100', 'QR-Code', N'Khách đổi ý'),
-(8, 2, NULL,64000,     0,     0, '2026-06-27 16:20:00', 'Refunded',  0, 'At-Counter',NULL,                    NULL,         'Cash',    N'Sản phẩm lỗi'),
+(8, 2, NULL,64000,     0,     0, '2026-06-27 16:20:00', 'Cancelled', 0, 'At-Counter',NULL,                    NULL,         'Cash',    N'Sản phẩm lỗi'),
 (9, 2, 4,  69000, 15000, 15000, '2026-06-28 13:15:00', 'Cancelled', 0, 'Online',    N'Hoài Đức, Hà Nội',     '0955667788', 'QR-Code', N'Không liên hệ được'),
-(10,2, NULL,70000,     0,     0, '2026-06-29 18:40:00', 'Refunded',  0, 'At-Counter',NULL,                    NULL,         'Bank-Transfer', N'Hoàn theo yêu cầu');
+(10,2, NULL,70000,     0,     0, '2026-06-29 18:40:00', 'Cancelled', 0, 'At-Counter',NULL,                    NULL,         'Bank-Transfer', N'Hoàn theo yêu cầu');
 
 INSERT INTO dbo.OrderDetails
     (order_id, product_id, quantity, selected_size, ice_level, sugar_level, price, note)
@@ -501,24 +580,24 @@ VALUES
 INSERT INTO dbo.OrderStatusHistory (order_id, old_status, new_status, changed_by, changed_at, note) VALUES
 (1,NULL,'Pending',6,'2026-06-20 09:15:00',N'Khách tạo đơn'),
 (1,'Pending','Approved',2,'2026-06-20 09:20:00',N'Thu ngân duyệt'),
-(1,'Approved','Processing',3,'2026-06-20 09:22:00',N'Bắt đầu pha chế'),
-(1,'Processing','Delivering',4,'2026-06-20 09:40:00',N'Nhận đơn giao'),
-(1,'Delivering','Completed',4,'2026-06-20 10:05:00',N'Giao thành công'),
-(2,NULL,'Processing',2,'2026-06-21 10:30:00',N'Đơn tại quầy'),
-(2,'Processing','Completed',2,'2026-06-21 10:35:00',N'Đã giao đồ uống'),
+(1,'Approved','Approved',3,'2026-06-20 09:22:00',N'Bắt đầu pha chế'),
+(1,'Approved','Approved',4,'2026-06-20 09:40:00',N'Nhận đơn giao'),
+(1,'Approved','Completed',4,'2026-06-20 10:05:00',N'Giao thành công'),
+(2,NULL,'Approved',2,'2026-06-21 10:30:00',N'Đơn tại quầy'),
+(2,'Approved','Completed',2,'2026-06-21 10:35:00',N'Đã giao đồ uống'),
 (3,NULL,'Pending',8,'2026-07-05 08:20:00',N'Khách tạo đơn'),
-(4,NULL,'Processing',2,'2026-07-05 09:05:00',N'Đơn tại quầy'),
+(4,NULL,'Approved',2,'2026-07-05 09:05:00',N'Đơn tại quầy'),
 (5,NULL,'Pending',10,'2026-07-05 09:45:00',N'Khách tạo đơn'),
 (5,'Pending','Approved',2,'2026-07-05 09:50:00',N'Đã duyệt'),
-(5,'Approved','Processing',3,'2026-07-05 09:52:00',N'Đang pha chế'),
-(5,'Processing','Ready',3,'2026-07-05 10:00:00',N'Đã pha xong'),
-(5,'Ready','Delivering',4,'2026-07-05 10:10:00',N'Đang giao'),
-(6,NULL,'Processing',2,'2026-06-25 14:10:00',N'Đơn tại quầy'),
-(6,'Processing','Completed',2,'2026-06-25 14:20:00',N'Hoàn thành'),
+(5,'Approved','Approved',3,'2026-07-05 09:52:00',N'Đang pha chế'),
+(5,'Approved','Approved',3,'2026-07-05 10:00:00',N'Đã pha xong'),
+(5,'Approved','Approved',4,'2026-07-05 10:10:00',N'Đang giao'),
+(6,NULL,'Approved',2,'2026-06-25 14:10:00',N'Đơn tại quầy'),
+(6,'Approved','Completed',2,'2026-06-25 14:20:00',N'Hoàn thành'),
 (7,'Pending','Cancelled',2,'2026-06-26 11:05:00',N'Khách hủy'),
-(8,'Completed','Refunded',2,'2026-06-27 16:45:00',N'Đã hoàn tiền'),
-(9,'Delivering','Cancelled',2,'2026-06-28 14:30:00',N'Giao thất bại'),
-(10,'Completed','Refunded',1,'2026-06-29 20:00:00',N'Quản lý duyệt hoàn tiền');
+(8,'Completed','Cancelled',2,'2026-06-27 16:45:00',N'Đã hoàn tiền'),
+(9,'Approved','Cancelled',2,'2026-06-28 14:30:00',N'Giao thất bại'),
+(10,'Completed','Cancelled',1,'2026-06-29 20:00:00',N'Quản lý duyệt hoàn tiền');
 
 INSERT INTO dbo.PointTransactions
     (user_id, order_id, voucher_id, points_change, balance_after, transaction_type, description, created_at)
@@ -615,3 +694,36 @@ ORDER BY t.name;
 SELECT TOP (5) * FROM dbo.vw_DailyRevenue ORDER BY revenue_date DESC;
 SELECT TOP (5) * FROM dbo.vw_TopSellingProducts ORDER BY quantity_sold DESC, product_id;
 GO
+
+/* ======================================================================
+   IMAGE URL ONLINE FIX 2026-07-12
+   Đổi đường dẫn ảnh local trong database sang raw GitHub URL để máy khác vẫn hiển thị ảnh.
+   Lưu ý: các file ảnh trong web/images phải được commit và push lên GitHub trước.
+   ====================================================================== */
+DECLARE @ImageBase VARCHAR(255) = 'https://raw.githubusercontent.com/yeunaa3/CafeWeb/Khanh/web';
+
+UPDATE dbo.Products
+SET image_url = CASE
+    WHEN image_url LIKE '/images/products/%' THEN @ImageBase + image_url
+    WHEN image_url LIKE 'images/products/%' THEN @ImageBase + '/' + image_url
+    WHEN image_url LIKE '/uploads/products/%' THEN @ImageBase + '/images/products' + image_url
+    WHEN image_url LIKE 'uploads/products/%' THEN @ImageBase + '/images/products/' + image_url
+    ELSE image_url
+END
+WHERE image_url IS NOT NULL
+  AND image_url <> ''
+  AND image_url NOT LIKE 'http://%'
+  AND image_url NOT LIKE 'https://%';
+
+UPDATE dbo.Users
+SET avatar_url = CASE
+    WHEN avatar_url LIKE '/images/avatars/%' THEN @ImageBase + avatar_url
+    WHEN avatar_url LIKE 'images/avatars/%' THEN @ImageBase + '/' + avatar_url
+    WHEN avatar_url LIKE '/uploads/avatars/%' THEN @ImageBase + '/images/avatars' + avatar_url
+    WHEN avatar_url LIKE 'uploads/avatars/%' THEN @ImageBase + '/images/avatars/' + avatar_url
+    ELSE avatar_url
+END
+WHERE avatar_url IS NOT NULL
+  AND avatar_url <> ''
+  AND avatar_url NOT LIKE 'http://%'
+  AND avatar_url NOT LIKE 'https://%';

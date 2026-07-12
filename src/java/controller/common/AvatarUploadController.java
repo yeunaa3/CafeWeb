@@ -1,6 +1,6 @@
 package controller.common;
 
-import dal.UserDAO;
+import dao.UserDAO;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
@@ -11,6 +11,8 @@ import jakarta.servlet.http.HttpSession;
 import jakarta.servlet.http.Part;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.Locale;
 import model.User;
 
@@ -21,6 +23,8 @@ import model.User;
         maxRequestSize = 22 * 1024 * 1024
 )
 public class AvatarUploadController extends HttpServlet {
+
+    private static final String AVATAR_UPLOAD_PATH = "/images/avatars/uploads";
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -50,7 +54,7 @@ public class AvatarUploadController extends HttpServlet {
                 return;
             }
 
-            String uploadPath = getServletContext().getRealPath("/uploads/avatars");
+            String uploadPath = getServletContext().getRealPath(AVATAR_UPLOAD_PATH);
             if (uploadPath == null) {
                 putMessage(session, user, false, "Không tìm thấy thư mục upload của server.");
                 response.sendRedirect(request.getContextPath() + target);
@@ -65,9 +69,11 @@ public class AvatarUploadController extends HttpServlet {
             }
 
             String fileName = "avatar-" + user.getUserId() + "-" + System.currentTimeMillis() + extension;
-            avatar.write(new File(uploadDir, fileName).getAbsolutePath());
+            File savedFile = new File(uploadDir, fileName);
+            avatar.write(savedFile.getAbsolutePath());
+            copyToProjectAssetFolder(savedFile, AVATAR_UPLOAD_PATH);
 
-            String avatarUrl = "uploads/avatars/" + fileName;
+            String avatarUrl = AVATAR_UPLOAD_PATH + "/" + fileName;
             if (new UserDAO().updateAvatar(user.getUserId(), avatarUrl)) {
                 user.setAvatarUrl(avatarUrl);
                 session.setAttribute("user", user);
@@ -95,6 +101,25 @@ public class AvatarUploadController extends HttpServlet {
         }
         String extension = fileName.substring(dot).toLowerCase(Locale.ROOT);
         return extension.matches("\\.(png|jpg|jpeg|webp)") ? extension : null;
+    }
+
+    private void copyToProjectAssetFolder(File savedFile, String assetPath) {
+        try {
+            String realRoot = getServletContext().getRealPath("/");
+            if (realRoot == null) return;
+            File runtimeRoot = new File(realRoot).getCanonicalFile();
+            File projectRoot = runtimeRoot.getParentFile() == null ? null : runtimeRoot.getParentFile().getParentFile();
+            if (projectRoot == null || !new File(projectRoot, "nbproject").isDirectory()) return;
+
+            String relativeAssetPath = assetPath.startsWith("/") ? assetPath.substring(1) : assetPath;
+            File sourceDir = new File(projectRoot, "web" + File.separator + relativeAssetPath.replace('/', File.separatorChar));
+            if (!sourceDir.exists() && !sourceDir.mkdirs()) return;
+            File sourceFile = new File(sourceDir, savedFile.getName()).getCanonicalFile();
+            if (!sourceFile.equals(savedFile.getCanonicalFile())) {
+                Files.copy(savedFile.toPath(), sourceFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+            }
+        } catch (IOException ignored) {
+        }
     }
 
     private String accountPath(User user) {

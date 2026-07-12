@@ -1,4 +1,4 @@
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
@@ -8,7 +8,7 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width,initial-scale=1">
         <title>Sản phẩm - CBMS</title>
-        <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/manager.css?v=20260708-ui7">
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/css/manager.css?v=20260709-orderflow1">
     </head>
     <body class="manager-page">
         <div class="manager-shell">
@@ -62,13 +62,8 @@
                                                 <div class="product-cell">
                                                     <span>
                                                         <c:choose>
-<<<<<<< Updated upstream
-                                                            <c:when test="${not empty product.imageUrl}">
-                                                                <img src="${pageContext.request.contextPath}/${fn:startsWith(product.imageUrl, 'uploads/') ? product.imageUrl : 'assets/images/'.concat(product.imageUrl)}" alt="">
-=======
                                                             <c:when test="${not empty product.displayImageUrl}">
-                                                                <img src="${fn:startsWith(product.displayImageUrl, 'http://') or fn:startsWith(product.displayImageUrl, 'https://') ? product.displayImageUrl : pageContext.request.contextPath.concat(product.displayImageUrl)}" alt="" onerror="this.hidden=true;">
->>>>>>> Stashed changes
+                                                                <img src="<c:url value='${product.displayImageUrl}'/>" alt="" onerror="this.hidden=true;">
                                                             </c:when>
                                                             <c:otherwise>${fn:substring(product.productName,0,1)}</c:otherwise>
                                                         </c:choose>
@@ -139,9 +134,9 @@
                         <footer class="table-footer">
                             <span>Hiển thị <strong>${fn:length(productList)}</strong> sản phẩm</span>
                             <div class="pagination">
-                                <button disabled>‹</button>
+                                <button disabled>&lsaquo;</button>
                                 <b>1</b>
-                                <button disabled>›</button>
+                                <button disabled>&rsaquo;</button>
                             </div>
                         </footer>
                     </section>
@@ -198,7 +193,8 @@
                 </section>
             </div>
         </c:if>
-        <script src="${pageContext.request.contextPath}/assets/js/manager.js?v=20260708-ui7">
+        <script src="${pageContext.request.contextPath}/js/manager.js?v=20260709-orderflow1">
         </script>
     </body>
 </html>
+

@@ -1,4 +1,4 @@
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
@@ -8,7 +8,7 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width,initial-scale=1">
         <title>Dashboard - CBMS</title>
-        <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/manager.css?v=20260708-ui7">
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/css/manager.css?v=20260709-orderflow1">
     </head>
     <body class="manager-page">
         <div class="manager-shell">
@@ -16,9 +16,15 @@
             <div class="manager-main">
                 <%@include file="includes/header.jspf"%>
                 <main class="manager-content dashboard-content">
-                    <div class="dashboard-filter" aria-label="Khoảng thời gian">
-                        <a class="${days == 7 ? 'active' : ''}" href="${pageContext.request.contextPath}/manager/dashboard?days=7">7 ngày</a>
-                        <a class="${days == 30 ? 'active' : ''}" href="${pageContext.request.contextPath}/manager/dashboard?days=30">30 ngày</a>
+                    <div class="dashboard-toolbar">
+                        <div class="dashboard-filter" aria-label="Khoảng thời gian">
+                            <a class="${days == 7 ? 'active' : ''}" href="${pageContext.request.contextPath}/manager/dashboard?days=7">7 ngày</a>
+                            <a class="${days == 30 ? 'active' : ''}" href="${pageContext.request.contextPath}/manager/dashboard?days=30">30 ngày</a>
+                        </div>
+                        <div class="dashboard-export-actions" aria-label="Xuất thống kê">
+                            <a href="${pageContext.request.contextPath}/manager/dashboard?days=${days}&export=excel">Xuất Excel</a>
+                            <a href="${pageContext.request.contextPath}/manager/dashboard?days=${days}&export=pdf">Xuất PDF</a>
+                        </div>
                     </div>
                     <section class="metric-grid dashboard-metrics">
                         <article>
@@ -150,7 +156,8 @@
                 </main>
             </div>
         </div>
-        <script src="${pageContext.request.contextPath}/assets/js/manager.js?v=20260708-ui7">
+        <script src="${pageContext.request.contextPath}/js/manager.js?v=20260709-orderflow1">
         </script>
     </body>
 </html>
+

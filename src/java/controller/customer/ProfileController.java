@@ -1,11 +1,12 @@
 package controller.customer;
 
-import dal.UserDAO;
+import dao.UserDAO;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import model.User;
 
@@ -15,6 +16,11 @@ public class ProfileController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        User account = getLoggedInUser(request);
+        if (account != null && account.getRoleId() != 3) {
+            response.sendRedirect(request.getContextPath() + accountPath(account));
+            return;
+        }
         User customer = CustomerPageSupport.resolveCustomer(request);
         if (customer == null) {
             response.sendRedirect(request.getContextPath() + "/login?returnUrl=/profile");
@@ -30,6 +36,11 @@ public class ProfileController extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
+        User account = getLoggedInUser(request);
+        if (account != null && account.getRoleId() != 3) {
+            response.sendRedirect(request.getContextPath() + accountPath(account));
+            return;
+        }
         User customer = CustomerPageSupport.resolveCustomer(request);
         if (customer == null) {
             response.sendRedirect(request.getContextPath() + "/login?returnUrl=/profile");
@@ -78,6 +89,22 @@ public class ProfileController extends HttpServlet {
 
     private String trim(String value) {
         return value == null ? "" : value.trim();
+    }
+
+    private User getLoggedInUser(HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        Object value = session == null ? null : session.getAttribute("user");
+        return value instanceof User ? (User) value : null;
+    }
+
+    private String accountPath(User user) {
+        if (user.getRoleId() == 1) {
+            return "/manager/account";
+        }
+        if (user.getRoleId() == 2) {
+            return "/cashier/account";
+        }
+        return "/profile";
     }
 
     private void pullProfileMessages(HttpServletRequest request) {

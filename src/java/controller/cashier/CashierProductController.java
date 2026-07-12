@@ -1,6 +1,6 @@
 package controller.cashier;
 
-import dal.ProductDAO;
+import dao.ProductDAO;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;

@@ -12,18 +12,37 @@ Tất cả thành viên sử dụng cùng phiên bản:
 
 Project sử dụng package `jakarta.servlet`, vì vậy phải chạy bằng Tomcat 10. Không dùng Tomcat 9 vì Tomcat 9 sử dụng package `javax.servlet`.
 
+## 1.1. Cấu trúc project theo rule
+
+Source Java nằm trong `src/java`:
+
+- `controller`: servlet/controller theo từng role.
+- `dao`: lớp truy cập database.
+- `model`: entity/DTO dùng để truyền dữ liệu.
+- `utils`: tiện ích dùng chung như connection pool.
+- `filter`: filter phân quyền và chặn truy cập.
+
+Tài nguyên web nằm trong `web`:
+
+- `jsp`: giao diện JSP.
+- `css`: file style.
+- `js`: file JavaScript.
+- `images`: ảnh tĩnh và ảnh upload từ màn hình quản lý/avatar.
+
 ## 2. Thư viện của project
 
-Bốn thư viện cần thiết đã nằm trong thư mục `lib/`:
+Các thư viện cần thiết đã nằm trong thư mục `lib/`:
 
 - `jakarta.servlet.jsp.jstl-2.0.0.jar`
 - `jakarta.servlet.jsp.jstl-api-2.0.0.jar`
+- `jakarta.mail-2.0.1.jar`
+- `jakarta.activation-api-2.1.3.jar`
 - `jaxb-api-2.1.jar`
 - `sqljdbc42.jar`
 
 `nbproject/project.properties` tham chiếu bằng đường dẫn tương đối `lib/...`. Không dùng chức năng Add JAR để thêm lại thư viện từ `C:\Users\...`, vì NetBeans sẽ lưu đường dẫn riêng của máy và làm máy khác bị lỗi.
 
-Servlet API không nằm trong bốn JAR trên. NetBeans lấy Servlet API từ Tomcat 10.1 đã gắn với project.
+Servlet API không nằm trong các JAR trên. NetBeans lấy Servlet API từ Tomcat 10.1 đã gắn với project.
 
 ## 3. Mở project lần đầu
 
@@ -41,42 +60,57 @@ Mỗi máy chỉ cần cấu hình JDK và Tomcat một lần.
 
 ## 4. Cấu hình database
 
-Project dùng duy nhất file:
+Project hiện dùng connection pool theo rule môn học. Cấu hình DB chính nằm trong:
 
-`web/WEB-INF/ConnectDB.properties`
+`web/META-INF/context.xml`
 
-Nội dung mặc định:
+Resource cần có tên đúng là `jdbc/CBMS`. Nếu tài khoản SQL Server trên máy khác, thành viên đó sửa `username`, `password` hoặc `url` trong `web/META-INF/context.xml` cho phù hợp.
 
-```properties
-url=jdbc:sqlserver://localhost:1433;databaseName=CBMS;trustServerCertificate=true
-userID=sa
-password=123456
-```
+`DBContext` không còn mở kết nối trực tiếp bằng `DriverManager`; nó gọi `utils.DBCPUtils` để mượn connection từ Tomcat pool.
 
-Nếu tài khoản SQL Server trên máy khác, thành viên đó sửa `userID` và `password` cho phù hợp.
+Nếu Tomcat báo không thấy `com.microsoft.sqlserver.jdbc.SQLServerDriver`, copy thêm `sqljdbc42.jar` vào thư mục `lib` của Tomcat rồi restart Tomcat.
 
-Có thể giữ nguyên file chung và đặt các biến môi trường riêng trên từng máy:
-
-- `CBMS_DB_URL`
-- `CBMS_DB_USER`
-- `CBMS_DB_PASSWORD`
-
-Giá trị từ biến môi trường sẽ được ưu tiên hơn giá trị trong file properties.
+Không cấu hình DB bằng các biến `CBMS_DB_*` nữa, vì rule hiện dùng Tomcat connection pool qua `jdbc/CBMS`.
 
 Nếu database đã được tạo từ phiên bản cũ, mở SSMS và chạy lần lượt:
 
 1. `database/migrations/001_add_user_gender.sql`
 2. `database/migrations/002_task7_manager.sql`
+3. `database/migrations/003_update_product_image_paths.sql`
 
 Database tạo mới bằng `CBMS.sql` đã có sẵn các cột này. Tài khoản Manager mẫu là `admin01` / `123456`.
 
-`DBContext` đọc file bằng:
+## 4.1. Cấu hình Gmail SMTP cho OTP
 
-```java
-getResourceAsStream("../ConnectDB.properties")
+Chức năng quên mật khẩu dùng Gmail SMTP qua Jakarta Mail để gửi mã OTP. Đây là phần tích hợp dịch vụ bên thứ ba của project.
+
+File chứa mật khẩu Gmail thật không commit lên Git:
+
+`web/WEB-INF/Mail.properties`
+
+Có thể dựa vào file mẫu:
+
+`web/WEB-INF/Mail.properties.example`
+
+Nội dung cần có:
+
+```properties
+mail.smtp.host=smtp.gmail.com
+mail.smtp.port=587
+mail.from=your_email@gmail.com
+mail.username=your_email@gmail.com
+mail.password=YOUR_GMAIL_APP_PASSWORD
 ```
 
-Khi chạy, classpath root là `WEB-INF/classes`; `../ConnectDB.properties` trỏ tới `WEB-INF/ConnectDB.properties`. Không tạo thêm file cùng tên trong `src/conf`.
+Có thể dùng biến môi trường thay cho file:
+
+- `CBMS_MAIL_HOST`
+- `CBMS_MAIL_PORT`
+- `CBMS_MAIL_FROM`
+- `CBMS_MAIL_USERNAME`
+- `CBMS_MAIL_PASSWORD`
+
+OTP dùng thời gian của server local qua `System.currentTimeMillis()` và hết hạn sau 5 phút. Không cần gọi API internet để lấy giờ.
 
 ## 5. Các thư mục được NetBeans tự sinh
 
@@ -105,19 +139,19 @@ Nếu Windows báo không xóa được JAR khi Clean and Build, hãy Stop Tomca
 
 ### Libraries báo Broken Reference
 
-Kiểm tra thư mục `lib/` có đủ bốn JAR. Không trỏ lại tới thư mục `allowedlib` trên Desktop. Sau khi pull, đóng và mở lại project để NetBeans reload `project.properties`.
+Kiểm tra thư mục `lib/` có đủ các JAR của project. Không trỏ lại tới thư mục `allowedlib` trên Desktop. Sau khi pull, đóng và mở lại project để NetBeans reload `project.properties`.
 
 ### `ClassNotFoundException: com.microsoft.sqlserver.jdbc.SQLServerDriver`
 
 Kiểm tra `lib/sqljdbc42.jar` tồn tại, sau đó Stop Tomcat và Clean and Build. Trong WAR phải có `WEB-INF/lib/sqljdbc42.jar`.
 
-### Không tìm thấy `ConnectDB.properties`
+### Không tìm thấy `jdbc/CBMS`
 
-Kiểm tra file nằm đúng tại `web/WEB-INF/ConnectDB.properties` và `DBContext` đang dùng đường dẫn `../ConnectDB.properties`.
+Kiểm tra `web/META-INF/context.xml` có khai báo Resource `jdbc/CBMS`, sau đó Stop Tomcat, Clean and Build và Run lại project.
 
 ### Không kết nối được SQL Server
 
-Kiểm tra SQL Server đang chạy, TCP/IP đã bật, port `1433` mở, database `CBMS` đã được tạo và tài khoản trong `ConnectDB.properties` chính xác.
+Kiểm tra SQL Server đang chạy, TCP/IP đã bật, port `1433` mở, database `CBMS` đã được tạo và tài khoản trong `web/META-INF/context.xml` chính xác.
 
 ## 7. Quy tắc khi commit và pull
 
@@ -158,18 +192,18 @@ Lỗi này xảy ra khi SQL Server từ chối kết nối trước khi DAO ch�
 1. Mở **SQL Server Configuration Manager**, bảo đảm service của instance đang ở trạng thái `Running`.
 2. Trong **SQL Server Network Configuration**, bật `TCP/IP`, đặt TCP Port là `1433`, rồi restart SQL Server service.
 3. Bật chế độ **SQL Server and Windows Authentication mode**; bảo đảm login `sa` được enable.
-4. Dùng chính tài khoản trong `ConnectDB.properties` đăng nhập thử bằng SSMS với server `localhost,1433`.
+4. Dùng chính tài khoản trong `web/META-INF/context.xml` đăng nhập thử bằng SSMS với server `localhost,1433`.
 5. Kiểm tra database `CBMS` đã tồn tại và đã chạy `CBMS.sql` hoặc các migration cần thiết.
-6. Kiểm tra `web/WEB-INF/ConnectDB.properties` có đúng URL, user và password của máy đó.
-7. Trong Command Prompt chạy `set CBMS_DB` hoặc PowerShell chạy `Get-ChildItem Env:CBMS_DB*`. Xóa/sửa biến cũ vì các biến này được ưu tiên hơn file properties.
-8. Stop Tomcat, chạy **Clean and Build**, rồi Run lại để WAR mới chứa properties và JDBC driver.
+6. Kiểm tra `web/META-INF/context.xml` có đúng URL, username và password của máy đó.
+7. Nếu Tomcat báo không thấy driver, copy `lib/sqljdbc42.jar` vào thư mục `lib` của Tomcat rồi restart Tomcat.
+8. Stop Tomcat, chạy **Clean and Build**, rồi Run lại để WAR mới chứa cấu hình và JDBC driver.
 
 URL chuẩn khi SQL Server chạy cổng cố định:
 
 ```properties
-url=jdbc:sqlserver://localhost:1433;databaseName=CBMS;encrypt=true;trustServerCertificate=true
-userID=sa
-password=mat_khau_cua_may_do
+url="jdbc:sqlserver://localhost:1433;databaseName=CBMS;encrypt=true;trustServerCertificate=true"
+username="sa"
+password="mat_khau_cua_may_do"
 ```
 
 Nếu dùng instance `SQLEXPRESS` với cổng động, nên cấu hình instance dùng cổng cố định `1433`. Chỉ sửa username/password trong khi SQL Server thực tế đang chạy ở instance hoặc port khác vẫn sẽ kết nối thất bại.

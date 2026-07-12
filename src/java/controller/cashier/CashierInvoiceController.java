@@ -1,6 +1,6 @@
 package controller.cashier;
 
-import dal.OrderDAO;
+import dao.OrderDAO;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -21,8 +21,7 @@ public class CashierInvoiceController extends HttpServlet {
         OrderDAO orderDAO = new OrderDAO();
         List<ManagerOrderSummary> invoices = new ArrayList<ManagerOrderSummary>();
         for (ManagerOrderSummary order : orderDAO.getManagerOrders(request.getParameter("q"), "", 100)) {
-            if ("At-Counter".equals(order.getOrderType())
-                    && ("Completed".equals(order.getStatus()) || "Refunded".equals(order.getStatus()))) {
+            if ("At-Counter".equals(order.getOrderType()) && "Completed".equals(order.getStatus())) {
                 invoices.add(order);
             }
         }

@@ -1,4 +1,4 @@
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
@@ -8,8 +8,8 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>Đặt hàng tại quầy - CBMS</title>
-        <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/manager.css?v=20260708-ui7">
-        <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/cashier.css?v=20260708-ui7">
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/css/manager.css?v=20260709-orderflow1">
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/css/cashier.css?v=20260709-orderflow1">
     </head>
     <body class="manager-page">
         <div class="manager-shell">
@@ -47,13 +47,8 @@
                                 <article class="pos-item">
                                     <span class="pos-product-image">
                                         <c:choose>
-<<<<<<< Updated upstream
-                                            <c:when test="${not empty item.imageUrl}">
-                                                <img src="${pageContext.request.contextPath}/${fn:startsWith(item.imageUrl, 'uploads/') ? item.imageUrl : 'assets/images/'.concat(item.imageUrl)}" alt="">
-=======
                                             <c:when test="${not empty item.displayImageUrl}">
-                                                <img src="${fn:startsWith(item.displayImageUrl, 'http://') or fn:startsWith(item.displayImageUrl, 'https://') ? item.displayImageUrl : pageContext.request.contextPath.concat(item.displayImageUrl)}" alt="" onerror="this.hidden=true;">
->>>>>>> Stashed changes
+                                                <img src="<c:url value='${item.displayImageUrl}'/>" alt="" onerror="this.hidden=true;">
                                             </c:when>
                                             <c:otherwise>
                                                 ${fn:substring(item.productName, 0, 1)}
@@ -63,8 +58,8 @@
 
                                     <div class="pos-item-info">
                                         <strong>
-<c:out value="${item.productName}"/>
-</strong>
+                                            <c:out value="${item.productName}"/>
+                                        </strong>
                                         <small>
                                             <c:if test="${not empty item.toppings}">
                                                 <c:forEach var="topping" items="${item.toppings}" varStatus="loop">
@@ -119,7 +114,7 @@
                             <div>
                                 <small>Tạm tính</small>
                                 <strong>
-<fmt:formatNumber value="${cartTotal}" pattern="#,##0"/>đ</strong>
+                                    <fmt:formatNumber value="${cartTotal}" pattern="#,##0"/>đ</strong>
                             </div>
 
                             <div>
@@ -149,26 +144,26 @@
                                 <div class="qr-payment" data-qr-payment hidden>
                                     <img
                                         class="qr-image"
-                                        src="${pageContext.request.contextPath}/assets/images/payment-qr.jpg"
+                                        src="${pageContext.request.contextPath}/images/payment-qr.jpg"
                                         alt="QR thanh toán"
-                                        onerror="if(!this.dataset.triedPng){this.dataset.triedPng='true';this.src='${pageContext.request.contextPath}/assets/images/payment-qr.png';}else{this.hidden=true;this.nextElementSibling.hidden=false;}"
+                                        onerror="if(!this.dataset.triedPng){this.dataset.triedPng='true';this.src='${pageContext.request.contextPath}/images/payment-qr.png';}else{this.hidden=true;this.nextElementSibling.hidden=false;}"
                                         >
                                     <div class="qr-visual" hidden aria-label="QR thanh toán demo">
                                         <i class="finder one">
-</i>
+                                        </i>
                                         <i class="finder two">
-</i>
+                                        </i>
                                         <i class="finder three">
-</i>
+                                        </i>
                                     </div>
                                     <strong>Quét mã để thanh toán</strong>
-                                    <small>Đặt ảnh QR thật tại web/assets/images/payment-qr.jpg hoặc payment-qr.png</small>
+                                    <small>NGUYEN VAN KHANH</small>
                                 </div>
 
                                 <div class="payment-total">
                                     <span>Tổng</span>
                                     <strong>
-<fmt:formatNumber value="${cartTotal}" pattern="#,##0"/>đ</strong>
+                                        <fmt:formatNumber value="${cartTotal}" pattern="#,##0"/>đ</strong>
                                 </div>
 
                                 <button class="pay-button" type="submit" ${empty cart ? 'disabled' : ''}>
@@ -212,8 +207,8 @@
                                     <article>
                                         <div>
                                             <strong>
-<fmt:formatDate value="${held.createdAt}" pattern="HH:mm dd/MM"/>
-</strong>
+                                                <fmt:formatDate value="${held.createdAt}" pattern="HH:mm dd/MM"/>
+                                            </strong>
                                             <small>
                                                 ${held.itemCount} món ·
                                                 <fmt:formatNumber value="${held.total}" pattern="#,##0"/>đ
@@ -234,9 +229,10 @@
             </div>
         </div>
 
-        <script src="${pageContext.request.contextPath}/assets/js/manager.js?v=20260708-ui7">
-</script>
-        <script src="${pageContext.request.contextPath}/assets/js/cashier.js?v=20260708-ui7">
-</script>
+        <script src="${pageContext.request.contextPath}/js/manager.js?v=20260709-orderflow1">
+        </script>
+        <script src="${pageContext.request.contextPath}/js/cashier.js?v=20260709-orderflow1">
+        </script>
     </body>
 </html>
+

@@ -1,4 +1,4 @@
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
@@ -8,8 +8,8 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width,initial-scale=1">
         <title>Thêm món - CBMS</title>
-        <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/manager.css?v=20260708-ui7">
-        <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/cashier.css?v=20260708-ui7">
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/css/manager.css?v=20260709-orderflow1">
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/css/cashier.css?v=20260709-orderflow1">
     </head>
     <body class="manager-page">
         <div class="manager-shell">
@@ -41,13 +41,8 @@
                                 <article class="picker-row ${product.status?'':'sold-out'}">
                                     <span class="picker-image">
                                         <c:choose>
-<<<<<<< Updated upstream
-                                            <c:when test="${not empty product.imageUrl}">
-                                                <img src="${pageContext.request.contextPath}/${fn:startsWith(product.imageUrl, 'uploads/') ? product.imageUrl : 'assets/images/'.concat(product.imageUrl)}" alt="">
-=======
                                             <c:when test="${not empty product.displayImageUrl}">
-                                                <img src="${fn:startsWith(product.displayImageUrl, 'http://') or fn:startsWith(product.displayImageUrl, 'https://') ? product.displayImageUrl : pageContext.request.contextPath.concat(product.displayImageUrl)}" alt="" onerror="this.hidden=true;">
->>>>>>> Stashed changes
+                                                <img src="<c:url value='${product.displayImageUrl}'/>" alt="" onerror="this.hidden=true;">
                                             </c:when>
                                             <c:otherwise>${fn:substring(product.productName,0,1)}</c:otherwise>
                                         </c:choose>
@@ -74,7 +69,7 @@
                                         <option>L</option>
                                     </select>
                                     <div class="quantity-control">
-                                        <button type="button" data-quantity-minus ${product.status?'':'disabled'}>−</button>
+                                        <button type="button" data-quantity-minus ${product.status?'':'disabled'}>&minus;</button>
                                         <input name="quantity_${product.productId}" value="0" min="0" max="99" readonly>
                                         <button type="button" data-quantity-plus ${product.status?'':'disabled'}>+</button>
                                     </div>
@@ -93,9 +88,10 @@
                 </main>
             </div>
         </div>
-        <script src="${pageContext.request.contextPath}/assets/js/manager.js?v=20260708-ui7">
+        <script src="${pageContext.request.contextPath}/js/manager.js?v=20260709-orderflow1">
         </script>
-        <script src="${pageContext.request.contextPath}/assets/js/cashier.js?v=20260708-ui7">
+        <script src="${pageContext.request.contextPath}/js/cashier.js?v=20260709-orderflow1">
         </script>
     </body>
 </html>
+

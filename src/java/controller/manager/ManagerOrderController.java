@@ -1,6 +1,6 @@
 package controller.manager;
 
-import dal.OrderDAO;
+import dao.OrderDAO;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -15,7 +15,7 @@ import java.util.Set;
 @WebServlet(name = "ManagerOrderController", urlPatterns = {"/manager/orders"})
 public class ManagerOrderController extends HttpServlet {
     private static final Set<String> STATUSES = new HashSet<String>(Arrays.asList(
-            "Pending", "Approved", "Processing", "Ready", "Delivering", "Completed", "Cancelled", "Refunded"));
+            "Pending", "Approved", "Completed", "Cancelled"));
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
