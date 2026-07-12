@@ -32,9 +32,10 @@
 
                     <form class="auth-simple-form" action="${pageContext.request.contextPath}/verify-otp" method="post">
                         <label for="otpInput">Nhập mã OTP (6 số) đã gửi đến email của bạn</label>
-                        <input id="otpInput" type="text" name="otp_input" placeholder="******" 
-                               required autofocus maxlength="6" pattern="\d{6}" 
-                               style="letter-spacing: 5px; text-align: center; font-size: 18px; padding: 10px;">
+                        <input id="otpInput" type="number" name="otp_input" placeholder="123456" 
+                               required autofocus 
+                               oninput="if (this.value.length > 6) this.value = this.value.slice(0, 6);"
+                               style="letter-spacing: 2px; text-align: center; font-size: 20px; padding: 10px; width: 100%; box-sizing: border-box;">
 
                         <button class="auth-simple-submit" type="submit" style="margin-top: 24px;">Xác nhận</button>
                     </form>
