@@ -687,3 +687,32 @@ ORDER BY t.name;
 SELECT TOP (5) * FROM dbo.vw_DailyRevenue ORDER BY revenue_date DESC;
 SELECT TOP (5) * FROM dbo.vw_TopSellingProducts ORDER BY quantity_sold DESC, product_id;
 GO
+
+INSERT INTO dbo.Users
+(
+    username,
+    password,
+    full_name,
+    email,
+    phone,
+    address,
+    gender,
+    staff_position,
+    status,
+    points,
+    role_id
+)
+VALUES
+(
+    'ngocdai0411',
+    '123456',
+    N'Trần Ngọc Đại',
+    'ngocdai0411@gmail.com',
+    '0911222333',
+    N'Hà Nội',
+    N'Nam',
+    NULL,
+    1,
+    0,
+    3
+);
