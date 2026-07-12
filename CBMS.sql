@@ -176,7 +176,7 @@ CREATE TABLE dbo.Orders (
     CONSTRAINT CK_Orders_Total CHECK (total_price >= 0),
     CONSTRAINT CK_Orders_Discount CHECK (discount_amount >= 0),
     CONSTRAINT CK_Orders_ShippingFee CHECK (shipping_fee >= 0),
-    CONSTRAINT CK_Orders_Status CHECK (status IN ('Pending','Approved','Processing','Ready','Delivering','Completed','Cancelled','Refunded')),
+    CONSTRAINT CK_Orders_Status CHECK (status IN ('Pending','Approved','Completed','Cancelled')),
     CONSTRAINT CK_Orders_Type CHECK (order_type IN ('Online','At-Counter')),
     CONSTRAINT CK_Orders_PaymentMethod CHECK (payment_method IN ('Cash','QR-Code','Bank-Transfer')),
     CONSTRAINT CK_Orders_OnlineAddress CHECK (order_type = 'At-Counter' OR shipping_address IS NOT NULL)
@@ -288,7 +288,7 @@ CREATE TABLE dbo.OrderStatusHistory (
     note NVARCHAR(255) NULL,
     CONSTRAINT FK_OrderStatusHistory_Orders FOREIGN KEY (order_id) REFERENCES dbo.Orders(order_id) ON DELETE CASCADE,
     CONSTRAINT FK_OrderStatusHistory_Users FOREIGN KEY (changed_by) REFERENCES dbo.Users(user_id),
-    CONSTRAINT CK_OrderStatusHistory_NewStatus CHECK (new_status IN ('Pending','Approved','Processing','Ready','Delivering','Completed','Cancelled','Refunded'))
+    CONSTRAINT CK_OrderStatusHistory_NewStatus CHECK (new_status IN ('Pending','Approved','Completed','Cancelled'))
 );
 
 CREATE INDEX IX_OrderStatusHistory_OrderDate ON dbo.OrderStatusHistory(order_id, changed_at);
@@ -442,13 +442,13 @@ VALUES
 (6, 2, 1,  70000, 15000, 15000, '2026-06-20 09:15:00', 'Completed', 1, 'Online',    N'Thạch Thất, Hà Nội',   '0909090909', 'QR-Code', N'Gọi trước khi giao'),
 (7, 2, NULL,58000,     0,     0, '2026-06-21 10:30:00', 'Completed', 1, 'At-Counter',NULL,                    NULL,         'Cash',    NULL),
 (8, NULL,NULL,42000,    0, 15000, '2026-07-05 08:20:00', 'Pending',   0, 'Online',    N'Nam Từ Liêm, Hà Nội', '0922113344', 'Cash',    N'Ít đá'),
-(9, 2, 2,  84000, 20000,     0, '2026-07-05 09:05:00', 'Processing',0, 'At-Counter',NULL,                    NULL,         'Cash',    NULL),
-(10,2, NULL,89000,     0, 15000, '2026-07-05 09:45:00', 'Delivering',0, 'Online',    N'Hà Đông, Hà Nội',      '0888999000', 'QR-Code', NULL),
+(9, 2, 2,  84000, 20000,     0, '2026-07-05 09:05:00', 'Approved',  0, 'At-Counter',NULL,                    NULL,         'Cash',    NULL),
+(10,2, NULL,89000,     0, 15000, '2026-07-05 09:45:00', 'Approved',  0, 'Online',    N'Hà Đông, Hà Nội',      '0888999000', 'QR-Code', NULL),
 (6, 2, 3, 120000, 30000,     0, '2026-06-25 14:10:00', 'Completed', 1, 'At-Counter',NULL,                    NULL,         'Cash',    NULL),
 (7, 2, NULL,47000,     0, 15000, '2026-06-26 11:00:00', 'Cancelled', 0, 'Online',    N'Cầu Giấy, Hà Nội',     '0933221100', 'QR-Code', N'Khách đổi ý'),
-(8, 2, NULL,64000,     0,     0, '2026-06-27 16:20:00', 'Refunded',  0, 'At-Counter',NULL,                    NULL,         'Cash',    N'Sản phẩm lỗi'),
+(8, 2, NULL,64000,     0,     0, '2026-06-27 16:20:00', 'Cancelled', 0, 'At-Counter',NULL,                    NULL,         'Cash',    N'Sản phẩm lỗi'),
 (9, 2, 4,  69000, 15000, 15000, '2026-06-28 13:15:00', 'Cancelled', 0, 'Online',    N'Hoài Đức, Hà Nội',     '0955667788', 'QR-Code', N'Không liên hệ được'),
-(10,2, NULL,70000,     0,     0, '2026-06-29 18:40:00', 'Refunded',  0, 'At-Counter',NULL,                    NULL,         'Bank-Transfer', N'Hoàn theo yêu cầu');
+(10,2, NULL,70000,     0,     0, '2026-06-29 18:40:00', 'Cancelled', 0, 'At-Counter',NULL,                    NULL,         'Bank-Transfer', N'Hoàn theo yêu cầu');
 
 INSERT INTO dbo.OrderDetails
     (order_id, product_id, quantity, selected_size, ice_level, sugar_level, price, note)
@@ -506,24 +506,24 @@ VALUES
 INSERT INTO dbo.OrderStatusHistory (order_id, old_status, new_status, changed_by, changed_at, note) VALUES
 (1,NULL,'Pending',6,'2026-06-20 09:15:00',N'Khách tạo đơn'),
 (1,'Pending','Approved',2,'2026-06-20 09:20:00',N'Thu ngân duyệt'),
-(1,'Approved','Processing',3,'2026-06-20 09:22:00',N'Bắt đầu pha chế'),
-(1,'Processing','Delivering',4,'2026-06-20 09:40:00',N'Nhận đơn giao'),
-(1,'Delivering','Completed',4,'2026-06-20 10:05:00',N'Giao thành công'),
-(2,NULL,'Processing',2,'2026-06-21 10:30:00',N'Đơn tại quầy'),
-(2,'Processing','Completed',2,'2026-06-21 10:35:00',N'Đã giao đồ uống'),
+(1,'Approved','Approved',3,'2026-06-20 09:22:00',N'Bắt đầu pha chế'),
+(1,'Approved','Approved',4,'2026-06-20 09:40:00',N'Nhận đơn giao'),
+(1,'Approved','Completed',4,'2026-06-20 10:05:00',N'Giao thành công'),
+(2,NULL,'Approved',2,'2026-06-21 10:30:00',N'Đơn tại quầy'),
+(2,'Approved','Completed',2,'2026-06-21 10:35:00',N'Đã giao đồ uống'),
 (3,NULL,'Pending',8,'2026-07-05 08:20:00',N'Khách tạo đơn'),
-(4,NULL,'Processing',2,'2026-07-05 09:05:00',N'Đơn tại quầy'),
+(4,NULL,'Approved',2,'2026-07-05 09:05:00',N'Đơn tại quầy'),
 (5,NULL,'Pending',10,'2026-07-05 09:45:00',N'Khách tạo đơn'),
 (5,'Pending','Approved',2,'2026-07-05 09:50:00',N'Đã duyệt'),
-(5,'Approved','Processing',3,'2026-07-05 09:52:00',N'Đang pha chế'),
-(5,'Processing','Ready',3,'2026-07-05 10:00:00',N'Đã pha xong'),
-(5,'Ready','Delivering',4,'2026-07-05 10:10:00',N'Đang giao'),
-(6,NULL,'Processing',2,'2026-06-25 14:10:00',N'Đơn tại quầy'),
-(6,'Processing','Completed',2,'2026-06-25 14:20:00',N'Hoàn thành'),
+(5,'Approved','Approved',3,'2026-07-05 09:52:00',N'Đang pha chế'),
+(5,'Approved','Approved',3,'2026-07-05 10:00:00',N'Đã pha xong'),
+(5,'Approved','Approved',4,'2026-07-05 10:10:00',N'Đang giao'),
+(6,NULL,'Approved',2,'2026-06-25 14:10:00',N'Đơn tại quầy'),
+(6,'Approved','Completed',2,'2026-06-25 14:20:00',N'Hoàn thành'),
 (7,'Pending','Cancelled',2,'2026-06-26 11:05:00',N'Khách hủy'),
-(8,'Completed','Refunded',2,'2026-06-27 16:45:00',N'Đã hoàn tiền'),
-(9,'Delivering','Cancelled',2,'2026-06-28 14:30:00',N'Giao thất bại'),
-(10,'Completed','Refunded',1,'2026-06-29 20:00:00',N'Quản lý duyệt hoàn tiền');
+(8,'Completed','Cancelled',2,'2026-06-27 16:45:00',N'Đã hoàn tiền'),
+(9,'Approved','Cancelled',2,'2026-06-28 14:30:00',N'Giao thất bại'),
+(10,'Completed','Cancelled',1,'2026-06-29 20:00:00',N'Quản lý duyệt hoàn tiền');
 
 INSERT INTO dbo.PointTransactions
     (user_id, order_id, voucher_id, points_change, balance_after, transaction_type, description, created_at)
