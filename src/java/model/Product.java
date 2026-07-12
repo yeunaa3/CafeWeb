@@ -53,13 +53,6 @@ public class Product {
         if (path.startsWith("http://") || path.startsWith("https://")) {
             return path;
         }
-        int imageRoot = path.indexOf("/images/products/");
-        if (imageRoot >= 0) {
-            return path.substring(imageRoot);
-        }
-        if (path.startsWith("images/products/")) {
-            return "/" + path;
-        }
         if (path.startsWith("/assets/images/products/")) {
             return "/images/products/" + path.substring("/assets/images/products/".length());
         }
