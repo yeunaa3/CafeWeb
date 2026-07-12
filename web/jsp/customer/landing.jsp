@@ -51,7 +51,11 @@
                 <div class="recommend-grid">
                     <c:forEach var="product" items="${recommendedProducts}">
                         <a class="recommend-item" href="${pageContext.request.contextPath}/menu">
+<<<<<<< Updated upstream
                             <img src="${pageContext.request.contextPath}/assets/images/${product.imageUrl}"
+=======
+                            <img src="${fn:startsWith(product.displayImageUrl, 'http://') or fn:startsWith(product.displayImageUrl, 'https://') ? product.displayImageUrl : pageContext.request.contextPath.concat(product.displayImageUrl)}"
+>>>>>>> Stashed changes
                                  onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1572490122747-3968b75cc699?auto=format&fit=crop&w=600&q=80';"
                                  alt="${product.productName}">
                             <span>${product.productName}</span>

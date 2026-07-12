@@ -47,8 +47,13 @@
                                 <article class="pos-item">
                                     <span class="pos-product-image">
                                         <c:choose>
+<<<<<<< Updated upstream
                                             <c:when test="${not empty item.imageUrl}">
                                                 <img src="${pageContext.request.contextPath}/${fn:startsWith(item.imageUrl, 'uploads/') ? item.imageUrl : 'assets/images/'.concat(item.imageUrl)}" alt="">
+=======
+                                            <c:when test="${not empty item.displayImageUrl}">
+                                                <img src="${fn:startsWith(item.displayImageUrl, 'http://') or fn:startsWith(item.displayImageUrl, 'https://') ? item.displayImageUrl : pageContext.request.contextPath.concat(item.displayImageUrl)}" alt="" onerror="this.hidden=true;">
+>>>>>>> Stashed changes
                                             </c:when>
                                             <c:otherwise>
                                                 ${fn:substring(item.productName, 0, 1)}

@@ -66,7 +66,11 @@
                         <div class="product-grid">
                             <c:forEach var="product" items="${section.products}">
                                 <article class="product-card">
+<<<<<<< Updated upstream
                                     <img src="${pageContext.request.contextPath}/${empty product.imageUrl ? '' : (fn:startsWith(product.imageUrl, 'uploads/') ? product.imageUrl : 'assets/images/'.concat(product.imageUrl))}"
+=======
+                                    <img src="${fn:startsWith(product.displayImageUrl, 'http://') or fn:startsWith(product.displayImageUrl, 'https://') ? product.displayImageUrl : pageContext.request.contextPath.concat(product.displayImageUrl)}"
+>>>>>>> Stashed changes
                                          onerror="this.onerror=null;this.src='https://png.pngtree.com/png-clipart/20241213/original/pngtree-iced-coffee-with-milk-in-glass-black-png-image_17810628.png';"
                                          alt="${product.productName}">
                                     <div class="product-info">

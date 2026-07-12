@@ -60,8 +60,13 @@
                                                 <div class="product-cell">
                                                     <span>
                                                         <c:choose>
+<<<<<<< Updated upstream
                                                             <c:when test="${not empty product.imageUrl}">
                                                                 <img src="${pageContext.request.contextPath}/${fn:startsWith(product.imageUrl, 'uploads/') ? product.imageUrl : 'assets/images/'.concat(product.imageUrl)}" alt="">
+=======
+                                                            <c:when test="${not empty product.displayImageUrl}">
+                                                                <img src="${fn:startsWith(product.displayImageUrl, 'http://') or fn:startsWith(product.displayImageUrl, 'https://') ? product.displayImageUrl : pageContext.request.contextPath.concat(product.displayImageUrl)}" alt="" onerror="this.hidden=true;">
+>>>>>>> Stashed changes
                                                             </c:when>
                                                             <c:otherwise>${fn:substring(product.productName,0,1)}</c:otherwise>
                                                         </c:choose>
