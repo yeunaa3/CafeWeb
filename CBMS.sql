@@ -388,7 +388,12 @@ INSERT INTO dbo.Products (product_name, category_id, price, image_url, descripti
 (N'Trà vải',                    3, 39000, '/images/products/uploads/product-1783652497062.jpg', N'Trà thơm kết hợp quả vải', 1, '2026-01-12'),
 (N'Nước ép cam',                4, 35000, '/images/products/uploads/product-1783652520082.jpg', N'Nước cam ép nguyên chất', 1, '2026-01-13'),
 (N'Nước ép dưa hấu',            4, 35000, '/images/products/uploads/product-1783652531970.jpg', N'Dưa hấu tươi mát', 1, '2026-01-13'),
-(N'Bánh Croissant',             5, 28000, '/images/products/uploads/product-1783652557130.jpg', N'Bánh sừng bò thơm bơ', 1, '2026-01-14');
+(N'Bánh Croissant',             5, 28000, '/images/products/uploads/product-1783652557130.jpg', N'Bánh sừng bò thơm bơ', 1, '2026-01-14'),
+(N'Americano',                  1, 37000, '/images/products/uploads/product-1783671139443.jpg', NULL, 1, '2026-07-10'),
+(N'Cà phê trứng',               1, 40000, '/images/products/uploads/product-1783671451182.jpg', NULL, 1, '2026-07-10'),
+(N'Caramel Macchiato',          1, 28000, '/images/products/uploads/product-1783671502225.jpg', NULL, 1, '2026-07-10'),
+(N'Espresso',                   1, 21000, '/images/products/uploads/product-1783671533128.jpg', NULL, 1, '2026-07-10'),
+(N'Cold Brew',                  1, 24000, '/images/products/uploads/product-1783671575228.jpg', NULL, 1, '2026-07-10');
 
 INSERT INTO dbo.Sizes (size_code, size_name, price_modifier, status) VALUES
 ('S', N'Nhỏ', -3000, 1),

@@ -10,7 +10,7 @@
         <title>Menu - Cafe & Bubble tea</title>
         <link rel="stylesheet" href="${pageContext.request.contextPath}/css/customer.css?v=20260709-orderflow1">
     </head>
-    <body data-context-path="${pageContext.request.contextPath}">
+    <body class="menu-page-enhanced" data-context-path="${pageContext.request.contextPath}">
         <main class="page-shell">
             <header class="site-header">
                 <a class="brand" href="${pageContext.request.contextPath}/home">Cafe & Bubble tea</a>

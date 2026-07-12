@@ -4,9 +4,9 @@
               auth="Container"
               type="javax.sql.DataSource"
               driverClassName="com.microsoft.sqlserver.jdbc.SQLServerDriver"
-              url="jdbc:sqlserver://localhost:1433;databaseName=CBMS;trustServerCertificate=true"
+              url="jdbc:sqlserver://localhost:1433;databaseName=CBMS;encrypt=true;trustServerCertificate=true"
               username="sa"
-              password="123"
+              password="123456"
               maxTotal="20"
               maxIdle="10"
               maxWaitMillis="10000"/>
