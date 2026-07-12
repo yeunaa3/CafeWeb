@@ -20,5 +20,3 @@
 .DS_Store
 Thumbs.db
 
-# Secret local configuration
-/web/WEB-INF/Mail.properties
