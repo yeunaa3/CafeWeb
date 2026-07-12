@@ -68,6 +68,13 @@ public class User {
         if (path.startsWith("http://") || path.startsWith("https://")) {
             return path;
         }
+        int imageRoot = path.indexOf("/images/avatars/");
+        if (imageRoot >= 0) {
+            return path.substring(imageRoot);
+        }
+        if (path.startsWith("images/avatars/")) {
+            return "/" + path;
+        }
         if (path.startsWith("/assets/images/avatars/")) {
             return "/images/avatars/" + path.substring("/assets/images/avatars/".length());
         }

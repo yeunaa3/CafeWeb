@@ -58,12 +58,19 @@ public class ManagerProductController extends HttpServlet {
             return;
         }
         if ("delete".equals(action)) {
-            finish(request, response, productDAO.deleteProduct(productId), "Đã xóa sản phẩm.",
+            Product existingProduct = productDAO.getProductForAdmin(productId);
+            boolean deleted = productDAO.deleteProduct(productId);
+            if (deleted && existingProduct != null) {
+                deleteUploadedAsset(existingProduct.getDisplayImageUrl(), null, PRODUCT_UPLOAD_PATH);
+            }
+            finish(request, response, deleted, "Đã xóa sản phẩm.",
                     "Không thể xóa sản phẩm đã xuất hiện trong đơn hoặc combo. Hãy chuyển sang hết hàng.");
             return;
         }
 
         boolean editing = "update".equals(action);
+        String previousImageUrl = Product.normalizeImageUrl(request.getParameter("currentImageUrl"));
+        String uploadedImage = null;
         Product product = new Product();
         product.setProductId(productId);
         product.setProductName(trim(request.getParameter("productName")));
@@ -76,7 +83,7 @@ public class ManagerProductController extends HttpServlet {
         String error = validate(product);
         if (error == null) {
             try {
-                String uploadedImage = saveProductImage(request);
+                uploadedImage = saveProductImage(request);
                 if (uploadedImage != null) {
                     product.setImageUrl(uploadedImage);
                 }
@@ -91,8 +98,14 @@ public class ManagerProductController extends HttpServlet {
         if (error == null) {
             boolean success = editing ? productDAO.updateProduct(product) : productDAO.createProduct(product);
             if (success) {
+                if (uploadedImage != null) {
+                    deleteUploadedAsset(previousImageUrl, uploadedImage, PRODUCT_UPLOAD_PATH);
+                }
                 finish(request, response, true, editing ? "Đã sửa sản phẩm." : "Đã thêm sản phẩm.");
                 return;
+            }
+            if (uploadedImage != null) {
+                deleteUploadedAsset(uploadedImage, null, PRODUCT_UPLOAD_PATH);
             }
             error = "Không thể lưu sản phẩm. Tên món có thể đã tồn tại.";
         }
@@ -143,6 +156,47 @@ public class ManagerProductController extends HttpServlet {
         image.write(savedFile.getAbsolutePath());
         copyToProjectAssetFolder(savedFile, PRODUCT_UPLOAD_PATH);
         return PRODUCT_UPLOAD_PATH + "/" + fileName;
+    }
+
+    private void deleteUploadedAsset(String assetUrl, String replacementUrl, String uploadPath) {
+        String normalized = Product.normalizeImageUrl(assetUrl);
+        String replacement = Product.normalizeImageUrl(replacementUrl);
+        if (normalized.isEmpty() || normalized.equals(replacement)
+                || !normalized.startsWith(uploadPath + "/")) {
+            return;
+        }
+        String runtimePath = getServletContext().getRealPath(normalized);
+        if (runtimePath != null) {
+            deleteFile(new File(runtimePath));
+        }
+        File sourceFile = sourceAssetFile(normalized);
+        if (sourceFile != null) {
+            deleteFile(sourceFile);
+        }
+    }
+
+    private File sourceAssetFile(String assetUrl) {
+        try {
+            String realRoot = getServletContext().getRealPath("/");
+            if (realRoot == null) return null;
+            File runtimeRoot = new File(realRoot).getCanonicalFile();
+            File projectRoot = runtimeRoot.getParentFile() == null ? null : runtimeRoot.getParentFile().getParentFile();
+            if (projectRoot == null || !new File(projectRoot, "nbproject").isDirectory()) return null;
+
+            String relativeAssetPath = assetUrl.startsWith("/") ? assetUrl.substring(1) : assetUrl;
+            return new File(projectRoot, "web" + File.separator + relativeAssetPath.replace('/', File.separatorChar)).getCanonicalFile();
+        } catch (IOException ex) {
+            return null;
+        }
+    }
+
+    private void deleteFile(File file) {
+        if (file != null && file.isFile()) {
+            try {
+                Files.deleteIfExists(file.toPath());
+            } catch (IOException ignored) {
+            }
+        }
     }
 
     private void copyToProjectAssetFolder(File savedFile, String assetPath) {

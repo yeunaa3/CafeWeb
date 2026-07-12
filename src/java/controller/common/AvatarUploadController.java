@@ -44,6 +44,7 @@ public class AvatarUploadController extends HttpServlet {
 
         User user = (User) value;
         String target = accountPath(user);
+        String oldAvatarUrl = user.getDisplayAvatarUrl();
         try {
             Part avatar = request.getPart("avatar");
             String submitted = avatar == null ? "" : avatar.getSubmittedFileName();
@@ -77,8 +78,10 @@ public class AvatarUploadController extends HttpServlet {
             if (new UserDAO().updateAvatar(user.getUserId(), avatarUrl)) {
                 user.setAvatarUrl(avatarUrl);
                 session.setAttribute("user", user);
+                deleteUploadedAsset(oldAvatarUrl, avatarUrl, AVATAR_UPLOAD_PATH);
                 putMessage(session, user, true, "Đã cập nhật ảnh đại diện.");
             } else {
+                deleteUploadedAsset(avatarUrl, null, AVATAR_UPLOAD_PATH);
                 putMessage(session, user, false, "Không thể lưu ảnh đại diện vào database.");
             }
         } catch (IllegalStateException ex) {
@@ -92,6 +95,47 @@ public class AvatarUploadController extends HttpServlet {
         }
 
         response.sendRedirect(request.getContextPath() + target);
+    }
+
+    private void deleteUploadedAsset(String assetUrl, String replacementUrl, String uploadPath) {
+        String normalized = User.normalizeAvatarUrl(assetUrl);
+        String replacement = User.normalizeAvatarUrl(replacementUrl);
+        if (normalized.isEmpty() || normalized.equals(replacement)
+                || !normalized.startsWith(uploadPath + "/")) {
+            return;
+        }
+        String runtimePath = getServletContext().getRealPath(normalized);
+        if (runtimePath != null) {
+            deleteFile(new File(runtimePath));
+        }
+        File sourceFile = sourceAssetFile(normalized);
+        if (sourceFile != null) {
+            deleteFile(sourceFile);
+        }
+    }
+
+    private File sourceAssetFile(String assetUrl) {
+        try {
+            String realRoot = getServletContext().getRealPath("/");
+            if (realRoot == null) return null;
+            File runtimeRoot = new File(realRoot).getCanonicalFile();
+            File projectRoot = runtimeRoot.getParentFile() == null ? null : runtimeRoot.getParentFile().getParentFile();
+            if (projectRoot == null || !new File(projectRoot, "nbproject").isDirectory()) return null;
+
+            String relativeAssetPath = assetUrl.startsWith("/") ? assetUrl.substring(1) : assetUrl;
+            return new File(projectRoot, "web" + File.separator + relativeAssetPath.replace('/', File.separatorChar)).getCanonicalFile();
+        } catch (IOException ex) {
+            return null;
+        }
+    }
+
+    private void deleteFile(File file) {
+        if (file != null && file.isFile()) {
+            try {
+                Files.deleteIfExists(file.toPath());
+            } catch (IOException ignored) {
+            }
+        }
     }
 
     private String extensionOf(String fileName) {
