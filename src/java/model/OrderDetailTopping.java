@@ -1,0 +1,30 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package model;
+
+/**
+ *
+ * @author Dumpling
+ */
+public class OrderDetailTopping {
+    private int orderDetailId;
+    private int toppingId;
+    private int quantity;
+    private double toppingPrice;
+
+    public OrderDetailTopping() {}
+
+    public int getOrderDetailId() { return orderDetailId; }
+    public void setOrderDetailId(int orderDetailId) { this.orderDetailId = orderDetailId; }
+
+    public int getToppingId() { return toppingId; }
+    public void setToppingId(int toppingId) { this.toppingId = toppingId; }
+
+    public int getQuantity() { return quantity; }
+    public void setQuantity(int quantity) { this.quantity = quantity; }
+
+    public double getToppingPrice() { return toppingPrice; }
+    public void setToppingPrice(double toppingPrice) { this.toppingPrice = toppingPrice; }
+}

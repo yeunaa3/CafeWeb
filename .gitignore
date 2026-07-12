@@ -4,6 +4,7 @@
 /dist/
 /out/
 *.class
+*~
 
 # Cấu hình riêng của các IDE (Eclipse, NetBeans, IntelliJ)
 .metadata/
@@ -18,3 +19,6 @@
 *.log
 .DS_Store
 Thumbs.db
+
+# Secret local configuration
+/web/WEB-INF/Mail.properties
