@@ -485,21 +485,23 @@ public class OrderDAO extends DBContext {
     }
 
     public DashboardSummary getDashboardSummary(int days) {
+        int safeDays = days < 1 ? 7 : days;
         DashboardSummary summary = new DashboardSummary();
-        loadDashboardMetrics(summary);
-        loadRevenueStats(summary, days < 1 ? 7 : days);
-        loadTopProducts(summary);
-        summary.setRecentOrders(getManagerOrders("", "", 6));
+        loadDashboardMetrics(summary, safeDays);
+        loadRevenueStats(summary, safeDays);
+        loadTopProducts(summary, safeDays);
+        loadRecentOrders(summary, safeDays);
         return summary;
     }
 
-    private void loadDashboardMetrics(DashboardSummary summary) {
+    private void loadDashboardMetrics(DashboardSummary summary, int days) {
         String sql = "SELECT "
                 + "(SELECT COUNT(*) FROM Products WHERE status=1) AS product_count, "
                 + "(SELECT COUNT(*) FROM Orders WHERE CAST(order_date AS DATE)=CAST(GETDATE() AS DATE)) AS today_orders, "
                 + "(SELECT COALESCE(SUM(total_price),0) FROM Orders WHERE status='Completed' "
                 + "AND CAST(order_date AS DATE)=CAST(GETDATE() AS DATE)) AS today_revenue, "
-                + "(SELECT COALESCE(SUM(total_price),0) FROM Orders WHERE status='Completed') AS total_revenue, "
+                + "(SELECT COALESCE(SUM(total_price),0) FROM Orders WHERE status='Completed' "
+                + "AND order_date>=DATEADD(day, 1-?, CAST(GETDATE() AS DATE))) AS total_revenue, "
                 + "(SELECT COUNT(*) FROM Users WHERE role_id=3 AND status=1) AS customer_count";
         Connection con = null;
         PreparedStatement ps = null;
@@ -507,6 +509,7 @@ public class OrderDAO extends DBContext {
         try {
             con = getConnection();
             ps = con.prepareStatement(sql);
+            ps.setInt(1, days);
             rs = ps.executeQuery();
             if (rs.next()) {
                 summary.setActiveProductCount(rs.getInt("product_count"));
@@ -556,12 +559,13 @@ public class OrderDAO extends DBContext {
         summary.setRevenueStats(stats);
     }
 
-    private void loadTopProducts(DashboardSummary summary) {
+    private void loadTopProducts(DashboardSummary summary, int days) {
         List<ProductSalesStat> products = new ArrayList<ProductSalesStat>();
         String sql = "SELECT TOP 6 p.product_id, p.product_name, SUM(od.quantity) AS quantity_sold, "
                 + "SUM(od.quantity*od.price) AS revenue FROM OrderDetails od "
                 + "JOIN Orders o ON o.order_id=od.order_id JOIN Products p ON p.product_id=od.product_id "
-                + "WHERE o.status='Completed' GROUP BY p.product_id,p.product_name "
+                + "WHERE o.status='Completed' AND o.order_date>=DATEADD(day, 1-?, CAST(GETDATE() AS DATE)) "
+                + "GROUP BY p.product_id,p.product_name "
                 + "ORDER BY quantity_sold DESC, revenue DESC";
         Connection con = null;
         PreparedStatement ps = null;
@@ -569,6 +573,7 @@ public class OrderDAO extends DBContext {
         try {
             con = getConnection();
             ps = con.prepareStatement(sql);
+            ps.setInt(1, days);
             rs = ps.executeQuery();
             while (rs.next()) {
                 ProductSalesStat product = new ProductSalesStat();
@@ -586,6 +591,35 @@ public class OrderDAO extends DBContext {
         summary.setTopProducts(products);
     }
 
+    private void loadRecentOrders(DashboardSummary summary, int days) {
+        List<ManagerOrderSummary> orders = new ArrayList<ManagerOrderSummary>();
+        String sql = "SELECT TOP 6 o.order_id, COALESCE(u.full_name, N'KhÃ¡ch vÃ£ng lai') AS customer_name, "
+                + "o.order_date, o.total_price, o.status, o.order_type, o.payment_method, "
+                + "o.shipping_address, o.shipping_phone, o.note, "
+                + "COALESCE(STRING_AGG(CONVERT(NVARCHAR(MAX), CONCAT(p.product_name, N' Ã—', od.quantity)), N', '), N'') AS items "
+                + "FROM Orders o LEFT JOIN Users u ON u.user_id=o.user_id "
+                + "LEFT JOIN OrderDetails od ON od.order_id=o.order_id "
+                + "LEFT JOIN Products p ON p.product_id=od.product_id "
+                + "WHERE o.order_date>=DATEADD(day, 1-?, CAST(GETDATE() AS DATE)) "
+                + "GROUP BY o.order_id, u.full_name, o.order_date, o.total_price, o.status, o.order_type, "
+                + "o.payment_method, o.shipping_address, o.shipping_phone, o.note "
+                + "ORDER BY o.order_date DESC, o.order_id DESC";
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            con = getConnection();
+            ps = con.prepareStatement(sql);
+            ps.setInt(1, days);
+            rs = ps.executeQuery();
+            while (rs.next()) orders.add(mapManagerOrder(rs));
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        } finally {
+            closeConnection(con, ps, rs);
+        }
+        summary.setRecentOrders(orders);
+    }
     private ManagerOrderSummary mapManagerOrder(ResultSet rs) throws SQLException {
         ManagerOrderSummary order = new ManagerOrderSummary();
         order.setOrderId(rs.getInt("order_id"));
@@ -603,3 +637,4 @@ public class OrderDAO extends DBContext {
     }
 
 }
+
