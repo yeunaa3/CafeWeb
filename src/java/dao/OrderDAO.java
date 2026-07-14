@@ -593,10 +593,10 @@ public class OrderDAO extends DBContext {
 
     private void loadRecentOrders(DashboardSummary summary, int days) {
         List<ManagerOrderSummary> orders = new ArrayList<ManagerOrderSummary>();
-        String sql = "SELECT TOP 6 o.order_id, COALESCE(u.full_name, N'KhÃ¡ch vÃ£ng lai') AS customer_name, "
+        String sql = "SELECT TOP 6 o.order_id, COALESCE(u.full_name, N'Khách vãng lai') AS customer_name, "
                 + "o.order_date, o.total_price, o.status, o.order_type, o.payment_method, "
                 + "o.shipping_address, o.shipping_phone, o.note, "
-                + "COALESCE(STRING_AGG(CONVERT(NVARCHAR(MAX), CONCAT(p.product_name, N' Ã—', od.quantity)), N', '), N'') AS items "
+                + "COALESCE(STRING_AGG(CONVERT(NVARCHAR(MAX), CONCAT(p.product_name, N' ×', od.quantity)), N', '), N'') AS items "
                 + "FROM Orders o LEFT JOIN Users u ON u.user_id=o.user_id "
                 + "LEFT JOIN OrderDetails od ON od.order_id=o.order_id "
                 + "LEFT JOIN Products p ON p.product_id=od.product_id "
